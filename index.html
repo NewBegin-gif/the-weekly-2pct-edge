@@ -17,34 +17,68 @@
 
     <section class="vision container">
         <h2>The Compound Math</h2>
-        <p>Most traders fail because they fight algorithms with human emotions. This system is designed around one core principle: <strong>mathematical compounding</strong>. At a targeted 2% weekly compound growth, €2,000 becomes €5,650 in Year 1, and over €45,000 by Year 3. Every single component—from the grid spacing algorithm to the ML trade predictors—is engineered to protect and accelerate this curve.</p>
+        <p>Most traders fail because they fight algorithmic markets with human emotions. This system is designed around one core principle: <strong>mathematical compounding</strong>. At a targeted 2% weekly compound growth, €2,000 becomes €5,650 in Year 1, and over €45,000 by Year 3. Every single component—from the grid spacing algorithm to the ML trade predictors—is engineered to protect and accelerate this curve.</p>
     </section>
 
-    <section class="pillars container">
-        <h2>The Core v4.0 Architecture</h2>
-        <div class="pillar-grid">
-            <div class="pillar-card">
-                <h3>8 Concurrent Strategies</h3>
-                <p>A "fishing net" that captures profit at every scale. Includes Macro-Tiered Grids, RSI Dip-Buying, Mean Reversion, Vol-Sniper, Flash-Crash catching, and the high-frequency Alpha Sniper.</p>
+    <!-- NEW SECTION: Deep Dive Narrative -->
+    <section class="deep-dive container" style="margin-top: 60px;">
+        <h2 style="text-align: center; margin-bottom: 50px; font-size: 2.2rem;">Inside The Engine: How It Works</h2>
+
+        <!-- Block 1: Strategies -->
+        <div style="display: flex; flex-wrap: wrap; gap: 40px; margin-bottom: 60px; align-items: center;">
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px;">1. The 8-Strategy "Fishing Net"</h3>
+                <p style="margin-bottom: 15px;">We don't rely on a single approach. The system simultaneously deploys 8 concurrent strategies to capture profit at every scale of market movement.</p>
+                <ul style="padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Macro-Tiered Grids:</strong> Captures daily volatility. Step sizes automatically scale with Bitcoin's absolute price (from €50 to €800 steps) so capital deploys efficiently.</li>
+                    <li><strong>Alpha Sniper & Vol-Sniper:</strong> High-frequency orderbook imbalance detection to profit in sideways markets and trail exact dip bottoms.</li>
+                    <li><strong>Flash-Crash Catcher:</strong> Pre-positioned hidden limit orders sit 15% below the market to instantly capitalize on extreme, sudden drops.</li>
+                </ul>
             </div>
-            <div class="pillar-card">
-                <h3>13 Safety Mechanisms</h3>
-                <p>Autonomous anti-fragility. Features Price-Tiered Stop-Losses, an 8% Daily Circuit Breaker, Heavy-Drop Protection, and Ghost Order Prevention. No single point of failure.</p>
+            <div style="flex: 1; min-width: 300px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-left: 4px solid #026aa7;">
+                <h4 style="color: #026aa7; margin-bottom: 10px; font-size: 1.2rem;">Universal Trailing Protection (UTP)</h4>
+                <p style="font-size: 0.95rem;">Never leave money on the table. Instead of fixed sell targets, our 3-tier adaptive trailing system lets profits run during massive rallies, while a 'Profit Guard' floor guarantees exchange fees are always covered.</p>
             </div>
-            <div class="pillar-card">
-                <h3>6 Machine Learning Models</h3>
-                <p>Intelligent filtering via GradientBoosting Trade Predictors, Isolation Forest Anomaly Detection, Q-Learning Grid Optimizers, and K-Means Loss Pattern Clustering.</p>
+        </div>
+
+        <!-- Block 2: Risk Management -->
+        <div style="display: flex; flex-wrap: wrap; gap: 40px; margin-bottom: 60px; align-items: center; flex-direction: row-reverse;">
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px;">2. Autonomous Risk Management (13 Layers)</h3>
+                <p style="margin-bottom: 15px;">A profitable system that crashes on its worst day is worthless. 'The Edge' features 13 independent safety mechanisms that act autonomously to protect your capital.</p>
+                <ul style="padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Daily Circuit Breaker:</strong> Automatically pauses buying if the daily realized + unrealized drawdown reaches the 8% threshold.</li>
+                    <li><strong>Heavy-Drop Protection:</strong> Dynamically doubles grid spacing if BTC drops >4% in a single hour to avoid "catching a falling knife."</li>
+                    <li><strong>Price-Tiered Stop-Losses:</strong> Accumulates BTC during deep macro dips (< €50k) and aggressively preserves EUR capital at euphoric highs (> €100k).</li>
+                </ul>
             </div>
-            <div class="pillar-card">
-                <h3>40+ Dashboard Widgets</h3>
-                <p>Complete telemetry. Monitor live P&L, system health, orderbook imbalances, and capital allocation directly from your browser, with full Telegram command integration.</p>
+            <div style="flex: 1; min-width: 300px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-left: 4px solid #ef4444;">
+                <h4 style="color: #ef4444; margin-bottom: 10px; font-size: 1.2rem;">Ghost Order Prevention</h4>
+                <p style="font-size: 0.95rem;">Complete startup reconciliation syncs every order between the PostgreSQL database and the exchange. It detects fills, cancellations, and orphans instantly. Zero data loss, zero ghost orders.</p>
+            </div>
+        </div>
+
+        <!-- Block 3: AI & Evolution -->
+        <div style="display: flex; flex-wrap: wrap; gap: 40px; margin-bottom: 40px; align-items: center;">
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px;">3. Machine Learning & Evolution</h3>
+                <p style="margin-bottom: 15px;">Hedge-fund-grade intelligence running 24/7. The system doesn't just trade; it learns, evolves, and optimizes itself.</p>
+                <ul style="padding-left: 20px; line-height: 1.8;">
+                    <li><strong>ML Trade Predictor:</strong> GradientBoosting models predict trade profitability before execution, reducing buy sizes if confidence is low.</li>
+                    <li><strong>Anomaly Detection:</strong> Isolation Forests detect abnormal market conditions (liquidity gaps, manipulation) and trigger defensive postures.</li>
+                    <li><strong>Genetic Evolution Engine:</strong> Automatically breeds and paper-tests top-performing strategy parameters to adapt to shifting market regimes over time.</li>
+                </ul>
+            </div>
+            <div style="flex: 1; min-width: 300px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-left: 4px solid #10b981;">
+                <h4 style="color: #10b981; margin-bottom: 10px; font-size: 1.2rem;">Black Swan Insurance</h4>
+                <p style="font-size: 0.95rem;">Diverts 2.5% of realized profits into a dedicated 'War Chest'. Designed specifically to deploy aggressive sniper buys during 15%+ market crashes—profiting from the exact events that destroy other traders.</p>
             </div>
         </div>
     </section>
 
     <section class="gallery container">
-        <h2>System Telemetry & Live Dashboards</h2>
-        <p>Complete transparency into the quant-core intelligence, anomaly detection, and portfolio rebalancing modules.</p>
+        <h2 style="text-align: center;">System Telemetry & Live Dashboards</h2>
+        <p style="text-align: center; margin-bottom: 40px;">Complete transparency. Monitor live P&L, system health, orderbook imbalances, and capital allocation directly from your browser, with 40+ widgets.</p>
         <div class="image-grid">
             <img src="images/dash1.png" alt="Main Cockpit Dashboard">
             <img src="images/dash2.png" alt="Liquidation & Stop-Loss Heatmap">
@@ -53,15 +87,39 @@
         </div>
     </section>
 
+    <!-- NEW SECTION: What you get -->
+    <section class="deliverables container" style="margin-top: 60px; background: #f3f4f6; padding: 60px 40px; border-radius: 12px; text-align: center;">
+        <h2 style="margin-bottom: 20px; font-size: 2.2rem;">What Exactly Do You Get?</h2>
+        <p style="max-width: 800px; margin: 0 auto 40px; font-size: 1.1rem; color: var(--secondary);">When you purchase 'The Weekly 2% Edge', you aren't renting a black-box bot subscription. You are acquiring the complete intellectual property and technical blueprint to deploy your own institutional trading operation.</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: left;">
+            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <h4 style="margin-bottom: 10px; color: var(--primary);">System Architecture</h4>
+                <p style="font-size: 0.95rem; color: var(--secondary); margin: 0;">2,000+ lines of detailed technical documentation covering every algorithm, formula, and mechanism.</p>
+            </div>
+            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <h4 style="margin-bottom: 10px; color: var(--primary);">Full Parameter Config</h4>
+                <p style="font-size: 0.95rem; color: var(--secondary); margin: 0;">Every threshold, multiplier, and constant documented with its exact value and mathematical reasoning.</p>
+            </div>
+            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <h4 style="margin-bottom: 10px; color: var(--primary);">Database Schema</h4>
+                <p style="font-size: 0.95rem; color: var(--secondary); margin: 0;">Complete PostgreSQL schema with 13+ tables, indexes, and constraints for 100% state persistence.</p>
+            </div>
+            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <h4 style="margin-bottom: 10px; color: var(--primary);">Dashboard & Telegram</h4>
+                <p style="font-size: 0.95rem; color: var(--secondary); margin: 0;">Full specifications for deploying the 40+ widget Flask dashboard and automated Telegram alert system.</p>
+            </div>
+        </div>
+    </section>
+
     <section id="pricing" class="pricing container">
-        <h2>Deploy The Complete System</h2>
         <div class="pricing-grid" style="display: flex; justify-content: center;">
             <div class="pricing-card premium" style="max-width: 500px; width: 100%;">
                 <h3>The Weekly 2% Edge v4.0</h3>
                 <p class="price">$199 <span>One-Time Payment</span></p>
-                <p>The ultimate quant trading setup, fully unlocked.</p>
+                <p>The ultimate quant trading setup, fully unlocked. No recurring fees.</p>
                 <ul>
-                    <li><strong>Complete System Architecture</strong> (2,000+ lines of quant logic)</li>
+                    <li><strong>Complete System Architecture Blueprint</strong></li>
                     <li>All 8 Trading Strategies & 13 Safety Layers</li>
                     <li>All 6 Machine Learning & AI Models</li>
                     <li>Full Parameter Configuration & DB Schema</li>
