@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+    <defs>
+        <!-- Gradients for depth and premium feel -->
+        <linearGradient id="edgeGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#026aa7" />
+            <stop offset="100%" stop-color="#10b981" />
+        </linearGradient>
+        <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#101828" />
+            <stop offset="100%" stop-color="#374151" />
+        </linearGradient>
+        
+        <!-- Filter for subtle drop shadow on the emblem -->
+        <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.15" />
+        </filter>
+    </defs>
+
+    <!-- The Emblem (Left Side) - Abstract Chart with a Sharp "Edge" -->
+    <g transform="translate(10, 10)" filter="url(#dropShadow)">
+        <!-- Base structure: 3 ascending pillars (Compounding) -->
+        <path d="M 10 90 L 30 90 L 30 100 L 10 100 Z" fill="#475467" opacity="0.4" />
+        <path d="M 40 60 L 60 60 L 60 100 L 40 100 Z" fill="#475467" opacity="0.6" />
+        <path d="M 70 30 L 90 30 L 90 100 L 70 100 Z" fill="#475467" opacity="0.8" />
+        
+        <!-- The "Edge" (The Dynamic Overlay) - Cutting across the pillars upwards -->
+        <path d="M 0 100 L 30 75 L 60 45 L 100 0 L 100 20 L 60 65 L 30 90 L 0 100 Z" fill="url(#edgeGradient)" />
+        
+        <!-- The Final Point (Alpha Sniper/Precision indicator) -->
+        <circle cx="100" cy="0" r="6" fill="#10b981" />
+    </g>
+
+    <!-- The Typography (Right Side) -->
+    <g transform="translate(130, 65)">
+        <!-- Main Brand Name -->
+        <text x="0" y="0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="42" fill="url(#textGradient)" letter-spacing="-1">
+            THE EDGE
+        </text>
+        
+        <!-- Subtitle / Tagline -->
+        <text x="3" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="12" fill="#6b7280" letter-spacing="3.5">
+            QUANTITATIVE TRADING
+        </text>
+    </g>
+</svg>
