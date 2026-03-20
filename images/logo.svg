@@ -6,8 +6,8 @@
             <stop offset="100%" stop-color="#10b981" />
         </linearGradient>
         <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#101828" />
-            <stop offset="100%" stop-color="#374151" />
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="100%" stop-color="#d1d5db" />
         </linearGradient>
         
         <!-- Filter for subtle drop shadow on the emblem -->
@@ -30,16 +30,16 @@
         <circle cx="100" cy="0" r="6" fill="#10b981" />
     </g>
 
-    <!-- The Typography (Right Side) -->
-    <g transform="translate(130, 65)">
-        <!-- Main Brand Name -->
-        <text x="0" y="0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="42" fill="url(#textGradient)" letter-spacing="-1">
-            THE EDGE
-        </text>
-        
-        <!-- Subtitle / Tagline -->
-        <text x="3" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="12" fill="#6b7280" letter-spacing="3.5">
-            QUANTITATIVE TRADING
-        </text>
-    </g>
+        <!-- The Typography (Right Side) -->
+        <g transform="translate(130, 65)">
+            <!-- Main Brand Name -->
+            <text x="0" y="0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="42" fill="#ffffff" letter-spacing="-1">
+                THE EDGE
+            </text>
+            
+            <!-- Subtitle / Tagline -->
+            <text x="3" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="12" fill="#9ca3af" letter-spacing="3.5">
+                QUANTITATIVE TRADING
+            </text>
+        </g>
 </svg>
