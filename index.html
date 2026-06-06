@@ -346,6 +346,84 @@
             color: #fff;
         }
 
+        /* The Broad Picture & Footer */
+        .bottom-cta-section {
+            background-color: #080f1a;
+            padding: 6rem 5%;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .bottom-cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .bottom-cta-content h2 {
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+
+        .bottom-cta-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: background-color 0.2s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .footer-strip {
+            background-color: #030712;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .footer-strip-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-strip a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-strip a:hover {
+            color: #fff;
+        }
+
+        .footer-node {
+            font-family: monospace;
+            color: #475569;
+        }
+
     </style>
 </head>
 <body>
@@ -360,7 +438,6 @@
         </a>
         <div class="nav-links">
             <a href="#stack">The Honest Stack</a>
-            <!-- Links openen nu in een NIEUW tabblad zodat The Weekly 2% Edge gewoon open blijft staan -->
             <a href="https://theweeklyaiedge.com/?utm_source=aibuildermarketplace&utm_medium=nav_banner&utm_campaign=cross_brand#news-log" target="_blank">Mindful AI News</a>
             <span class="separator">|</span>
             <a href="https://aibuildermarketplace.com/about/" target="_blank">About Me</a>
@@ -538,6 +615,29 @@
 
         </div>
     </main>
+
+    <!-- The Broad Picture Section -->
+    <section class="bottom-cta-section">
+        <div class="bottom-cta-content">
+            <h2>The Broad Picture</h2>
+            <p>While this hub lists the foundational tools that grant me personal freedom, I continuously track and evaluate hundreds of options across the digital landscape. There are so many incredible software tools available today that can genuinely assist us—we simply need to discover they exist and find out how they fit our daily lives. I built the <strong>AI Builder Marketplace</strong> to aggregate honest, objective data so you can safely choose the right tools to rebuild your own time.</p>
+            <a href="https://aibuildermarketplace.com" target="_blank" class="btn-primary">Explore The Full Software Directory →</a>
+        </div>
+    </section>
+
+    <!-- Footer Strip -->
+    <footer class="footer-strip">
+        <div class="footer-strip-left">
+            © 2026 The Weekly 2% Edge. Crafted with intention in Saigon, Vietnam.
+        </div>
+        <div class="footer-strip-right">
+            <a href="https://aibuildermarketplace.com/about/" target="_blank">About Me</a>
+            <span style="color: #334155;">|</span>
+            <a href="https://aibuildermarketplace.com" target="_blank">AI Builder Marketplace</a>
+            <span style="color: #334155;">|</span>
+            <span class="footer-node">Node Status: Active & Balanced</span>
+        </div>
+    </footer>
 
 </body>
 </html>
