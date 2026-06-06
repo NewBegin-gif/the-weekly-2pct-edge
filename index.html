@@ -1,149 +1,252 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Weekly 2% Edge | Compounding Efficiency Through Systems</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>The Weekly 2% Edge | Compound Your Time</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .code-font { font-family: 'Fira Code', monospace; }
+        :root {
+            --bg-color: #0b1120;
+            --surface: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 4rem 0 1.5rem 0;
+            color: #e2e8f0;
+            letter-spacing: -0.01em;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-bottom: 5rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 650px;
+        }
+
+        /* Article Styling */
+        article {
+            margin-bottom: 5rem;
+        }
+
+        .tool-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background-color: var(--surface);
+            object-fit: contain;
+            border: 1px solid var(--border);
+        }
+
+        .tool-tags {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Links and Buttons */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        a:hover {
+            border-color: var(--accent);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--surface);
+            color: var(--text-main);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--text-main);
+            color: var(--bg-color);
+            border-color: var(--text-main);
+        }
+
+        /* Crosslink box */
+        .crosslink-box {
+            background-color: var(--surface);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .crosslink-box p {
+            margin-bottom: 0;
+        }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500/30">
+<body>
 
-    <!-- Global Notice Banner -->
-    <div class="bg-gradient-to-r from-emerald-950/60 via-slate-900/40 to-emerald-950/60 border-b border-emerald-900/30 py-2 text-center text-xs font-medium tracking-wide text-emerald-300">
-        📈 The Real 2% Edge: Building digital systems that work consistently while your laptop is shut.
-    </div>
+<div class="container">
+    
+    <header class="hero">
+        <h1>The Weekly 2% Edge.</h1>
+        <p>Time is the only non-renewable asset in your business. You cannot buy more of it, but you can stop bleeding it. This platform is dedicated to one principle: compounding efficiency. By optimizing your workflows by just 2% every week, you drastically increase your output without increasing your hours.</p>
+        <p>Below is the exact, tested infrastructure to automate friction, defend your calendar, and buy back your time.</p>
+    </header>
 
-    <!-- Navigation -->
-    <nav class="bg-slate-950/80 backdrop-blur-md border-b border-slate-900 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex-shrink-0 flex items-center">
-                    <a href="#" class="font-bold text-xl tracking-tight text-white flex items-center gap-2">
-                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400"></span>
-                        The Weekly <span class="text-emerald-400">2Pct Edge</span>
-                    </a>
-                </div>
-                <div class="flex space-x-6 items-center">
-                    <a href="https://theweeklyaiedge.com" target="_blank" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">My Personal Journey</a>
-                    <span class="text-slate-800">|</span>
-                    <a href="https://aibuildermarketplace.com" target="_blank" class="text-emerald-400 hover:text-emerald-300 font-semibold text-sm transition-colors flex items-center gap-1">
-                        Full Directory <span>&rarr;</span>
-                    </a>
-                </div>
+    <main>
+        <!-- SaneBox Article -->
+        <article>
+            <div class="tool-meta">
+                <img src="1080x1080.jpg" alt="SaneBox" class="tool-icon" style="object-fit: cover;">
+                <div class="tool-tags">Email Triage & Filtering</div>
             </div>
-        </div>
-    </nav>
+            <h2>Stop processing noise. Start processing work.</h2>
+            <p>The average professional spends over four hours a day managing email. The worst part? Data shows that a staggering 58% of the emails you receive are completely unimportant and do not require your attention[cite: 2]. Every time your focus breaks to delete a newsletter or CC-thread, you lose momentum.</p>
+            <p>We use <a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank">SaneBox</a> to stop this bleed. It does not require a new email client; it works in the background of your current setup. SaneBox uses AI to analyze your email headers and your behavior. It identifies what matters and silently moves the rest into a separate folder for later review.</p>
+            <p>The math is straightforward: if you eliminate the visual clutter, your context-switching drops to zero. You open your inbox, deal with the essentials, and get back to actual work.</p>
+            <a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank" class="btn">Deploy SaneBox</a>
+        </article>
 
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950 py-20 lg:py-28 border-b border-slate-900">
-        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/50 border border-emerald-900/30 text-xs font-medium text-emerald-400 mb-6">
-                🔄 Redefining the Compound Effect
-            </span>
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
-                Stop trading time for numbers. Let <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">software build your edge.</span>
-            </h1>
-            <p class="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-                True leverage isn't about watching charts all day or manually pushing data between apps. The most sustainable growth comes from setting up quiet, reliable systems that run flawlessly in the background—giving you steady progress while buying back your absolute freedom.
-            </p>
-        </div>
-    </section>
+        <!-- Reclaim.ai Article -->
+        <article>
+            <div class="tool-meta">
+                <img src="avatar-without-shadow-right.png" alt="Reclaim AI" class="tool-icon">
+                <div class="tool-tags">Calendar Defense</div>
+            </div>
+            <h2>Your calendar needs an enforcer.</h2>
+            <p>If you don't schedule your priorities, other people will schedule theirs. A blank space on your calendar is an invitation for someone else to book a meeting. Most professionals try to block "focus time" manually, but the moment an urgent meeting shifts, the whole system collapses.</p>
+            <p><a href="https://go.reclaim.ai/puu4y5wv8xfj" target="_blank">Reclaim.ai</a> solves this by making your schedule elastic. You tell it how many hours of deep work you need per week. Reclaim automatically finds the blocks, defends them against internal booking systems, and reshuffles them instantly if a high-priority meeting lands on your desk.</p>
+            <p>It integrates your task list directly into your timeline. You don't manage your calendar anymore; you set the rules, and the AI defends your time.</p>
+            <a href="https://go.reclaim.ai/puu4y5wv8xfj" target="_blank" class="btn">Automate Your Calendar</a>
+        </article>
 
-    <!-- The 2% Core Pillars -->
-    <section class="py-20 bg-slate-950 border-b border-slate-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl font-bold tracking-tight text-white">Where the Yield Compounds</h2>
-                <p class="mt-4 text-slate-400">By replacing manual friction with automated routines, your business gains a massive unfair advantage week after week.</p>
+        <!-- Lindy & Crosslink Article -->
+        <article>
+            <div class="tool-meta">
+                <img src="lindy-app-icon.png" alt="Lindy AI" class="tool-icon">
+                <div class="tool-tags">Autonomous AI Agents</div>
+            </div>
+            <h2>Delegate the repetitive.</h2>
+            <p>There are tasks you do every week that require logic, but not your specific expertise. Triage, routing requests, drafting standard replies, and updating CRMs. You don't need a human assistant for this; you need an autonomous agent.</p>
+            <p><a href="https://try.lindy.ai/04841byjd5bi" target="_blank">Lindy.ai</a> allows you to build an AI employee that connects to your existing tools. You define the trigger (e.g., "when an invoice arrives") and Lindy executes the workflow seamlessly in the background.</p>
+            
+            <div class="crosslink-box">
+                <p><strong>Looking to expand your AI workforce?</strong> While Lindy is excellent for personal workflows, scaling a business often requires highly specialized agents. Browse curated AI solutions or commission custom builds on our partner platform: <a href="https://aibuildermarketplace.com" target="_blank">AI Builder Marketplace</a>.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                <!-- Close CRM Pillar -->
-                <div class="bg-slate-900/40 border border-slate-900 rounded-2xl p-8 hover:border-slate-800 transition-all flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center gap-3 mb-6">
-                            <span class="h-8 w-8 rounded-lg bg-emerald-950 flex items-center justify-center text-emerald-400 font-bold font-mono text-sm">3.2x</span>
-                            <h3 class="text-xl font-bold text-white">Systematic Consistency</h3>
-                        </div>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                            Data from thousands of sales operations shows that letting a tool automatically handle your follow-ups creates a massive long-term advantage. Sequence users close 2.5x more deals and generate 3.2x more revenue per rep—simply because software never forgets or gets distracted.
-                        </p>
-                    </div>
-                    <a href="https://aibuildermarketplace.com/b2b/close-crm-review/" target="_blank" class="text-sm font-medium text-emerald-400 hover:text-emerald-300 flex items-center gap-1 mt-4">
-                        See how it compounds &rarr;
-                    </a>
-                </div>
+            <a href="https://try.lindy.ai/04841byjd5bi" target="_blank" class="btn">Hire Lindy</a>
+        </article>
 
-                <!-- CloudTalk Pillar -->
-                <div class="bg-slate-900/40 border border-slate-900 rounded-2xl p-8 hover:border-slate-800 transition-all flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center gap-3 mb-6">
-                            <span class="h-8 w-8 rounded-lg bg-emerald-950 flex items-center justify-center text-emerald-400 font-bold font-mono text-sm">24/7</span>
-                            <h3 class="text-xl font-bold text-white">Always-On Operations</h3>
-                        </div>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                            Repetitive calls and appointment reminders eat up to 60% of a normal team's weekly capacity. Deploying an AI voice assistant to handle routine confirmations overnight means your business never misses an opportunity—even when you are completely offline or sleeping across the world.
-                        </p>
-                    </div>
-                    <a href="https://aibuildermarketplace.com/b2b/cloudtalk-review/" target="_blank" class="text-sm font-medium text-emerald-400 hover:text-emerald-300 flex items-center gap-1 mt-4">
-                        See how it protects time &rarr;
-                    </a>
-                </div>
-
-                <!-- Bitvavo Pillar -->
-                <div class="bg-slate-900/40 border border-slate-900 rounded-2xl p-8 hover:border-slate-800 transition-all flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center gap-3 mb-6">
-                            <span class="h-8 w-8 rounded-lg bg-emerald-950 flex items-center justify-center text-emerald-400 font-bold font-mono text-sm">SEC</span>
-                            <h3 class="text-xl font-bold text-white">Automated Wealth</h3>
-                        </div>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                            True financial peace doesn't come from staring at volatile charts all day. It comes from establishing solid, rule-based asset accumulation using secure, regulated exchanges that execute your plans quietly in the background, allowing your capital to compound while you focus on life.
-                        </p>
-                    </div>
-                    <a href="https://aibuildermarketplace.com/b2b/bitvavo-trading-bot/" target="_blank" class="text-sm font-medium text-emerald-400 hover:text-emerald-300 flex items-center gap-1 mt-4">
-                        See the automated gateway &rarr;
-                    </a>
-                </div>
-
+        <!-- ClickUp Article -->
+        <article>
+            <div class="tool-meta">
+                <div class="tool-icon" style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; color: white;">C</div>
+                <div class="tool-tags">Operational Command Center</div>
             </div>
-        </div>
-    </section>
+            <h2>Kill the app fatigue. Centralize your data.</h2>
+            <p>Information fragmentation destroys efficiency. Your team discusses a project in Slack, tracks the tasks in Jira or Asana, and writes the documentation in Google Docs. Finding one piece of information takes five minutes of searching across three tabs.</p>
+            <p><a href="https://try.web.clickup.com/1fuixmntw4bz" target="_blank">ClickUp</a> is the architecture that replaces them all. It is a unified workspace. With the recent addition of ClickUp Chat, conversations are directly linked to tasks. More importantly, their internal AI Knowledge Management allows you to query your entire company's database and get instant, accurate answers.</p>
+            <p>Consolidating your software stack saves money on subscriptions, but the real ROI is the speed at which your team can locate data and execute tasks.</p>
+            <a href="https://try.web.clickup.com/1fuixmntw4bz" target="_blank" class="btn">Consolidate with ClickUp</a>
+        </article>
 
-    <!-- Ecosysteem Sluiting CTA -->
-    <section class="bg-slate-900 border-t border-slate-900 py-20 text-center relative overflow-hidden">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <h2 class="text-3xl font-bold tracking-tight text-white mb-6">The Central Software Architecture</h2>
-            <p class="text-md sm:text-lg text-slate-400 mb-10 leading-relaxed">
-                The tools mentioned above are just part of the framework I use to maintain absolute digital leverage. To help you discover and compare the exact tools needed to build your own compounding infrastructure, I run a comprehensive, objective directory. 
-            </p>
-            <a href="https://aibuildermarketplace.com" target="_blank" class="inline-flex justify-center items-center px-8 py-4 text-md font-medium rounded-xl text-slate-950 bg-emerald-400 hover:bg-emerald-300 font-semibold shadow-xl shadow-emerald-950/20 transition-all">
-                Access the AI Builder Marketplace &rarr;
-            </a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-slate-950 border-t border-slate-900 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-sm">
-            <p class="text-slate-500 mb-4 md:mb-0">&copy; 2026 The Weekly 2Pct Edge. Built with absolute focus on systemic leverage.</p>
-            <div class="flex space-x-6 text-slate-400 items-center">
-                <a href="https://theweeklyaiedge.com" class="hover:text-white transition-colors">Life Log</a>
-                <span class="text-slate-800">|</span>
-                <a href="https://aibuildermarketplace.com" class="hover:text-white transition-colors">Software Marketplace</a>
+        <!-- Browse AI & Beautiful.ai Combo Article -->
+        <article>
+            <div class="tool-meta">
+                <div class="tool-icon" style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; color: white;">B</div>
+                <div class="tool-tags">Data Extraction & Presentation</div>
             </div>
-        </div>
-    </footer>
-<div style="text-align: center; margin: 4rem auto; max-width: 800px; padding: 3rem 2rem; background-color: #1e293b; border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);">
-    <h2 style="font-size: 2rem; margin-bottom: 1rem; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">Werk je al met de juiste infrastructuur?</h2>
-    <p style="color: #94a3b8; margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">Ontdek de geselecteerde software-stack waarmee je repetitief werk automatiseert, uren tijd terugkoopt en je wekelijkse output maximaliseert.</p>
-    <a href="stack.html" style="display: inline-block; background-color: #3b82f6; color: white; padding: 1rem 2.5rem; border-radius: 6px; text-decoration: none; font-size: 1.1rem; font-weight: bold; transition: background-color 0.2s; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">Bekijk de 2% Edge Stack</a>
+            <h2>From raw data to board deck in under an hour.</h2>
+            <p>Competitive intelligence usually requires tedious manual labor: checking pricing pages, scraping lead lists, or monitoring market shifts. <a href="https://partners.browse.ai/2p19q7ssljpk" target="_blank">Browse AI</a> turns this into a no-code automated process. You record your screen once to show the AI what to look for, and it continuously extracts the structured data into a spreadsheet for you.</p>
+            <p>But data is useless if you can't present it. That is where the design tax comes in—spending three hours pushing text boxes around in PowerPoint to make the numbers look acceptable.</p>
+            <p>By feeding your findings into <a href="https://beautifulai.partnerlinks.io/7s7xjgpea39q" target="_blank">Beautiful.ai</a>, you cut that time down to 25 minutes. You type the argument and paste the data; the AI automatically builds the charts, balances the layout, and locks your brand colors. It is the fastest pipeline from raw intelligence to professional, client-ready collateral.</p>
+            
+            <a href="https://partners.browse.ai/2p19q7ssljpk" target="_blank" class="btn" style="margin-right: 10px;">Try Browse AI</a>
+            <a href="https://beautifulai.partnerlinks.io/7s7xjgpea39q" target="_blank" class="btn">Try Beautiful.ai</a>
+        </article>
+
+        <!-- QuillBot Article -->
+        <article>
+            <div class="tool-meta">
+                <img src="8.jpg" alt="QuillBot" class="tool-icon" style="object-fit: cover;">
+                <div class="tool-tags">Communication Velocity</div>
+            </div>
+            <h2>Never stare at a blank page again.</h2>
+            <p>Writing is thinking, but formatting that writing for a specific audience takes time. Whether you need to condense a 10-page report into a brief summary or rewrite a blunt email to sound more professional, manual editing is slow.</p>
+            <p><a href="https://try.quillbot.com/1kodsf2wz3o2" target="_blank">QuillBot</a> removes the friction from business communication. It is not about letting AI write for you; it is about letting AI refine your thoughts. Use the paraphraser to instantly adjust the tone of your documents, or the summarizer to extract the core thesis from lengthy research.</p>
+            <p>It ensures your communication is sharp, precise, and fast. As we discuss weekly on <a href="https://theweekly2pctedge.com" target="_blank">The Weekly 2% Edge</a>: clarity equals speed, and speed equals profit.</p>
+            <a href="https://try.quillbot.com/1kodsf2wz3o2" target="_blank" class="btn">Accelerate your Writing</a>
+        </article>
+
+    </main>
 </div>
+
 </body>
 </html>
