@@ -6,8 +6,8 @@
     <title>The Weekly 2% Edge | Compound Your Time</title>
     <style>
         :root {
-            --bg-color: #0b1120;
-            --surface: #1e293b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent: #3b82f6;
@@ -19,234 +19,307 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
             color: var(--text-main);
-            line-height: 1.7;
-            font-size: 1.1rem;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 4rem 1.5rem;
+        /* Navbar */
+        nav {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(15, 23, 42, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        /* Typography */
-        h1 {
-            font-size: 3.5rem;
+        .logo {
+            font-size: 1.25rem;
             font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
             letter-spacing: -0.02em;
             color: #ffffff;
+            text-decoration: none;
         }
 
-        h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin: 4rem 0 1.5rem 0;
-            color: #e2e8f0;
-            letter-spacing: -0.01em;
-        }
-
-        p {
-            margin-bottom: 1.5rem;
+        .nav-links a {
             color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s;
         }
 
-        strong {
+        .nav-links a:hover {
             color: var(--text-main);
-            font-weight: 600;
         }
 
         /* Hero Section */
         .hero {
-            margin-bottom: 5rem;
-            padding-bottom: 3rem;
-            border-bottom: 1px solid var(--border);
+            padding: 6rem 5% 4rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero p {
             font-size: 1.25rem;
-            max-width: 650px;
-        }
-
-        /* Article Styling */
-        article {
-            margin-bottom: 5rem;
-        }
-
-        .tool-meta {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            color: var(--text-muted);
             margin-bottom: 2rem;
         }
 
-        .tool-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background-color: var(--surface);
-            object-fit: contain;
+        /* Marketplace Grid */
+        .container {
+            padding: 2rem 5% 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
             border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s;
         }
 
-        .tool-tags {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* Links and Buttons */
-        a {
-            color: var(--accent);
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.2s;
-        }
-
-        a:hover {
+        .card:hover {
+            transform: translateY(-5px);
             border-color: var(--accent);
         }
 
-        .btn {
-            display: inline-block;
-            background-color: var(--surface);
-            color: var(--text-main);
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            object-fit: contain;
+            background-color: #0b1120;
             border: 1px solid var(--border);
-            font-weight: 600;
+        }
+
+        .card-icon-text {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background-color: #0b1120;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-title-group h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            color: #f8fafc;
+        }
+
+        .tag {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
             font-size: 1rem;
-            margin-top: 1rem;
-            transition: all 0.2s;
+        }
+
+        .crosslink {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid var(--accent);
+            padding: 1rem;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .crosslink a {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .crosslink a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            margin-top: auto;
         }
 
         .btn:hover {
-            background-color: var(--text-main);
-            color: var(--bg-color);
-            border-color: var(--text-main);
+            background-color: var(--accent-hover);
         }
 
-        /* Crosslink box */
-        .crosslink-box {
-            background-color: var(--surface);
-            border-left: 4px solid var(--accent);
-            padding: 1.5rem;
-            border-radius: 0 8px 8px 0;
-            margin: 2rem 0;
-            font-size: 0.95rem;
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
         }
-        
-        .crosslink-box p {
-            margin-bottom: 0;
+
+        .btn-outline:hover {
+            background-color: var(--border);
         }
+
     </style>
 </head>
 <body>
 
-<div class="container">
-    
+    <nav>
+        <a href="/" class="logo">The Weekly 2% Edge.</a>
+        <div class="nav-links">
+            <a href="https://aibuildermarketplace.com" target="_blank">AI Builder Marketplace</a>
+        </div>
+    </nav>
+
     <header class="hero">
-        <h1>The Weekly 2% Edge.</h1>
-        <p>Time is the only non-renewable asset in your business. You cannot buy more of it, but you can stop bleeding it. This platform is dedicated to one principle: compounding efficiency. By optimizing your workflows by just 2% every week, you drastically increase your output without increasing your hours.</p>
-        <p>Below is the exact, tested infrastructure to automate friction, defend your calendar, and buy back your time.</p>
+        <h1>Compound Your Time.</h1>
+        <p>Time is the only non-renewable asset in your business. By optimizing your workflows by just 2% every week, you drastically increase your output without increasing your hours. Below is the curated infrastructure to automate friction, defend your calendar, and buy back your time.</p>
     </header>
 
-    <main>
-        <!-- SaneBox Article -->
-        <article>
-            <div class="tool-meta">
-                <img src="1080x1080.jpg" alt="SaneBox" class="tool-icon" style="object-fit: cover;">
-                <div class="tool-tags">Email Triage & Filtering</div>
-            </div>
-            <h2>Stop processing noise. Start processing work.</h2>
-            <p>The average professional spends over four hours a day managing email. The worst part? Data shows that a staggering 58% of the emails you receive are completely unimportant and do not require your attention[cite: 2]. Every time your focus breaks to delete a newsletter or CC-thread, you lose momentum.</p>
-            <p>We use <a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank">SaneBox</a> to stop this bleed. It does not require a new email client; it works in the background of your current setup. SaneBox uses AI to analyze your email headers and your behavior. It identifies what matters and silently moves the rest into a separate folder for later review.</p>
-            <p>The math is straightforward: if you eliminate the visual clutter, your context-switching drops to zero. You open your inbox, deal with the essentials, and get back to actual work.</p>
-            <a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank" class="btn">Deploy SaneBox</a>
-        </article>
-
-        <!-- Reclaim.ai Article -->
-        <article>
-            <div class="tool-meta">
-                <img src="avatar-without-shadow-right.png" alt="Reclaim AI" class="tool-icon">
-                <div class="tool-tags">Calendar Defense</div>
-            </div>
-            <h2>Your calendar needs an enforcer.</h2>
-            <p>If you don't schedule your priorities, other people will schedule theirs. A blank space on your calendar is an invitation for someone else to book a meeting. Most professionals try to block "focus time" manually, but the moment an urgent meeting shifts, the whole system collapses.</p>
-            <p><a href="https://go.reclaim.ai/puu4y5wv8xfj" target="_blank">Reclaim.ai</a> solves this by making your schedule elastic. You tell it how many hours of deep work you need per week. Reclaim automatically finds the blocks, defends them against internal booking systems, and reshuffles them instantly if a high-priority meeting lands on your desk.</p>
-            <p>It integrates your task list directly into your timeline. You don't manage your calendar anymore; you set the rules, and the AI defends your time.</p>
-            <a href="https://go.reclaim.ai/puu4y5wv8xfj" target="_blank" class="btn">Automate Your Calendar</a>
-        </article>
-
-        <!-- Lindy & Crosslink Article -->
-        <article>
-            <div class="tool-meta">
-                <img src="lindy-app-icon.png" alt="Lindy AI" class="tool-icon">
-                <div class="tool-tags">Autonomous AI Agents</div>
-            </div>
-            <h2>Delegate the repetitive.</h2>
-            <p>There are tasks you do every week that require logic, but not your specific expertise. Triage, routing requests, drafting standard replies, and updating CRMs. You don't need a human assistant for this; you need an autonomous agent.</p>
-            <p><a href="https://try.lindy.ai/04841byjd5bi" target="_blank">Lindy.ai</a> allows you to build an AI employee that connects to your existing tools. You define the trigger (e.g., "when an invoice arrives") and Lindy executes the workflow seamlessly in the background.</p>
+    <main class="container">
+        <div class="grid">
             
-            <div class="crosslink-box">
-                <p><strong>Looking to expand your AI workforce?</strong> While Lindy is excellent for personal workflows, scaling a business often requires highly specialized agents. Browse curated AI solutions or commission custom builds on our partner platform: <a href="https://aibuildermarketplace.com" target="_blank">AI Builder Marketplace</a>.</p>
+            <!-- SaneBox -->
+            <div class="card">
+                <div class="card-header">
+                    <img src="1080x1080.jpg" alt="SaneBox" class="card-icon" style="object-fit: cover;">
+                    <div class="card-title-group">
+                        <div class="tag">Email Triage</div>
+                        <h2>SaneBox</h2>
+                    </div>
+                </div>
+                <p><strong>Stop processing noise.</strong> The average professional spends over four hours a day managing email. Data shows that 58% of the emails you receive are completely unimportant. SaneBox uses AI to analyze your email headers and silently moves the noise into a separate folder for later review. Zero context-switching. Just focus.</p>
+                <a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank" class="btn">Deploy SaneBox</a>
             </div>
 
-            <a href="https://try.lindy.ai/04841byjd5bi" target="_blank" class="btn">Hire Lindy</a>
-        </article>
-
-        <!-- ClickUp Article -->
-        <article>
-            <div class="tool-meta">
-                <div class="tool-icon" style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; color: white;">C</div>
-                <div class="tool-tags">Operational Command Center</div>
+            <!-- Reclaim.ai -->
+            <div class="card">
+                <div class="card-header">
+                    <img src="avatar-without-shadow-right.png" alt="Reclaim AI" class="card-icon">
+                    <div class="card-title-group">
+                        <div class="tag">Calendar Defense</div>
+                        <h2>Reclaim.ai</h2>
+                    </div>
+                </div>
+                <p><strong>Your calendar needs an enforcer.</strong> If you don't schedule your priorities, others will. Reclaim makes your schedule elastic. You tell it how many hours of deep work you need per week. It automatically finds the blocks, defends them against internal booking systems, and reshuffles instantly if an urgent meeting lands on your desk.</p>
+                <a href="https://go.reclaim.ai/puu4y5wv8xfj" target="_blank" class="btn">Automate Calendar</a>
             </div>
-            <h2>Kill the app fatigue. Centralize your data.</h2>
-            <p>Information fragmentation destroys efficiency. Your team discusses a project in Slack, tracks the tasks in Jira or Asana, and writes the documentation in Google Docs. Finding one piece of information takes five minutes of searching across three tabs.</p>
-            <p><a href="https://try.web.clickup.com/1fuixmntw4bz" target="_blank">ClickUp</a> is the architecture that replaces them all. It is a unified workspace. With the recent addition of ClickUp Chat, conversations are directly linked to tasks. More importantly, their internal AI Knowledge Management allows you to query your entire company's database and get instant, accurate answers.</p>
-            <p>Consolidating your software stack saves money on subscriptions, but the real ROI is the speed at which your team can locate data and execute tasks.</p>
-            <a href="https://try.web.clickup.com/1fuixmntw4bz" target="_blank" class="btn">Consolidate with ClickUp</a>
-        </article>
 
-        <!-- Browse AI & Beautiful.ai Combo Article -->
-        <article>
-            <div class="tool-meta">
-                <div class="tool-icon" style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; color: white;">B</div>
-                <div class="tool-tags">Data Extraction & Presentation</div>
+            <!-- Lindy.ai -->
+            <div class="card">
+                <div class="card-header">
+                    <img src="lindy-app-icon.png" alt="Lindy AI" class="card-icon">
+                    <div class="card-title-group">
+                        <div class="tag">Autonomous Agents</div>
+                        <h2>Lindy.ai</h2>
+                    </div>
+                </div>
+                <p><strong>Delegate the repetitive.</strong> You don't need a human assistant for routing requests, drafting standard replies, or updating CRMs. You need an autonomous agent. Build an AI employee that connects to your existing tools and executes background workflows seamlessly.</p>
+                
+                <div class="crosslink">
+                    Looking to scale specialized agents for your business operations? Commission custom builds on the <a href="https://aibuildermarketplace.com" target="_blank">AI Builder Marketplace</a>.
+                </div>
+
+                <a href="https://try.lindy.ai/04841byjd5bi" target="_blank" class="btn">Hire Lindy</a>
             </div>
-            <h2>From raw data to board deck in under an hour.</h2>
-            <p>Competitive intelligence usually requires tedious manual labor: checking pricing pages, scraping lead lists, or monitoring market shifts. <a href="https://partners.browse.ai/2p19q7ssljpk" target="_blank">Browse AI</a> turns this into a no-code automated process. You record your screen once to show the AI what to look for, and it continuously extracts the structured data into a spreadsheet for you.</p>
-            <p>But data is useless if you can't present it. That is where the design tax comes in—spending three hours pushing text boxes around in PowerPoint to make the numbers look acceptable.</p>
-            <p>By feeding your findings into <a href="https://beautifulai.partnerlinks.io/7s7xjgpea39q" target="_blank">Beautiful.ai</a>, you cut that time down to 25 minutes. You type the argument and paste the data; the AI automatically builds the charts, balances the layout, and locks your brand colors. It is the fastest pipeline from raw intelligence to professional, client-ready collateral.</p>
-            
-            <a href="https://partners.browse.ai/2p19q7ssljpk" target="_blank" class="btn" style="margin-right: 10px;">Try Browse AI</a>
-            <a href="https://beautifulai.partnerlinks.io/7s7xjgpea39q" target="_blank" class="btn">Try Beautiful.ai</a>
-        </article>
 
-        <!-- QuillBot Article -->
-        <article>
-            <div class="tool-meta">
-                <img src="8.jpg" alt="QuillBot" class="tool-icon" style="object-fit: cover;">
-                <div class="tool-tags">Communication Velocity</div>
+            <!-- ClickUp -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon-text">C</div>
+                    <div class="card-title-group">
+                        <div class="tag">Command Center</div>
+                        <h2>ClickUp</h2>
+                    </div>
+                </div>
+                <p><strong>Kill the app fatigue.</strong> Information fragmentation destroys efficiency. ClickUp centralizes your project management, Sprints, and documentation. With internal AI Knowledge Management, you can query your entire company's database and turn chat conversations directly into trackable tasks. Find data instantly.</p>
+                <a href="https://try.web.clickup.com/1fuixmntw4bz" target="_blank" class="btn">Centralize Operations</a>
             </div>
-            <h2>Never stare at a blank page again.</h2>
-            <p>Writing is thinking, but formatting that writing for a specific audience takes time. Whether you need to condense a 10-page report into a brief summary or rewrite a blunt email to sound more professional, manual editing is slow.</p>
-            <p><a href="https://try.quillbot.com/1kodsf2wz3o2" target="_blank">QuillBot</a> removes the friction from business communication. It is not about letting AI write for you; it is about letting AI refine your thoughts. Use the paraphraser to instantly adjust the tone of your documents, or the summarizer to extract the core thesis from lengthy research.</p>
-            <p>It ensures your communication is sharp, precise, and fast. As we discuss weekly on <a href="https://theweekly2pctedge.com" target="_blank">The Weekly 2% Edge</a>: clarity equals speed, and speed equals profit.</p>
-            <a href="https://try.quillbot.com/1kodsf2wz3o2" target="_blank" class="btn">Accelerate your Writing</a>
-        </article>
 
+            <!-- Browse AI & Beautiful.ai Combo -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon-text">B</div>
+                    <div class="card-title-group">
+                        <div class="tag">Data & Presentation</div>
+                        <h2>Browse AI & Beautiful.ai</h2>
+                    </div>
+                </div>
+                <p><strong>From raw data to board deck.</strong> Stop manual scraping. <strong>Browse AI</strong> continuously extracts structured data from competitors or lead lists without code. Feed that intelligence directly into <strong>Beautiful.ai</strong>. The AI builds the charts, balances the layout, and cuts the presentation design time from 3 hours to 25 minutes.</p>
+                
+                <a href="https://partners.browse.ai/2p19q7ssljpk" target="_blank" class="btn btn-outline">Try Browse AI</a>
+                <a href="https://beautifulai.partnerlinks.io/7s7xjgpea39q" target="_blank" class="btn">Try Beautiful.ai</a>
+            </div>
+
+            <!-- QuillBot -->
+            <div class="card">
+                <div class="card-header">
+                    <img src="8.jpg" alt="QuillBot" class="card-icon" style="object-fit: cover;">
+                    <div class="card-title-group">
+                        <div class="tag">Communication Velocity</div>
+                        <h2>QuillBot</h2>
+                    </div>
+                </div>
+                <p><strong>Never stare at a blank page.</strong> Formatting your thoughts for a specific audience takes time. Use QuillBot to instantly adjust the tone of blunt emails or extract the core thesis from lengthy research documents. Ensure your business communication is sharp, precise, and fast.</p>
+                <a href="https://try.quillbot.com/1kodsf2wz3o2" target="_blank" class="btn">Accelerate Writing</a>
+            </div>
+
+        </div>
     </main>
-</div>
 
 </body>
 </html>
