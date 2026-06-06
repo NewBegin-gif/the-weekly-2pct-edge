@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Edge Stack | The Weekly 2Pct Edge</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #334155;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            border-color: var(--accent);
+        }
+
+        .card-image-container {
+            width: 100%;
+            height: 150px;
+            background-color: #0f172a;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            text-align: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+        
+        .disclaimer {
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>The 2% Edge Stack</h1>
+        <p class="subtitle">De ultieme infrastructuur voor professionals. Automatiseer repetitief werk, koop uren van je tijd terug en vergroot elke week je voorsprong.</p>
+    </header>
+
+    <div class="grid">
+        
+        <!-- Reclaim.ai -->
+        <div class="card">
+            <div class="card-image-container">
+                <img src="avatar-without-shadow-right.png" alt="Reclaim AI" class="card-img" style="height: 80px;">
+            </div>
+            <h2>Reclaim.ai</h2>
+            <div class="tagline">Tijdmanagement & Agenda Automatisering</div>
+            <p>Verdedig je agenda tegen chaos. Reclaim integreert met je taken en plant automatisch focus-tijd in. Het is ontworpen om de gaten in je werkweek te dichten en zorgt dat je nooit meer het slachtoffer bent van je eigen kalender.</p>
+            <a href="https://go.reclaim.ai/puu4y5wv8xfj" target="_blank" class="btn">Optimaliseer je Agenda</a>
+        </div>
+
+        <!-- SaneBox -->
+        <div class="card">
+            <div class="card-image-container">
+                <img src="1080x1080.jpg" alt="SaneBox" class="card-img">
+            </div>
+            <h2>SaneBox</h2>
+            <div class="tagline">AI Inbox Filtering</div>
+            <p>Werkers spenderen gemiddeld 28% van hun tijd aan e-mail, waarvan 58% onbelangrijk is. SaneBox gebruikt AI om je inbox op te schonen, verplaatst ruis automatisch naar @SaneLater, en bespaart je uren per week aan context-switching.</p>
+            <a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank" class="btn">Schoon je Inbox op</a>
+        </div>
+
+        <!-- ClickUp -->
+        <div class="card">
+            <div class="card-image-container">
+                <!-- Placeholder for ClickUp -->
+                <div style="color: white; font-size: 2rem; font-weight: bold;">ClickUp</div>
+            </div>
+            <h2>ClickUp</h2>
+            <div class="tagline">De Alles-in-Eén Werk Cockpit</div>
+            <p>Vervang al je losse apps. ClickUp combineert projectmanagement, Sprints en documenten in één platform. Met de nieuwe ClickUp Chat en AI Knowledge Management heb je direct toegang tot al je bedrijfsdata en zet je gesprekken moeiteloos om in taken.</p>
+            <a href="https://try.web.clickup.com/1fuixmntw4bz" target="_blank" class="btn">Stroomlijn je Werk</a>
+        </div>
+
+        <!-- Beautiful.ai -->
+        <div class="card">
+            <div class="card-image-container">
+                <div style="color: white; font-size: 2rem; font-weight: bold;">Beautiful.ai</div>
+            </div>
+            <h2>Beautiful.ai</h2>
+            <div class="tagline">AI Presentatie Ontwerper</div>
+            <p>Maak een einde aan het vechten met lay-outs. Type je content en de AI balanceert direct de slide. Het brengt de bouwtijd van een professioneel board-deck of klantpresentatie terug van 3 uur naar slechts 25 minuten. Focus op het argument, de AI doet het design.</p>
+            <a href="https://beautifulai.partnerlinks.io/7s7xjgpea39q" target="_blank" class="btn">Probeer 14 dagen gratis</a>
+        </div>
+
+        <!-- QuillBot -->
+        <div class="card">
+            <div class="card-image-container">
+                <img src="8.jpg" alt="QuillBot" class="card-img" style="object-fit: cover;">
+            </div>
+            <h2>QuillBot</h2>
+            <div class="tagline">AI Schrijfassistent & Paraphraser</div>
+            <p>De ultieme tool om sneller en strakker te communiceren. Herschrijf teksten, pas de vloeiendheid aan, en vat lange documenten direct samen. Perfect om repetitief schrijfwerk en documentatie in een fractie van de tijd af te handelen.</p>
+            <a href="https://try.quillbot.com/1kodsf2wz3o2" target="_blank" class="btn">Schrijf Sneller met AI</a>
+        </div>
+
+        <!-- Lindy -->
+        <div class="card">
+            <div class="card-image-container">
+                <img src="lindy-app-icon.png" alt="Lindy AI" class="card-img" style="height: 80px;">
+            </div>
+            <h2>Lindy.ai</h2>
+            <div class="tagline">Jouw Persoonlijke AI Agent</div>
+            <p>Delegeer je dagelijkse, saaie workflows. Lindy fungeert als een autonome assistent die je helpt met het triageren van informatie, het voorbereiden van reacties en het automatiseren van stappen waar je normaal gesproken handmatig doorheen moet klikken.</p>
+            <a href="https://try.lindy.ai/04841byjd5bi" target="_blank" class="btn">Huur je AI Assistent in</a>
+        </div>
+
+        <!-- Browse AI -->
+        <div class="card">
+            <div class="card-image-container">
+                <div style="color: white; font-size: 2rem; font-weight: bold;">Browse AI</div>
+            </div>
+            <h2>Browse AI</h2>
+            <div class="tagline">Automatische Data Extractie</div>
+            <p>Laat robots het internet voor je scannen. Monitor concurrenten, verzamel prijzen of scrape leads zonder één regel code te schrijven. Browse AI trekt gestructureerde data direct naar een spreadsheet, zodat jij beslissingen kunt nemen op basis van real-time intel.</p>
+            <a href="https://partners.browse.ai/2p19q7ssljpk" target="_blank" class="btn">Automatiseer je Research</a>
+        </div>
+
+    </div>
+
+    <p class="disclaimer">
+        <em>* Disclaimer: The Weekly 2Pct Edge maakt gebruik van affiliate links. Wij ontvangen mogelijk een commissie zonder extra kosten voor jou. Wij bevelen uitsluitend tools aan die wij zelf essentieel achten voor productiviteit en groei.</em>
+    </p>
+</div>
+
+</body>
+</html>
