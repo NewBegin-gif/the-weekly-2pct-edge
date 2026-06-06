@@ -5,17 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaneBox Review | The Weekly 2% Edge</title>
     <style>
-        :root { --bg-dark: #0f172a; --bg-card: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8; --accent: #3b82f6; --border: #334155; }
-        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        :root { --bg-dark: #050b14; --bg-card: #0b121f; --text-main: #f8fafc; --text-muted: #94a3b8; --accent: #6366f1; --accent-purple: #8b5cf6; --border: #1e293b; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; }
         
+        /* Nav & Footer (Zelfde als index) */
+        nav { padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; background-color: rgba(5, 11, 20, 0.95); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+        .logo { font-size: 1.4rem; font-weight: 800; color: #ffffff; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; }
+        .logo-dot { color: var(--accent); font-size: 1.2rem; }
+        .logo-accent { color: var(--accent-purple); font-weight: 600; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-links .separator { color: var(--border); }
+
         .article-container { max-width: 700px; margin: 0 auto; padding: 4rem 1.5rem; }
         
-        .hero-banner { width: 100%; max-width: 400px; display: block; margin: 0 auto 3rem auto; border-radius: 8px; object-fit: contain; background-color: white; padding: 2rem; border: 1px solid var(--border); }
+        /* Artikel Logo */
+        .article-hero-logo { width: 90px; height: 90px; display: block; margin: 0 auto 2.5rem auto; border-radius: 16px; object-fit: contain; background-color: white; padding: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         
-        h1 { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; line-height: 1.1; font-weight: 800; }
+        h1 { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; line-height: 1.2; font-weight: 800; text-align: center; }
         h2 { font-size: 1.6rem; margin: 2.5rem 0 1rem; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
         p { margin-bottom: 1.25rem; color: var(--text-muted); font-size: 1.1rem; }
-        
         ul { margin: 1.5rem 0; padding-left: 1.5rem; color: var(--text-muted); }
         li { margin-bottom: 1rem; list-style-type: disc; }
         strong { color: var(--text-main); }
@@ -23,40 +33,88 @@
         .highlight-box { background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--accent); margin: 2rem 0; }
         .highlight-box a { color: var(--accent); font-weight: 600; text-decoration: none; }
         .highlight-box a:hover { text-decoration: underline; }
-        .highlight-box h3 { margin-bottom: 1rem; color: #fff; }
         
-        .btn { display: inline-block; background-color: var(--accent); color: white; padding: 0.8rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 1rem; }
-        .btn:hover { background-color: #2563eb; }
+        .btn { display: inline-block; background-color: var(--accent); color: white; padding: 0.8rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; margin-top: 1rem; transition: background-color 0.2s; }
+        .btn:hover { background-color: #4f46e5; }
+
+        /* Related Tools Grid */
+        .related-tools { margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border); }
+        .related-tools h3 { font-size: 1.4rem; color: #fff; margin-bottom: 2rem; text-align: center; }
+        .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; }
+        .related-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem 1rem; text-align: center; text-decoration: none; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+        .related-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .related-icon { width: 48px; height: 48px; border-radius: 10px; object-fit: contain; background: white; padding: 6px; }
+        .related-name { color: var(--text-main); font-size: 0.85rem; font-weight: 600; }
+        
+        .footer-strip { background-color: #030712; padding: 2rem 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; border-top: 1px solid var(--border); font-size: 0.85rem; color: #64748b; margin-top: 4rem; }
     </style>
 </head>
 <body>
+    <nav>
+        <a href="/" class="logo"><span class="logo-dot">●</span> The Weekly <span class="logo-accent">2% Edge</span></a>
+        <div class="nav-links">
+            <a href="/#stack">The Honest Stack</a>
+            <a href="https://theweeklyaiedge.com/?utm_source=aibuildermarketplace&utm_medium=nav_banner&utm_campaign=cross_brand#news-log" target="_blank">Mindful AI News</a>
+            <span class="separator">|</span>
+            <a href="https://aibuildermarketplace.com/about/" target="_blank">About Me</a>
+        </div>
+    </nav>
+
     <main class="article-container">
-        <!-- Vernieuwde SaneBox Logo Header -->
-        <img src="SaneBox_logo_2023-02.png" alt="SaneBox Review" class="hero-banner">
+        <img src="SaneBox_logo_2023-02.png" alt="SaneBox Logo" class="article-hero-logo">
         
-        <h1>SaneBox Review: Automating Email Triage to Reclaim 4 Hours a Day</h1>
+        <h1>SaneBox: Automating Email Triage to Reclaim 4 Hours a Day</h1>
         
         <p><strong>The core problem with email is not volume; it is context-switching.</strong></p>
-        <p>The average professional spends over four hours a day managing their inbox, making it the most time-consuming work activity facing the workforce today. The math is brutal: it takes 64 seconds to recover from an email interruption and return to your preceding level of productivity. If you receive 94 emails a day, that is over 100 minutes of pure lost productivity due to fractured focus.</p>
-        <p>Worse, internal data shows that 58% of the emails you receive are completely unimportant. You are spending your most valuable asset—time—sorting through noise.</p>
+        <p>The average professional spends over four hours a day managing their inbox, making it the most time-consuming work activity facing the workforce today. The math is brutal: it takes 64 seconds to recover from an email interruption. Worse, internal data shows that 58% of the emails you receive are completely unimportant. You are spending your most valuable asset—time—sorting through noise.</p>
 
         <h2>The Solution: Algorithmic Triage</h2>
-        <p><a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank" style="color: var(--accent);">SaneBox</a> is not a new email client. It is an AI layer that sits on top of your existing infrastructure (Gmail, Outlook, iCloud) and acts as a ruthless gatekeeper. It does not read your email content; it analyzes the headers and your past interaction behavior to determine importance.</p>
-        <p>If an email is not critical, SaneBox intercepts it before it hits your inbox and routes it to an <code>@SaneLater</code> folder.</p>
+        <p><a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank" style="color: var(--accent);">SaneBox</a> is not a new email client. It is an AI layer that sits on top of your existing infrastructure (Gmail, Outlook, iCloud) and acts as a ruthless gatekeeper. It does not read your email content; it analyzes the headers and your past interaction behavior to determine importance. If an email is not critical, SaneBox intercepts it before it hits your inbox.</p>
 
         <h2>Key Efficiencies & ROI</h2>
         <ul>
-            <li><strong>Zero Context-Switching:</strong> By filtering out the 58% of irrelevant emails, your inbox only contains actionable items. You open it, execute, and leave.</li>
-            <li><strong>Automated Follow-ups:</strong> SaneBox’s Reply Tracking automatically notifies you if a sent email goes unanswered by a specified time, eliminating the need to manually track pending responses.</li>
-            <li><strong>One-Click Unsubscribe:</strong> Instead of hunting for unsubscribe links, you move an email to the <code>@SaneBlackHole</code> folder. SaneBox sends all future emails from that sender straight to the trash.</li>
+            <li><strong>Zero Context-Switching:</strong> By filtering out the 58% of irrelevant emails, your inbox only contains actionable items.</li>
+            <li><strong>Automated Follow-ups:</strong> SaneBox’s Reply Tracking automatically notifies you if a sent email goes unanswered.</li>
+            <li><strong>One-Click Unsubscribe:</strong> Move an email to the <code>@SaneBlackHole</code> folder, and SaneBox sends all future emails from that sender straight to the trash.</li>
         </ul>
 
-        <div class="highlight-box">
-            <h3>The 2% Edge Integration</h3>
-            <p>At <a href="/">The Weekly 2% Edge</a>, the foundational rule of compounding time is eliminating friction. SaneBox automates the lowest-leverage task in your day—sorting. Once your inbox is automated, you buy back the mental bandwidth needed to focus on high-leverage growth, such as deploying custom trading architectures or exploring algorithmic solutions on the <a href="https://aibuildermarketplace.com" target="_blank">AI Builder Marketplace</a>.</p>
-        </div>
-
         <a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank" class="btn">Deploy SaneBox with a 14-day trial</a>
+
+        <!-- Related Tools Section -->
+        <div class="related-tools">
+            <h3>Explore The Honest Stack</h3>
+            <div class="related-grid">
+                <a href="reclaim.html" class="related-card">
+                    <img src="avatar-without-shadow-right.png" class="related-icon" alt="Reclaim.ai">
+                    <span class="related-name">Reclaim.ai</span>
+                </a>
+                <a href="lindy.html" class="related-card">
+                    <img src="lindy-app-icon.png" class="related-icon" alt="Lindy.ai">
+                    <span class="related-name">Lindy.ai</span>
+                </a>
+                <a href="clickup.html" class="related-card">
+                    <img src="https://www.google.com/s2/favicons?domain=clickup.com&sz=128" class="related-icon" alt="ClickUp">
+                    <span class="related-name">ClickUp</span>
+                </a>
+                <a href="browse-ai.html" class="related-card">
+                    <img src="https://www.google.com/s2/favicons?domain=browse.ai&sz=128" class="related-icon" alt="Browse AI">
+                    <span class="related-name">Browse AI</span>
+                </a>
+                <a href="beautiful-ai.html" class="related-card">
+                    <img src="https://www.google.com/s2/favicons?domain=beautiful.ai&sz=128" class="related-icon" alt="Beautiful.ai">
+                    <span class="related-name">Beautiful.ai</span>
+                </a>
+                <a href="quillbot.html" class="related-card">
+                    <img src="https://www.google.com/s2/favicons?domain=quillbot.com&sz=128" class="related-icon" alt="QuillBot">
+                    <span class="related-name">QuillBot</span>
+                </a>
+            </div>
+        </div>
     </main>
+    
+    <footer class="footer-strip">
+        <div class="footer-strip-left">© 2026 The Weekly 2% Edge.</div>
+        <div class="footer-strip-right" style="font-family: monospace;">Node Status: Active & Balanced</div>
+    </footer>
 </body>
 </html>
