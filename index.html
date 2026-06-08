@@ -16,437 +16,78 @@
             --border: #1e293b;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Top Announcement Bar */
-        .top-bar {
-            background-color: #030712;
-            color: #94a3b8;
-            text-align: center;
-            padding: 0.6rem 1rem;
-            font-size: 0.85rem;
-            border-bottom: 1px solid var(--border);
-            font-weight: 500;
-            letter-spacing: 0.02em;
-        }
-
-        /* Navbar */
-        nav {
-            padding: 1.5rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: rgba(5, 11, 20, 0.95);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #ffffff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .logo-dot {
-            color: var(--accent);
-            font-size: 1.2rem;
-        }
-
-        .logo-accent {
-            color: var(--accent-purple);
-            font-weight: 600;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-main);
-        }
-
-        .nav-links .separator {
-            color: var(--border);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 6rem 5% 4rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            gap: 4rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .hero-content {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background-color: rgba(30, 41, 59, 0.5);
-            border: 1px solid var(--border);
-            padding: 0.4rem 1rem;
-            border-radius: 100px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-            text-decoration: none;
-            transition: border-color 0.2s;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; -webkit-font-smoothing: antialiased; }
         
-        .hero-badge:hover {
-            border-color: var(--accent-purple);
-        }
+        .top-bar { background-color: #030712; color: #94a3b8; text-align: center; padding: 0.6rem 1rem; font-size: 0.85rem; border-bottom: 1px solid var(--border); font-weight: 500; letter-spacing: 0.02em; }
+        nav { padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; background-color: rgba(5, 11, 20, 0.95); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+        .logo { font-size: 1.4rem; font-weight: 800; color: #ffffff; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; }
+        .logo-dot { color: var(--accent); font-size: 1.2rem; }
+        .logo-accent { color: var(--accent-purple); font-weight: 600; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-links .separator { color: var(--border); }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-        }
+        .hero { padding: 6rem 5% 4rem; max-width: 1200px; margin: 0 auto; display: flex; gap: 4rem; align-items: center; flex-wrap: wrap; }
+        .hero-content { flex: 1; min-width: 300px; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background-color: rgba(30, 41, 59, 0.5); border: 1px solid var(--border); padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem; text-decoration: none; transition: border-color 0.2s; }
+        .hero-badge:hover { border-color: var(--accent-purple); }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+        .gradient-text { background: linear-gradient(to right, #8b5cf6, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.8; }
+        .hero-quote { border-left: 2px solid var(--border); padding-left: 1.5rem; margin-top: 2rem; font-style: italic; color: #cbd5e1; font-size: 1.05rem; }
 
-        .gradient-text {
-            background: linear-gradient(to right, #8b5cf6, #6366f1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .terminal-container { flex: 1; min-width: 350px; background-color: #0b1120; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .terminal-header { background-color: #0f172a; padding: 0.8rem 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border); }
+        .terminal-dot { width: 10px; height: 10px; border-radius: 50%; background-color: #334155; }
+        .terminal-title { margin-left: auto; margin-right: auto; color: #64748b; font-size: 0.8rem; font-family: monospace; }
+        .terminal-body { padding: 1.5rem; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; line-height: 1.8; color: #94a3b8; }
+        .term-green { color: #10b981; } .term-blue { color: #6366f1; } .term-purple { color: #8b5cf6; }
+        .terminal-status-box { background-color: rgba(30, 41, 59, 0.4); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; margin-top: 1rem; margin-bottom: 1rem; }
+        .status-line { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
 
-        .hero p {
-            font-size: 1.15rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            line-height: 1.8;
-        }
+        .section-title { text-align: center; margin: 2rem 0 4rem; }
+        .section-title h2 { font-size: 2rem; color: #fff; }
 
-        .hero-quote {
-            border-left: 2px solid var(--border);
-            padding-left: 1.5rem;
-            margin-top: 2rem;
-            font-style: italic;
-            color: #cbd5e1;
-            font-size: 1.05rem;
-        }
+        .container { padding: 0 5% 6rem; max-width: 1200px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+        .card { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; display: flex; flex-direction: column; transition: transform 0.2s, border-color 0.2s; }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .card-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .card-icon { width: 64px; height: 64px; border-radius: 12px; object-fit: contain; background-color: #ffffff; border: 1px solid var(--border); padding: 8px; }
+        .card-title-group h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.2rem; color: #f8fafc; }
+        .tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-purple); font-weight: 700; background-color: rgba(139, 92, 246, 0.1); padding: 0.2rem 0.6rem; border-radius: 4px; display: inline-block; }
+        .card p { color: var(--text-muted); margin-bottom: 1.5rem; flex-grow: 1; font-size: 1rem; }
+        .card-actions { margin-top: auto; display: flex; flex-direction: column; gap: 0.8rem; }
+        .btn { display: block; text-align: center; background-color: rgba(99, 102, 241, 0.1); border: 1px solid var(--accent); color: #fff; padding: 0.8rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; transition: all 0.2s; }
+        .btn:hover { background-color: var(--accent); }
+        .btn-outline { display: block; text-align: center; background-color: transparent; color: var(--text-muted); padding: 0.8rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; transition: color 0.2s; }
+        .btn-outline:hover { color: #fff; }
 
-        /* Terminal Box */
-        .terminal-container {
-            flex: 1;
-            min-width: 350px;
-            background-color: #0b1120;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
+        .bottom-cta-section { background-color: #080f1a; padding: 6rem 5%; text-align: center; border-top: 1px solid var(--border); }
+        .bottom-cta-content { max-width: 800px; margin: 0 auto; }
+        .bottom-cta-content h2 { font-size: 2.2rem; color: #fff; margin-bottom: 1.5rem; font-weight: 800; }
+        .bottom-cta-content p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2.5rem; }
+        .btn-primary { background-color: var(--accent); color: #fff; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.05rem; transition: background-color 0.2s; display: inline-block; }
+        .btn-primary:hover { background-color: var(--accent-hover); }
 
-        .terminal-header {
-            background-color: #0f172a;
-            padding: 0.8rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .terminal-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: #334155;
-        }
-
-        .terminal-title {
-            margin-left: auto;
-            margin-right: auto;
-            color: #64748b;
-            font-size: 0.8rem;
-            font-family: monospace;
-        }
-
-        .terminal-body {
-            padding: 1.5rem;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.85rem;
-            line-height: 1.8;
-            color: #94a3b8;
-        }
-
-        .term-green { color: #10b981; }
-        .term-blue { color: #6366f1; }
-        .term-purple { color: #8b5cf6; }
-
-        .terminal-status-box {
-            background-color: rgba(30, 41, 59, 0.4);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .status-line {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Section Title */
-        .section-title {
-            text-align: center;
-            margin: 2rem 0 4rem;
-        }
-
-        .section-title h2 {
-            font-size: 2rem;
-            color: #fff;
-        }
-
-        /* Marketplace Grid */
-        .container {
-            padding: 0 5% 6rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2.5rem;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 12px;
-            object-fit: contain;
-            background-color: #ffffff;
-            border: 1px solid var(--border);
-            padding: 8px;
-        }
-
-        .card-title-group h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 0.2rem;
-            color: #f8fafc;
-        }
-
-        .tag {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--accent-purple);
-            font-weight: 700;
-            background-color: rgba(139, 92, 246, 0.1);
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
-            font-size: 1rem;
-        }
-
-        .card-actions {
-            margin-top: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .btn {
-            display: block;
-            text-align: center;
-            background-color: rgba(99, 102, 241, 0.1);
-            border: 1px solid var(--accent);
-            color: #fff;
-            padding: 0.8rem 1.5rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn:hover {
-            background-color: var(--accent);
-        }
-
-        .btn-outline {
-            display: block;
-            text-align: center;
-            background-color: transparent;
-            color: var(--text-muted);
-            padding: 0.8rem 1.5rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-
-        .btn-outline:hover {
-            color: #fff;
-        }
-
-        /* The Broad Picture & Footer */
-        .bottom-cta-section {
-            background-color: #080f1a;
-            padding: 6rem 5%;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-
-        .bottom-cta-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .bottom-cta-content h2 {
-            font-size: 2.2rem;
-            color: #fff;
-            margin-bottom: 1.5rem;
-            font-weight: 800;
-        }
-
-        .bottom-cta-content p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 2.5rem;
-        }
-
-        .btn-primary {
-            background-color: var(--accent);
-            color: #fff;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.05rem;
-            transition: background-color 0.2s;
-            display: inline-block;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .footer-strip {
-            background-color: #030712;
-            padding: 2rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            border-top: 1px solid var(--border);
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-
-        .footer-strip-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .footer-strip a {
-            color: #94a3b8;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .footer-strip a:hover {
-            color: #fff;
-        }
-
-        .footer-node {
-            font-family: monospace;
-            color: #475569;
-        }
-
+        .footer-strip { background-color: #030712; padding: 2rem 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; border-top: 1px solid var(--border); font-size: 0.85rem; color: #64748b; }
+        .footer-strip-right { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+        .footer-strip a { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
+        .footer-strip a:hover { color: #fff; }
+        .footer-node { font-family: monospace; color: #475569; }
     </style>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CW1KZ258ZV"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-CW1KZ258ZV');
-    </script>
 </head>
 <body>
 
-    <div class="top-bar">
-        🌿 Location: Embracing freedom in Saigon, Vietnam — Building tech to cherish presence.
-    </div>
+    <div class="top-bar">🌿 Location: Embracing freedom in Saigon, Vietnam — Building tech to cherish presence.</div>
 
     <nav>
-        <a href="/" class="logo">
-            <span class="logo-dot">●</span> The Weekly <span class="logo-accent">2% Edge</span>
-        </a>
+        <a href="/" class="logo"><span class="logo-dot">●</span> The Weekly <span class="logo-accent">2% Edge</span></a>
         <div class="nav-links">
             <a href="#stack">The Honest Stack</a>
-            <a href="https://theweeklyaiedge.com/?utm_source=aibuildermarketplace&utm_medium=nav_banner&utm_campaign=cross_brand#news-log" target="_blank">Mindful AI News</a>
+            <a href="https://theweeklyaiedge.com" target="_blank">Mindful AI News</a>
             <span class="separator">|</span>
             <a href="https://aibuildermarketplace.com/about/" target="_blank">About Me</a>
             <a href="https://aibuildermarketplace.com" target="_blank">Marketplace →</a>
@@ -461,50 +102,32 @@
             <h1>Building workflows to <span class="gradient-text">reclaim our time.</span></h1>
             <p>Time is the only non-renewable asset. After two decades navigating the high-pressure world of international finance, I traded the daily grind for a life defined by freedom. Now, from our home in Saigon, I build quiet, autonomous systems that handle the heavy digital lifting.</p>
             <p>By optimizing operations by just 2% every week, I create the space to step away from the screen, spend more meaningful time with my wife, and guide our son and daughter as they grow.</p>
-            
             <div class="hero-quote">
                 There is an incredible landscape of beautiful, powerful AI tools available to us today. Below is the curated infrastructure I use to automate friction and buy back my time.
             </div>
         </div>
-
         <div class="terminal-container">
             <div class="terminal-header">
-                <div class="terminal-dot"></div>
-                <div class="terminal-dot"></div>
-                <div class="terminal-dot"></div>
+                <div class="terminal-dot"></div><div class="terminal-dot"></div><div class="terminal-dot"></div>
                 <div class="terminal-title">saigon_presence_node (~/life_optimized)</div>
             </div>
             <div class="terminal-body">
                 // Activating intentional living protocols...<br>
                 <span class="term-blue">[OK]</span> Quiet automation loops running gently in background<br>
                 <span class="term-blue">[OK]</span> Digital systems stable and secure<br>
-                <span class="term-green">[INFO] Morning status: Present, Curious, Grateful</span><br>
-                <br>
+                <span class="term-green">[INFO] Morning status: Present, Curious, Grateful</span><br><br>
                 daan@saigon:~$ run_life_priorities<br>
-                
                 <div class="terminal-status-box">
-                    <div class="status-line">
-                        <span>❤️ Wife & Family:</span>
-                        <span class="term-blue">Cherishing every day</span>
-                    </div>
-                    <div class="status-line">
-                        <span>🌍 World Discovery:</span>
-                        <span class="term-green">Fully Open</span>
-                    </div>
-                    <div class="status-line">
-                        <span>🚀 Rat Race Status:</span>
-                        <span class="term-purple">Successfully Exited</span>
-                    </div>
+                    <div class="status-line"><span>❤️ Wife & Family:</span><span class="term-blue">Cherishing every day</span></div>
+                    <div class="status-line"><span>🌍 World Discovery:</span><span class="term-green">Fully Open</span></div>
+                    <div class="status-line"><span>🚀 Rat Race Status:</span><span class="term-purple">Successfully Exited</span></div>
                 </div>
-                
                 _ Systems ready. Time to close the laptop and explore.
             </div>
         </div>
     </header>
 
-    <div class="section-title" id="stack">
-        <h2>The Honest Stack</h2>
-    </div>
+    <div class="section-title" id="stack"><h2>The Honest Stack</h2></div>
 
     <main class="container">
         <div class="grid">
@@ -512,10 +135,7 @@
             <div class="card">
                 <div class="card-header">
                     <img src="https://www.google.com/s2/favicons?domain=aisq.com&sz=128" alt="AISQ Logo" class="card-icon">
-                    <div class="card-title-group">
-                        <div class="tag">Marketing Autopilot</div>
-                        <h2>AISQ</h2>
-                    </div>
+                    <div class="card-title-group"><div class="tag">Marketing Autopilot</div><h2>AISQ</h2></div>
                 </div>
                 <p><strong>Kill the duct-tape marketing.</strong> Managing 10 different subscriptions for SEO, socials, and content distribution is a full-time job. AISQ acts as an autonomous engine that executes your marketing strategy without constant human overhead.</p>
                 <div class="card-actions">
@@ -523,16 +143,49 @@
                     <a href="aisq.html" class="btn-outline">Read Full Review →</a>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <img src="https://www.google.com/s2/favicons?domain=gamma.app&sz=128" alt="Gamma Logo" class="card-icon">
+                    <div class="card-title-group"><div class="tag">Visual Output</div><h2>Gamma</h2></div>
+                </div>
+                <p><strong>Kill the design tax.</strong> Stop wasting hours formatting slides and aligning text boxes. Gamma uses AI to generate beautiful presentations, documents, and webpages in seconds, letting you focus entirely on your message.</p>
+                <div class="card-actions">
+                    <a href="https://try.gamma.app/cw0to3pyxe7t" target="_blank" class="btn">Try Gamma Now</a>
+                    <a href="gamma.html" class="btn-outline">Read Full Review →</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <img src="https://www.google.com/s2/favicons?domain=trainual.com&sz=128" alt="Trainual Logo" class="card-icon">
+                    <div class="card-title-group"><div class="tag">SOP Playbook</div><h2>Trainual</h2></div>
+                </div>
+                <p><strong>Make yourself replaceable.</strong> If everyone relies on you for answers, you don't own a business; you own a high-stress job. Trainual centralizes your SOPs and automates team onboarding, giving you your freedom back.</p>
+                <div class="card-actions">
+                    <a href="https://start.trainual.com/nn7g1qwtr0cd" target="_blank" class="btn">Build Your Playbook</a>
+                    <a href="trainual.html" class="btn-outline">Read Full Review →</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <img src="https://www.google.com/s2/favicons?domain=proton.me&sz=128" alt="Proton Logo" class="card-icon">
+                    <div class="card-title-group"><div class="tag">Secure Operations</div><h2>Proton Drive</h2></div>
+                </div>
+                <p><strong>Independent data protection.</strong> Ditch Big Tech surveillance. Proton Drive offers an end-to-end encrypted ecosystem for your documents, hosted in Switzerland, ensuring your intellectual property is never mined for AI training.</p>
+                <div class="card-actions">
+                    <a href="https://now.getproton.me/xtd5ynchlrma" target="_blank" class="btn">Secure Your Operation</a>
+                    <a href="proton.html" class="btn-outline">Read Full Review →</a>
+                </div>
+            </div>
             
             <div class="card">
                 <div class="card-header">
                     <img src="https://www.google.com/s2/favicons?domain=vistasocial.com&sz=128" alt="Vista Social Logo" class="card-icon">
-                    <div class="card-title-group">
-                        <div class="tag">Social Media Command</div>
-                        <h2>Vista Social</h2>
-                    </div>
+                    <div class="card-title-group"><div class="tag">Social Media Command</div><h2>Vista Social</h2></div>
                 </div>
-                <p><strong>Kill the social media scroll.</strong> Constant context-switching destroys focus. Vista Social acts as a central command center, unifying your inboxes, automating DM workflows, and scheduling cross-platform posts so you can publish, engage, and step away from the screen.</p>
+                <p><strong>Kill the social media scroll.</strong> Constant context-switching destroys focus. Vista Social acts as a central command center, unifying your inboxes, automating DM workflows, and scheduling cross-platform posts.</p>
                 <div class="card-actions">
                     <a href="https://join.vistasocial.com/3gvz9j8tfhuo" target="_blank" class="btn">Streamline Your Socials</a>
                     <a href="vista-social.html" class="btn-outline">Read Full Review →</a>
@@ -541,28 +194,10 @@
 
             <div class="card">
                 <div class="card-header">
-                    <img src="SaneBox_logo_2023-02.png" alt="SaneBox Logo" class="card-icon">
-                    <div class="card-title-group">
-                        <div class="tag">Email Triage</div>
-                        <h2>SaneBox</h2>
-                    </div>
-                </div>
-                <p><strong>Stop processing noise.</strong> The average professional spends over four hours a day managing email. SaneBox uses AI to analyze your email headers and silently moves the noise into a separate folder for later review. Zero context-switching. Just focus.</p>
-                <div class="card-actions">
-                    <a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank" class="btn">Start 14-Day Free Trial</a>
-                    <a href="sanebox.html" class="btn-outline">Read Full Review →</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
                     <img src="avatar-without-shadow-right.png" alt="Reclaim.ai Logo" class="card-icon">
-                    <div class="card-title-group">
-                        <div class="tag">Calendar Defense</div>
-                        <h2>Reclaim.ai</h2>
-                    </div>
+                    <div class="card-title-group"><div class="tag">Calendar Defense</div><h2>Reclaim.ai</h2></div>
                 </div>
-                <p><strong>Your calendar needs an enforcer.</strong> Reclaim makes your schedule elastic. You tell it how many hours of deep work you need per week. It automatically finds the blocks, defends them against internal booking systems, and reshuffles instantly if an urgent meeting lands on your desk.</p>
+                <p><strong>Your calendar needs an enforcer.</strong> Reclaim makes your schedule elastic. You tell it how many hours of deep work you need per week. It automatically finds the blocks and defends them against internal booking systems.</p>
                 <div class="card-actions">
                     <a href="https://go.reclaim.ai/puu4y5wv8xfj" target="_blank" class="btn">Automate Your Calendar</a>
                     <a href="reclaim.html" class="btn-outline">Read Full Review →</a>
@@ -572,12 +207,9 @@
             <div class="card">
                 <div class="card-header">
                     <img src="lindy-app-icon.png" alt="Lindy.ai Logo" class="card-icon">
-                    <div class="card-title-group">
-                        <div class="tag">Autonomous Agents</div>
-                        <h2>Lindy.ai</h2>
-                    </div>
+                    <div class="card-title-group"><div class="tag">Autonomous Agents</div><h2>Lindy.ai</h2></div>
                 </div>
-                <p><strong>Delegate the repetitive.</strong> You don't need a human assistant for routing requests, drafting standard replies, or updating CRMs. You need an autonomous agent. Build an AI employee that connects to your existing tools and executes background workflows seamlessly.</p>
+                <p><strong>Delegate the repetitive.</strong> You don't need a human assistant for routing requests, drafting standard replies, or updating CRMs. Build an AI employee that connects to your existing tools and executes background workflows seamlessly.</p>
                 <div class="card-actions">
                     <a href="https://try.lindy.ai/04841byjd5bi" target="_blank" class="btn">Hire Your AI Agent</a>
                     <a href="lindy.html" class="btn-outline">Read Full Review →</a>
@@ -586,61 +218,25 @@
 
             <div class="card">
                 <div class="card-header">
-                    <img src="https://www.google.com/s2/favicons?domain=clickup.com&sz=128" alt="ClickUp Logo" class="card-icon">
-                    <div class="card-title-group">
-                        <div class="tag">Command Center</div>
-                        <h2>ClickUp</h2>
-                    </div>
+                    <img src="https://www.google.com/s2/favicons?domain=idrive.com&sz=128" alt="IDrive Logo" class="card-icon">
+                    <div class="card-title-group"><div class="tag">Disaster Recovery</div><h2>IDrive</h2></div>
                 </div>
-                <p><strong>Kill the app fatigue.</strong> Information fragmentation destroys efficiency. ClickUp centralizes your project management, Sprints, and documentation. With internal AI Knowledge Management, you can query your entire company's database and turn chat conversations directly into trackable tasks.</p>
+                <p><strong>Automate your risk management.</strong> Stop relying on manual backups. IDrive quietly and securely backs up all your devices (PCs, Macs, servers) directly to the cloud in the background, protecting your operation against ransomware and data loss.</p>
                 <div class="card-actions">
-                    <a href="https://try.web.clickup.com/1fuixmntw4bz" target="_blank" class="btn">Centralize Your Operations</a>
-                    <a href="clickup.html" class="btn-outline">Read Full Review →</a>
+                    <a href="https://partners.idrive.com/qrvz8k6i2arr" target="_blank" class="btn">Automate Your Backups</a>
+                    <a href="idrive.html" class="btn-outline">Read Full Review →</a>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <img src="https://www.google.com/s2/favicons?domain=browse.ai&sz=128" alt="Browse AI Logo" class="card-icon">
-                    <div class="card-title-group">
-                        <div class="tag">Data Extraction</div>
-                        <h2>Browse AI</h2>
-                    </div>
+                    <img src="SaneBox_logo_2023-02.png" alt="SaneBox Logo" class="card-icon">
+                    <div class="card-title-group"><div class="tag">Email Triage</div><h2>SaneBox</h2></div>
                 </div>
-                <p><strong>Automate your intelligence gathering.</strong> Stop manual scraping. Browse AI continuously extracts structured data from competitors or lead lists without code, turning any website into a live, automated spreadsheet.</p>
+                <p><strong>Stop processing noise.</strong> The average professional spends over four hours a day managing email. SaneBox uses AI to analyze your email headers and silently moves the noise into a separate folder for later review. Zero context-switching.</p>
                 <div class="card-actions">
-                    <a href="https://partners.browse.ai/2p19q7ssljpk" target="_blank" class="btn">Try Browse AI</a>
-                    <a href="browse-ai.html" class="btn-outline">Read Full Review →</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <img src="https://www.google.com/s2/favicons?domain=beautiful.ai&sz=128" alt="Beautiful.ai Logo" class="card-icon">
-                    <div class="card-title-group">
-                        <div class="tag">Presentation Automation</div>
-                        <h2>Beautiful.ai</h2>
-                    </div>
-                </div>
-                <p><strong>Eliminate the design tax.</strong> Beautiful.ai is an AI presentation maker built for work output. The AI enforces design rules automatically, cutting the time to build a professional client deck from 3 hours to 25 minutes.</p>
-                <div class="card-actions">
-                    <a href="https://beautifulai.partnerlinks.io/7s7xjgpea39q" target="_blank" class="btn">Try Beautiful.ai</a>
-                    <a href="beautiful-ai.html" class="btn-outline">Read Full Review →</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <img src="https://www.google.com/s2/favicons?domain=quillbot.com&sz=128" alt="QuillBot Logo" class="card-icon">
-                    <div class="card-title-group">
-                        <div class="tag">Communication Velocity</div>
-                        <h2>QuillBot</h2>
-                    </div>
-                </div>
-                <p><strong>Never stare at a blank page.</strong> Formatting your thoughts for a specific audience takes time. Use QuillBot to instantly adjust the tone of blunt emails or extract the core thesis from lengthy research documents. Ensure your business communication is sharp, precise, and fast.</p>
-                <div class="card-actions">
-                    <a href="https://try.quillbot.com/1kodsf2wz3o2" target="_blank" class="btn">Accelerate Your Writing</a>
-                    <a href="quillbot.html" class="btn-outline">Read Full Review →</a>
+                    <a href="https://try.sanebox.com/7wul6weu1xvd" target="_blank" class="btn">Start 14-Day Free Trial</a>
+                    <a href="sanebox.html" class="btn-outline">Read Full Review →</a>
                 </div>
             </div>
 
@@ -650,22 +246,14 @@
     <section class="bottom-cta-section">
         <div class="bottom-cta-content">
             <h2>The Broad Picture</h2>
-            <p>While this hub lists the foundational tools that grant me personal freedom, I continuously track and evaluate hundreds of options across the digital landscape. There are so many incredible software tools available today that can genuinely assist us—we simply need to discover they exist and find out how they fit our daily lives. I built the <strong>AI Builder Marketplace</strong> to aggregate honest, objective data so you can safely choose the right tools to rebuild your own time.</p>
+            <p>While this hub lists the foundational tools that grant me personal freedom, I continuously track and evaluate hundreds of options across the digital landscape. I built the <strong>AI Builder Marketplace</strong> to aggregate honest, objective data so you can safely choose the right tools to rebuild your own time.</p>
             <a href="https://aibuildermarketplace.com" target="_blank" class="btn-primary">Explore The Full Software Directory →</a>
         </div>
     </section>
 
     <footer class="footer-strip">
-        <div class="footer-strip-left">
-            © 2026 The Weekly 2% Edge. Crafted with intention in Saigon, Vietnam.
-        </div>
-        <div class="footer-strip-right">
-            <a href="https://aibuildermarketplace.com/about/" target="_blank">About Me</a>
-            <span style="color: #334155;">|</span>
-            <a href="https://aibuildermarketplace.com" target="_blank">AI Builder Marketplace</a>
-            <span style="color: #334155;">|</span>
-            <span class="footer-node">Node Status: Active & Balanced</span>
-        </div>
+        <div class="footer-strip-left">© 2026 The Weekly 2% Edge. Crafted with intention in Saigon, Vietnam.</div>
+        <div class="footer-strip-right"><a href="https://aibuildermarketplace.com/about/" target="_blank">About Me</a><span style="color: #334155;">|</span><a href="https://aibuildermarketplace.com" target="_blank">AI Builder Marketplace</a><span style="color: #334155;">|</span><span class="footer-node">Node Status: Active & Balanced</span></div>
     </footer>
-
-</body></html>
+</body>
+</html>
