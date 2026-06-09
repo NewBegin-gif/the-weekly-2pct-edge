@@ -42,7 +42,7 @@
             letter-spacing: 0.02em;
         }
 
-        /* Navbar */
+        /* Navbar (Omni-Navigation) */
         nav {
             padding: 1.5rem 5%;
             display: flex;
@@ -53,6 +53,7 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
         }
 
         .logo {
@@ -77,8 +78,17 @@
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             align-items: center;
+        }
+
+        .nav-network-label {
+            font-size: 0.7rem;
+            color: #64748b;
+            font-family: monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-right: -0.5rem;
         }
 
         .nav-links a {
@@ -95,6 +105,7 @@
 
         .nav-links .separator {
             color: var(--border);
+            margin: 0 0.5rem;
         }
 
         /* Hero Section */
@@ -346,49 +357,86 @@
             color: #fff;
         }
 
-        /* The Broad Picture & Footer */
-        .bottom-cta-section {
+        /* Ecosystem Hub Section */
+        .ecosystem-section {
             background-color: #080f1a;
             padding: 6rem 5%;
-            text-align: center;
             border-top: 1px solid var(--border);
         }
 
-        .bottom-cta-content {
-            max-width: 800px;
-            margin: 0 auto;
+        .ecosystem-header {
+            text-align: center;
+            margin-bottom: 4rem;
         }
 
-        .bottom-cta-content h2 {
+        .ecosystem-header h2 {
             font-size: 2.2rem;
             color: #fff;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             font-weight: 800;
         }
 
-        .bottom-cta-content p {
+        .ecosystem-header p {
             color: var(--text-muted);
             font-size: 1.1rem;
             line-height: 1.8;
-            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
-        .btn-primary {
-            background-color: var(--accent);
-            color: #fff;
-            padding: 1rem 2rem;
-            border-radius: 8px;
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .eco-card {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 1.05rem;
-            transition: background-color 0.2s;
-            display: inline-block;
+            transition: all 0.3s ease;
+            display: block;
         }
 
-        .btn-primary:hover {
-            background-color: var(--accent-hover);
+        .eco-card:hover {
+            border-color: var(--accent);
+            background-color: rgba(15, 23, 42, 0.9);
+            transform: translateY(-3px);
         }
 
+        .eco-tag {
+            font-size: 0.65rem;
+            font-family: monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .eco-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .eco-card:hover .eco-title {
+            color: var(--accent);
+        }
+
+        .eco-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Footer */
         .footer-strip {
             background-color: #030712;
             padding: 2rem 5%;
@@ -424,13 +472,17 @@
             color: #475569;
         }
 
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* Keep it simple on mobile */
+            }
+        }
     </style>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CW1KZ258ZV"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-CW1KZ258ZV');
     </script>
 </head>
@@ -445,11 +497,12 @@
             <span class="logo-dot">●</span> The Weekly <span class="logo-accent">2% Edge</span>
         </a>
         <div class="nav-links">
-            <a href="#stack">The Honest Stack</a>
-            <a href="https://theweeklyaiedge.com/?utm_source=aibuildermarketplace&utm_medium=nav_banner&utm_campaign=cross_brand#news-log" target="_blank">Mindful AI News</a>
+            <span class="nav-network-label">The Network</span>
             <span class="separator">|</span>
-            <a href="https://aibuildermarketplace.com/about/" target="_blank">About Me</a>
-            <a href="https://aibuildermarketplace.com" target="_blank">Marketplace →</a>
+            <a href="https://theweeklyaiedge.com/?utm_source=theweekly2pctedge&utm_medium=ecosystem&utm_campaign=cross_brand" target="_blank">AI Edge</a>
+            <a href="https://zerotouchsupport.com/?utm_source=theweekly2pctedge&utm_medium=ecosystem&utm_campaign=cross_brand" target="_blank">ZeroTouch Support</a>
+            <a href="https://aibuildermarketplace.com/?utm_source=theweekly2pctedge&utm_medium=ecosystem&utm_campaign=cross_brand" target="_blank">AI Builders</a>
+            <a href="https://officesoftwaremarketplace.com/?utm_source=theweekly2pctedge&utm_medium=ecosystem&utm_campaign=cross_brand" target="_blank">Office Software</a>
         </div>
     </nav>
 
@@ -707,11 +760,35 @@
         </div>
     </main>
 
-    <section class="bottom-cta-section">
-        <div class="bottom-cta-content">
-            <h2>The Broad Picture</h2>
-            <p>While this hub lists the foundational tools that grant me personal freedom, I continuously track and evaluate hundreds of options across the digital landscape. There are so many incredible software tools available today that can genuinely assist us—we simply need to discover they exist and find out how they fit our daily lives. I built the <strong>AI Builder Marketplace</strong> to aggregate honest, objective data so you can safely choose the right tools to rebuild your own time.</p>
-            <a href="https://aibuildermarketplace.com" target="_blank" class="btn-primary">Explore The Full Software Directory →</a>
+    <section id="ecosystem" class="ecosystem-section">
+        <div class="ecosystem-header">
+            <h2>Explore Our Broader Network</h2>
+            <p>This platform is one node in our unified ecosystem. Depending on your current operational focus, traverse our specialized network lanes to reclaim your time.</p>
+        </div>
+        <div class="ecosystem-grid">
+            <a href="https://theweeklyaiedge.com/?utm_source=theweekly2pctedge&utm_medium=ecosystem&utm_campaign=cross_brand" target="_blank" class="eco-card">
+                <span class="eco-tag">01 / Trends & Mindset</span>
+                <h3 class="eco-title">The Weekly AI Edge &rarr;</h3>
+                <p class="eco-desc">Mindful analysis tracking major software shifts, cutting straight through market noise.</p>
+            </a>
+
+            <a href="https://zerotouchsupport.com/?utm_source=theweekly2pctedge&utm_medium=ecosystem&utm_campaign=cross_brand" target="_blank" class="eco-card">
+                <span class="eco-tag">03 / Communication</span>
+                <h3 class="eco-title">ZeroTouchSupport &rarr;</h3>
+                <p class="eco-desc">Deep specialization covering autonomous support infrastructure and voice operations.</p>
+            </a>
+
+            <a href="https://aibuildermarketplace.com/?utm_source=theweekly2pctedge&utm_medium=ecosystem&utm_campaign=cross_brand" target="_blank" class="eco-card">
+                <span class="eco-tag">04 / The Tech Registry</span>
+                <h3 class="eco-title">AI Builder Marketplace &rarr;</h3>
+                <p class="eco-desc">Curated platform tailored for AI developers, system architects, and tech pipelines.</p>
+            </a>
+
+            <a href="https://officesoftwaremarketplace.com/?utm_source=theweekly2pctedge&utm_medium=ecosystem&utm_campaign=cross_brand" target="_blank" class="eco-card">
+                <span class="eco-tag">05 / The Commodity Directory</span>
+                <h3 class="eco-title">Office Software &rarr;</h3>
+                <p class="eco-desc">Comprehensive database for day-to-day business utilities across all operational lanes.</p>
+            </a>
         </div>
     </section>
 
