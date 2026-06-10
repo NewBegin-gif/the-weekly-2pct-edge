@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://theweekly2pctedge.com/sitemap.xml
