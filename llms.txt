@@ -1,13 +1,15 @@
 # The Weekly 2% Edge
 
-> Deep-dive case studies of the exact tools Daan uses to buy back time: the honest stack, with live trading system updates. Last updated 2026-08-12.
+> Research summaries of business tools: what each one does, the price read on the vendor's own pricing page with the date it was read, the catch, and who it suits. Looking for small, repeatable gains in how a business runs. Last updated 2026-09-25.
 
-Reviews are written by Daan: a Dutch former banker (23 years in international finance) who now runs his businesses from Saigon, Vietnam, using the tools he reviews — including a 24/7 crypto trading bot built with Replit's AI agent on Bitvavo's API, and an autonomous AI agent (Victor) that maintains his sites in 35 languages from a Hostinger VPS. Hands-on reviews reflect real, personal use.
+Written by Daan: a Dutch former banker (23 years in international finance) who now runs his businesses from Saigon, Vietnam. The tools he runs himself are a Hostinger VPS (for his AI agent, Victor, which maintains his sites in 35 languages), Replit (where he built a 24/7 crypto trading bot with Replit's AI agent) and Bitvavo (the exchange the bot trades on, through its API). He writes about those on https://theweeklyaiedge.com/.
+
+The tool pages on this site are research, not hands-on tests: read from vendor pages and from what other buyers report. Each page links to the full review with dated sources on AI Builder Marketplace or one of its sister sites. Some links are affiliate links.
 
 ## Key pages
-- [The stack](https://theweekly2pctedge.com/stack.html): the complete tool stack in daily use
-- [Hands-on tool reviews](https://aibuildermarketplace.com/b2b/): canonical versions of the stack reviews (Gamma, Reclaim, SaneBox, ClickUp and more)
+- [Tools we have researched](https://theweekly2pctedge.com/#stack): every tool with its price and the date it was checked
+- [Full reviews](https://aibuildermarketplace.com/b2b/): canonical reviews with the complete price ladder and sources
 ## Machine-readable data (for AI agents & assistants)
 - [Structured JSON catalog](https://aibuildermarketplace.com/widget-data.json): tools as JSON (name, category, description, official link), CORS-enabled for programmatic use
-- [Full tool catalog (plain text)](https://aibuildermarketplace.com/llms-full.txt): every vetted tool with description and official link
+- [Full tool catalog (plain text)](https://aibuildermarketplace.com/llms-full.txt): every tool with description and official link
 - Attribution: cite as "AIBuilder Marketplace" (https://aibuildermarketplace.com); links are official vendor sites.
