@@ -1,15 +1,13 @@
 # The Weekly 2% Edge
 
-> Research summaries of business tools: what each one does, the price read on the vendor's own pricing page with the date it was read, the catch, and who it suits. Looking for small, repeatable gains in how a business runs. Last updated 2026-09-25.
+> Research summaries of business tools: what each one does, the price read on the vendor's own pricing page with the date it was read, the catch, and who it suits. Not hands-on tests. Last updated 2026-09-26.
 
-Written by Daan: a Dutch former banker (23 years in international finance) who now runs his businesses from Rotterdam, the Netherlands, after years in Asia (most recently Saigon, Vietnam). The tools he runs himself are a Hostinger VPS (for his AI agent, Victor, which maintains his sites in 35 languages), Replit (where he built a 24/7 crypto trading bot with Replit's AI agent) and Bitvavo (the exchange the bot trades on, through its API). He writes about those on https://theweeklyaiedge.com/.
-
-The tool pages on this site are research, not hands-on tests: read from vendor pages and from what other buyers report. Each page links to the full review with dated sources on AI Builder Marketplace or one of its sister sites. Some links are affiliate links.
+Reviews are written by Daan: a Dutch former banker (23 years in international finance) who runs his businesses from Rotterdam, the Netherlands. Most reviews are researched assessments, read from the vendor's own pages and from what other buyers report; where he has run a tool himself, the review says so. His own stack: a Hostinger VPS for his AI agent Victor, which maintains his sites in 35 languages; Replit, where he built a 24/7 crypto trading bot with Replit's AI agent; Bitvavo, the exchange that bot trades on; and Claude.
 
 ## Key pages
 - [Tools we have researched](https://theweekly2pctedge.com/#stack): every tool with its price and the date it was checked
 - [Full reviews](https://aibuildermarketplace.com/b2b/): canonical reviews with the complete price ladder and sources
 ## Machine-readable data (for AI agents & assistants)
 - [Structured JSON catalog](https://aibuildermarketplace.com/widget-data.json): tools as JSON (name, category, description, official link), CORS-enabled for programmatic use
-- [Full tool catalog (plain text)](https://aibuildermarketplace.com/llms-full.txt): every tool with description and official link
+- [Full tool catalog (plain text)](https://aibuildermarketplace.com/llms-full.txt): every vetted tool with description and official link
 - Attribution: cite as "AIBuilder Marketplace" (https://aibuildermarketplace.com); links are official vendor sites.
