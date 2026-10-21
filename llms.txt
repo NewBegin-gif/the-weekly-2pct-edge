@@ -1,13 +1,8 @@
 # The Weekly 2% Edge
 
-> Research summaries of business tools: what each one does, the price read on the vendor's own pricing page with the date it was read, the catch, and who it suits. Not hands-on tests. Last updated 2026-10-21.
+> The public logbook of a live BTC-EUR trading bot: realized profit per week as a percentage of the capital in play (after fees, one week delayed), the open positions next to it, and the measured places where profit leaked away. Percentages only; no signals, no advice. Last updated 2026-10-21.
 
-Reviews are written by Daan: a Dutch former banker (23 years in international finance) who runs his businesses from Rotterdam, the Netherlands. Most reviews are researched assessments, read from the vendor's own pages and from what other buyers report; where he has run a tool himself, the review says so. His own stack: a Hostinger VPS for his AI agent Victor, which maintains his sites in 35 languages; Replit, where he built a 24/7 crypto trading bot with Replit's AI agent; Bitvavo, the exchange that bot trades on; and Claude.
+Reviews are written by Daan: a Dutch former banker (23 years in international finance) who runs his businesses from Rotterdam, the Netherlands. Most reviews are researched assessments, read from the vendor's own pages and from what other buyers report; where he has run a tool himself, the review says so. His own stack: a Hostinger VPS for his AI agent Victor, which maintains his sites; Replit, where he built a 24/7 crypto trading bot with Replit's AI agent; Bitvavo, the exchange that bot trades on; and Claude.
 
 ## Key pages
-- [Tools we have researched](https://theweekly2pctedge.com/#stack): every tool with its price and the date it was checked
-- [Full reviews](https://aibuildermarketplace.com/b2b/): canonical reviews with the complete price ladder and sources
-## Machine-readable data (for AI agents & assistants)
-- [Structured JSON catalog](https://aibuildermarketplace.com/widget-data.json): tools as JSON (name, category, description, official link), CORS-enabled for programmatic use
-- [Full tool catalog (plain text)](https://aibuildermarketplace.com/llms-full.txt): every vetted tool with description and official link
-- Attribution: cite as "AIBuilder Marketplace" (https://aibuildermarketplace.com); links are official vendor sites.
+- [The logbook](https://theweekly2pctedge.com/): every week since W17 2026, the leaks, and returns per strategy
