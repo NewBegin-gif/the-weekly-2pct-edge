@@ -97,7 +97,13 @@ button { padding:.7rem 1.2rem; border-radius:8px; border:0; background:var(--acc
 <div class="box">
 <h3>One honest email a week</h3>
 <p>What changed on the bot, what broke, and what I measured. No tips.</p>
-<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank"><input type="email" name="email" placeholder="you@example.com" required><button type="submit">Subscribe</button></form>
+<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="weekmail"><input type="email" name="email" placeholder="you@example.com" required><button type="submit">Subscribe</button></form>
+</div>
+
+<div class="box" id="build-notes">
+<h3>The build notes of this bot</h3>
+<p>How it is built and guarded: the ladder, the safety checks, the monitoring, and the mistakes above in full detail. It's an engineering document, not a strategy that promises returns. It doesn't exist as a product yet. Leave your email if you'd want it, and I'll only write it if enough people do.</p>
+<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="bouwnotities"><input type="email" name="email" placeholder="you@example.com" required><button type="submit">I'd want the build notes</button></form>
 </div>
 
 <p class="disclaimer">This is a personal logbook, not financial advice and not an offer of any service. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
