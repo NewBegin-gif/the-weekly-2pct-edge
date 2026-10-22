@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Method: how every number is computed | The Weekly 2% Edge</title>
-<meta name="description" content="How the logbook of a live BTC-EUR bot computes its weekly figure: realized profit after fees on both sides, loss sales included, as a percentage of the capital in play, published one week late.">
+<meta name="description" content="How this bitcoin bot logbook measures weekly profit, fees, open positions and loss sales, with a seven-day delay for weekly results.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="author" content="Daniel Haket">
 <meta name="theme-color" content="#f6f3ec" media="(prefers-color-scheme: light)">
@@ -17,7 +17,7 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Weekly 2% Edge">
 <meta property="og:title" content="Method: how every number is computed | The Weekly 2% Edge">
-<meta property="og:description" content="How the logbook of a live BTC-EUR bot computes its weekly figure: realized profit after fees on both sides, loss sales included, as a percentage of the capital in play, published one week late.">
+<meta property="og:description" content="How this bitcoin bot logbook measures weekly profit, fees, open positions and loss sales, with a seven-day delay for weekly results.">
 <meta property="og:url" content="https://theweekly2pctedge.com/method/">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://theweekly2pctedge.com/og-image.png">
@@ -27,7 +27,7 @@
 <meta property="og:image:alt" content="The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, drawn against the 0.5% goal and the 2% in the name.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Method: how every number is computed | The Weekly 2% Edge">
-<meta name="twitter:description" content="How the logbook of a live BTC-EUR bot computes its weekly figure: realized profit after fees on both sides, loss sales included, as a percentage of the capital in play, published one week late.">
+<meta name="twitter:description" content="How this bitcoin bot logbook measures weekly profit, fees, open positions and loss sales, with a seven-day delay for weekly results.">
 <meta name="twitter:image" content="https://theweekly2pctedge.com/og-image.png">
 <meta name="twitter:image:alt" content="The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, drawn against the 0.5% goal and the 2% in the name.">
 <script type="application/ld+json">
@@ -38,7 +38,7 @@
    "@type": "TechArticle",
    "@id": "https://theweekly2pctedge.com/method/#article",
    "headline": "How every number in the logbook is computed",
-   "description": "How the logbook of a live BTC-EUR bot computes its weekly figure: realized profit after fees on both sides, loss sales included, as a percentage of the capital in play, published one week late.",
+   "description": "How this bitcoin bot logbook measures weekly profit, fees, open positions and loss sales, with a seven-day delay for weekly results.",
    "url": "https://theweekly2pctedge.com/method/",
    "mainEntityOfPage": "https://theweekly2pctedge.com/method/",
    "inLanguage": "en",
@@ -282,6 +282,33 @@ button:hover{opacity:.9}
 .formula{font-family:var(--mono);font-size:.92rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--brass);border-radius:3px;padding:.9rem 1rem;color:var(--ink);overflow-x:auto}
 .crumbs{font-size:.85rem;color:var(--muted);margin-bottom:1.2rem}
 
+/* grootboek: folio per sectie, editiestrook */
+.folio{font:600 .72rem/1.4 var(--mono);letter-spacing:.12em;color:var(--brass);text-transform:uppercase;display:flex;align-items:center;gap:.7rem;margin:0 0 .9rem}
+.folio::after{content:"";flex:1;border-top:1px solid var(--rule-2);max-width:9rem}
+.folio b{font-weight:700;color:var(--ink)}
+.edition-bar{border-bottom:1px solid var(--rule);background:var(--sunk)}
+.edition{display:flex;flex-wrap:wrap;gap:.35rem 1.6rem;padding-top:.8rem;padding-bottom:.8rem;font:.75rem/1.5 var(--mono);color:var(--muted);letter-spacing:.02em}
+.edition strong{color:var(--ink);font-weight:600}
+.edition a{color:var(--ink-2)}
+.hero-num{font-variant-numeric:tabular-nums}
+.answer::before{border-left-color:var(--brass)}
+.leak-top a{text-decoration:none;color:inherit}
+.leak-top a:hover{color:var(--ink)}
+.leak .now{border-top-style:dashed;color:var(--ink)}
+.leak-fig{font-family:var(--mono);letter-spacing:-.06em}
+.chart .narrow .ax,.chart .narrow .ref-lbl{font-size:13px}
+.chart .narrow .val{font-size:12px}
+@media (max-width:520px){
+  .hero{padding:1.6rem 0 2rem}.hero-grid{gap:1.2rem}
+  .hero h1{font-size:clamp(1.85rem,8vw,2.15rem)}
+  .answer{padding:1.15rem 1rem 1rem 1.6rem}.answer::before{left:.7rem}
+  .hero-num{font-size:3.8rem}.answer-sub{margin-bottom:.75rem}
+  #strategies table{table-layout:fixed;font-size:.78rem}
+  #strategies th,#strategies td{padding:.6rem .35rem;white-space:normal;overflow-wrap:anywhere}
+  #strategies th:first-child{width:28%}
+  #strategies .code{font-size:1em}
+}
+
 @media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
 </style>
 </head>
@@ -317,7 +344,7 @@ button:hover{opacity:.9}
 <p>Unlike the weekly figures, this range is not a week old: it covers the seven days up to the build, so a drop in open positions is visible before it can reach any weekly figure. The same goes for the strategy table below, which covers the 90 days up to the build.</p>
 
 <h2>The one-week delay</h2>
-<p>A week appears on the logbook 7 days after it ends. The page is checked daily, but it is only rebuilt when a new week becomes eligible, so the date on it changes only when there is something new. The weekly figures are a record of finished weeks, not a live feed.</p>
+<p>A week's result appears on the logbook 7 days after it ends. The delay applies to the weekly results; the open-position range and the strategy table are read on the build date, which the page states. The page is checked daily, but it is only rebuilt when a new week becomes eligible, so the date on it changes only when there is something new. The weekly figures are a record of finished weeks, not a live feed.</p>
 
 <h2>The goal line and the name</h2>
 <p>The name promised 2% a week. Measured honestly, the realistic goal turned out to be 0.5% a week. The chart draws both lines, so every week can be read against the goal and against the name.</p>
@@ -336,7 +363,7 @@ button:hover{opacity:.9}
 </ul>
 
 <h2>Where the data comes from</h2>
-<p>All figures come from the bot's own records through its read-only dashboard, the same numbers I look at. The bot runs on Replit and trades on Bitvavo. A script reads the dashboard and builds the page; no number on it is typed in by hand. The weekly series is also available as a file: <a href="/weekly-series.csv">weekly-series.csv</a>.</p>
+<p>All figures come from the bot's own records through its read-only dashboard, the same numbers I look at. The bot runs on Replit and trades on Bitvavo. A script builds the weekly series and summaries from the dashboard; the dated leak measurements and reference goals are maintained separately. The weekly series is also available as a file: <a href="/weekly-series.csv">weekly-series.csv</a>.</p>
 <p><a href="/">&larr; Back to the logbook</a></p>
 </div></div></main>
 <footer class="foot"><div class="wrap">

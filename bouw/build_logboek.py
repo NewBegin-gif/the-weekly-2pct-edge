@@ -18,7 +18,10 @@ elke dag van datum wisselen zonder nieuwe inhoud. Bij elke herschrijving komen m
   llms.txt              samenvatting voor taalmodellen, met de actuele cijfers en de datum
   weekly-series.csv     de weekreeks (week, maandag, % gerealiseerd), de Dataset-download
   sitemap.xml           / en /method/ met lastmod
-robots.txt, og-image.png en de favicons zijn statisch. Alleen stdlib.
+  og-image.png          bouw/og-basis.png met de staven van alle weken erop getekend (stdlib-PNG)
+robots.txt en de favicons zijn statisch. Alleen stdlib.
+Vertraging (22 okt 2026, besluit na Codex-review): de weekresultaten zijn zeven dagen vertraagd; de open-bandbreedte
+en de strategietabel zijn gelezen op de bouwdatum, en dat staat er overal bij.
 
     python3 bouw/build_logboek.py                    # homepage + bijbehorende bestanden, alleen bij een nieuwe week
     python3 bouw/build_logboek.py --forceer          # altijd herschrijven
@@ -67,16 +70,18 @@ LEKKEN = [
                 "block only above 80.",
          datum="changed 9 Aug 2026", iso="2026-08-09",
          cijfer="RSI 70", cijfer_uitleg="hard block that froze the ladder", nu="Now a taper; hard block only above 80"),
-    dict(kop="The weekly report undercounted by about half",
-         uitleg="The report filtered on when a position started instead of when it was sold, so positions spanning "
-                "two weeks disappeared. Fixed, and checked against the trade records.",
+    dict(kop="One weekly report missed about half of that week's profit",
+         uitleg="In one week of the bot's Telegram weekly report, about half of the realized profit was missing. The "
+                "report filtered on when a position started instead of when it was sold, so positions spanning two "
+                "weeks disappeared. Fixed, and checked against the trade records.",
          datum="fixed 9 Aug 2026", iso="2026-08-09",
-         cijfer="~½", cijfer_uitleg="of realized profit went uncounted", nu="Fixed and checked against trade records"),
+         cijfer="~½", cijfer_uitleg="of one week's realized profit missing from the report",
+         nu="Fixed and checked against trade records"),
 ]
 
 TITEL = "The Weekly 2% Edge | A live bitcoin bot's honest logbook"
-OMSCHRIJVING = ("What a live BTC-EUR trading bot actually made each week since April 2026, in percentages after fees, "
-                "and where the edge leaks: fees, rules that backfired, reporting bugs. No signals, no advice.")
+OMSCHRIJVING = ("A live bitcoin bot's weekly results after fees, in percentages. Realized profit, open positions and "
+                "dated mistakes. No signals or advice.")
 OG_BEELD = f"{SITE}/og-image.png"
 OG_ALT = ("The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, "
           "drawn against the 0.5% goal and the 2% in the name.")
@@ -308,6 +313,33 @@ button:hover{opacity:.9}
 .formula{font-family:var(--mono);font-size:.92rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--brass);border-radius:3px;padding:.9rem 1rem;color:var(--ink);overflow-x:auto}
 .crumbs{font-size:.85rem;color:var(--muted);margin-bottom:1.2rem}
 
+/* grootboek: folio per sectie, editiestrook */
+.folio{font:600 .72rem/1.4 var(--mono);letter-spacing:.12em;color:var(--brass);text-transform:uppercase;display:flex;align-items:center;gap:.7rem;margin:0 0 .9rem}
+.folio::after{content:"";flex:1;border-top:1px solid var(--rule-2);max-width:9rem}
+.folio b{font-weight:700;color:var(--ink)}
+.edition-bar{border-bottom:1px solid var(--rule);background:var(--sunk)}
+.edition{display:flex;flex-wrap:wrap;gap:.35rem 1.6rem;padding-top:.8rem;padding-bottom:.8rem;font:.75rem/1.5 var(--mono);color:var(--muted);letter-spacing:.02em}
+.edition strong{color:var(--ink);font-weight:600}
+.edition a{color:var(--ink-2)}
+.hero-num{font-variant-numeric:tabular-nums}
+.answer::before{border-left-color:var(--brass)}
+.leak-top a{text-decoration:none;color:inherit}
+.leak-top a:hover{color:var(--ink)}
+.leak .now{border-top-style:dashed;color:var(--ink)}
+.leak-fig{font-family:var(--mono);letter-spacing:-.06em}
+.chart .narrow .ax,.chart .narrow .ref-lbl{font-size:13px}
+.chart .narrow .val{font-size:12px}
+@media (max-width:520px){
+  .hero{padding:1.6rem 0 2rem}.hero-grid{gap:1.2rem}
+  .hero h1{font-size:clamp(1.85rem,8vw,2.15rem)}
+  .answer{padding:1.15rem 1rem 1rem 1.6rem}.answer::before{left:.7rem}
+  .hero-num{font-size:3.8rem}.answer-sub{margin-bottom:.75rem}
+  #strategies table{table-layout:fixed;font-size:.78rem}
+  #strategies th,#strategies td{padding:.6rem .35rem;white-space:normal;overflow-wrap:anywhere}
+  #strategies th:first-child{width:28%}
+  #strategies .code{font-size:1em}
+}
+
 @media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
 """
 
@@ -447,8 +479,11 @@ def grafiek(weken, breedte, hoogte, links, rechts, boven, onder, max_labels, soo
                      f'{" · goal met" if p >= DOEL else ""}</title>'
                      f'<rect class="hit-area" x="{links + i * band:.1f}" y="{boven}" width="{band:.1f}" height="{ph}"/>'
                      f'<path class="{klasse(p)}" d="{balk_pad(x, y0, y1, bw)}"/></g>')
-        if i in label_bij:
-            ty = y1 - 6 if p >= 0 else y1 + 14
+        ty = y1 - 6 if p >= 0 else y1 + 14
+        # geen waardelabel dat aan de rechterkant over het label van een referentielijn valt
+        botst = (x + bw / 2 + 24 > breedte - rechts
+                 and any(abs(ty - 4 - y(v)) < 13 for v in (DOEL, NAAM_BELOFTE)))
+        if i in label_bij and not botst:
             delen.append(f'<text class="val" x="{x + bw / 2:.1f}" y="{ty:.1f}" text-anchor="middle">{pct(p)}</text>')
         if (n - 1 - i) % stride == 0 and not (i in label_bij and p < 0):
             delen.append(f'<text class="ax" x="{x + bw / 2:.1f}" y="{hoogte - onder + 18}" text-anchor="middle">{label}</text>')
@@ -484,6 +519,92 @@ def bereik_html(lo, hi):
 <dl class="range-vals"><div><dt>Lowest reading</dt><dd>{pct(lo)}</dd></div><div><dt>Highest reading</dt><dd>{pct(hi)}</dd></div></dl>"""
 
 
+# ---------------------------------------------------------------- OG-beeld (stdlib: PNG lezen, staven tekenen, schrijven)
+# bouw/og-basis.png is het vaste deel (kop, merk, labels 'the name: 2%' / 'goal 0.5%', tijdloze onderregel). De
+# staven, stippellijnen en nullijn tekent dit script bij elke herschrijving, zodat het beeld niet veroudert.
+OG_BASIS = W2E / "bouw" / "og-basis.png"
+OG_X0, OG_X1, OG_NUL, OG_PX = 120, 1030, 521, 98.0  # grafiekvlak; px per procentpunt (0,5% -> y 472, 2% -> y 325)
+OG_KLEUR = dict(hit=(31, 122, 82), below=(63, 115, 184), neg=(194, 65, 45), naam=(125, 94, 34), doel=(67, 74, 84),
+                nul=(27, 31, 36))
+
+
+def png_lees(pad):
+    import struct
+    import zlib
+    data = pad.read_bytes()
+    pos, w, h, kleur, idat = 8, 0, 0, 0, b""
+    while pos < len(data):
+        lengte, soort = struct.unpack(">I4s", data[pos:pos + 8])
+        stuk = data[pos + 8:pos + 8 + lengte]
+        if soort == b"IHDR":
+            w, h, diepte, kleur, _, _, interlace = struct.unpack(">IIBBBBB", stuk)
+            if diepte != 8 or kleur not in (2, 6) or interlace:
+                raise ValueError("og-basis.png moet 8-bit RGB(A) zonder interlace zijn")
+        elif soort == b"IDAT":
+            idat += stuk
+        pos += 12 + lengte
+    bpp = 3 if kleur == 2 else 4
+    ruw, rij_len = zlib.decompress(idat), w * bpp
+    rijen, vorige = [], bytearray(rij_len)
+    for r in range(h):
+        f, rij = ruw[r * (rij_len + 1)], bytearray(ruw[r * (rij_len + 1) + 1:(r + 1) * (rij_len + 1)])
+        for i in range(rij_len):
+            a = rij[i - bpp] if i >= bpp else 0
+            b, c = vorige[i], (vorige[i - bpp] if i >= bpp else 0)
+            if f == 1:
+                rij[i] = (rij[i] + a) & 255
+            elif f == 2:
+                rij[i] = (rij[i] + b) & 255
+            elif f == 3:
+                rij[i] = (rij[i] + (a + b) // 2) & 255
+            elif f == 4:
+                p = a + b - c
+                pa, pb, pc = abs(p - a), abs(p - b), abs(p - c)
+                rij[i] = (rij[i] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
+        vorige = rij  # de ontfilterde rij, nog met alfa
+        rijen.append(rij if bpp == 3 else bytearray(v for k, v in enumerate(rij) if k % 4 != 3))  # alfa weg
+    return w, h, rijen
+
+
+def og_beeld(weken):
+    """Teken de staven op de basis en geef de PNG-bytes terug (of None als de basis ontbreekt)."""
+    import struct
+    import zlib
+    if not OG_BASIS.exists():
+        return None
+    w, h, px = png_lees(OG_BASIS)
+
+    def zet(x0, y0, x1, y1, kleur):
+        x0, x1 = max(0, int(round(x0))), min(w, int(round(x1)))
+        for y in range(max(0, int(round(y0))), min(h, int(round(y1)))):
+            px[y][x0 * 3:x1 * 3] = bytes(kleur) * (x1 - x0)
+
+    def y(v):
+        return OG_NUL - max(-0.4, min(2.6, v)) * OG_PX
+
+    for waarde, kleur, streep in ((NAAM_BELOFTE, OG_KLEUR["naam"], 8), (DOEL, OG_KLEUR["doel"], 8)):
+        x = OG_X0
+        while x < OG_X1:
+            zet(x, y(waarde) - 1, min(x + streep, OG_X1), y(waarde) + 1, kleur)
+            x += streep + 6
+    band = (OG_X1 - OG_X0) / len(weken)
+    bw = min(24.0, band * 0.62)
+    for i, (_, _, p) in enumerate(weken):
+        x = OG_X0 + i * band + (band - bw) / 2
+        kleur = OG_KLEUR["hit" if p >= DOEL else ("neg" if p < 0 else "below")]
+        boven, onder = (y(p), OG_NUL) if p >= 0 else (OG_NUL, y(p))
+        if onder - boven < 2:
+            boven, onder = (OG_NUL - 2, OG_NUL) if p >= 0 else (OG_NUL, OG_NUL + 2)
+        zet(x, boven, x + bw, onder, kleur)
+    zet(OG_X0, OG_NUL - 1, OG_X1, OG_NUL + 1, OG_KLEUR["nul"])
+    ruw = b"".join(b"\x00" + bytes(r) for r in px)
+
+    def stuk(soort, inhoud):
+        return struct.pack(">I", len(inhoud)) + soort + inhoud + struct.pack(">I", zlib.crc32(soort + inhoud))
+    return (b"\x89PNG\r\n\x1a\n" + stuk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0))
+            + stuk(b"IDAT", zlib.compress(ruw, 9)) + stuk(b"IEND", b""))
+
+
 # ---------------------------------------------------------------- pagina's
 
 def csv_tekst(weken):
@@ -510,7 +631,7 @@ def homepage(c):
     verlies = [p for p in reeks if p < 0]
     verlies_tekst = ("none" if not verlies else f"{len(verlies)}")
     wide = grafiek(weken, 960, 340, 46, 70, 22, 34, 13, "wide", "cw")
-    narrow = grafiek(weken, 360, 250, 34, 40, 22, 30, 6, "narrow", "cn")
+    narrow = grafiek(weken, 360, 260, 42, 42, 22, 32, 6, "narrow", "cn")
 
     tabel = "".join(
         f'<tr><td class="lbl">{label} {start.isocalendar()[0]}</td><td><time datetime="{start}">{kort(start)}</time></td>'
@@ -521,7 +642,7 @@ def homepage(c):
         f'<td class="r">{pct(float(s["roi_pct"]))}</td><td class="r">{float(s["median_hold_hours"]):.0f} h</td></tr>'
         for s in sorted(c["strat"], key=lambda s: -s["total_trades"]))
     lekken = "".join(
-        f'<article class="leak"><div class="leak-top"><span>Leak {i}</span><time datetime="{l["iso"]}">{e(l["datum"])}</time></div>'
+        f'<article class="leak" id="leak-{i}"><div class="leak-top"><a href="#leak-{i}" aria-label="Link to leak {i}">Leak {i}</a><time datetime="{l["iso"]}">{e(l["datum"])}</time></div>'
         f'<p class="leak-fig">{e(l["cijfer"])}</p><p class="leak-fig-sub">{e(l["cijfer_uitleg"])}</p>'
         f'<h3>{e(l["kop"])}</h3><p class="txt">{e(l["uitleg"])}</p><p class="now">{e(l["nu"])}</p></article>'
         for i, l in enumerate(LEKKEN, 1))
@@ -560,7 +681,7 @@ def homepage(c):
 
 <div class="hero"><div class="wrap hero-grid">
 <div class="hero-head">
-<p class="kicker">Live bot logbook &middot; {e(periode)} &middot; one week delayed</p>
+<p class="kicker">Live bot logbook &middot; {e(periode)} &middot; weeks published 7 days late</p>
 <h1>The name promised 2% a week. Here is what the bot actually made.</h1>
 </div>
 <aside class="answer" aria-label="The short answer">
@@ -580,9 +701,15 @@ def homepage(c):
 <p>I don't sell signals, copy-trading or advice. I publish the measuring tape, not a return promise.</p>
 </div>
 </div></div>
+<div class="edition-bar"><div class="wrap edition">
+<span>Ledger through <strong>{e(laatste[1])} {laatste[0].isocalendar()[0]}</strong> (week of {lang(laatste[0])})</span>
+<span>Data read <time datetime="{c["gelezen"].isoformat()}">{lang(c["gelezen"])}</time></span>
+<a href="/method/">Read the method</a>
+</div></div>
 
 <section id="weeks"><div class="wrap">
 <div class="sec-head">
+<p class="folio"><b>01</b> Weekly ledger</p>
 <h2>Every week, realized profit as % of the capital in play</h2>
 <p>After exchange fees on both the buy and the sell, rare forced loss sales included. Each week is measured against the capital the bot had in play that week, so deposits don't inflate the percentages.</p>
 </div>
@@ -611,6 +738,7 @@ def homepage(c):
 
 <section id="realized-vs-open"><div class="wrap">
 <div class="sec-head">
+<p class="folio"><b>02</b> Open exposure</p>
 <h2>Realized vs. open: the part most bot results leave out</h2>
 <p>Every weekly figure above is <em>realized</em>: profit that was locked in by selling. The bitcoin the bot still holds is <em>open</em>, and it is not in those figures.</p>
 </div>
@@ -640,6 +768,7 @@ def homepage(c):
 
 <section id="leaks"><div class="wrap">
 <div class="sec-head">
+<p class="folio"><b>03</b> Measured leaks</p>
 <h2>Where the edge leaks</h2>
 <p>A bot that only ever sells at a profit still loses money in quieter ways. These are the leaks I measured on this bot, each with the date it was measured or fixed.</p>
 </div>
@@ -648,8 +777,9 @@ def homepage(c):
 
 <section id="strategies"><div class="wrap">
 <div class="sec-head">
+<p class="folio"><b>04</b> Strategy ledger</p>
 <h2>Which strategy earns what, last 90 days</h2>
-<p>The bot runs several strategies side by side. Names as the bot logs them.</p>
+<p>The bot runs several strategies side by side. Names as the bot logs them; the 90 days run up to {lang(c["gelezen"])}.</p>
 </div>
 <div class="tbl plain-tbl"><table>
 <thead><tr><th scope="col">Strategy</th><th scope="col" class="r">Closed trades</th><th scope="col" class="r">Return per trade</th><th scope="col" class="r">Median hold</th></tr></thead>
@@ -660,18 +790,19 @@ def homepage(c):
 
 <section id="rules"><div class="wrap">
 <div class="sec-head">
+<p class="folio"><b>05</b> Method</p>
 <h2>The rules of this logbook</h2>
-<p>Every figure comes from the bot's own records through its read-only dashboard, the same numbers I look at. A script builds this page; no number is typed in by hand. <a href="/method/">How each number is computed</a>.</p>
+<p>Every figure comes from the bot's own records through its read-only dashboard, the same numbers I look at. A script builds the weekly series and summaries from the dashboard; the dated leak measurements and reference goals are maintained separately. <a href="/method/">How each number is computed</a>.</p>
 </div>
 <ul class="rules">
 <li><strong>Percentages only.</strong> No amounts, no account size, no order details.</li>
-<li><strong>One week delayed.</strong> A week appears here seven days after it ends.</li>
+<li><strong>Weeks one week delayed.</strong> A week's result appears here seven days after it ends. The open-position range and the strategy table are read on the build date.</li>
 <li><strong>Fees on both sides.</strong> Every figure is after the exchange fee on the buy and on the sell.</li>
 <li><strong>Loss sales count.</strong> The rare forced exits at a loss are in the weekly figures.</li>
 <li><strong>Open positions shown next to it.</strong> Realized profit is never presented as the whole picture.</li>
 <li><strong>No signals, no advice, no copy-trading.</strong> This is a logbook, not a service.</li>
 </ul>
-<p class="small muted" style="margin-top:1.4rem">The bot runs on Replit and trades on Bitvavo. Data read on {lang(c["gelezen"])}.</p>
+<p class="small muted" style="margin-top:1.4rem">The bot runs on Replit and trades on Bitvavo.</p>
 </div></section>
 
 <section id="about"><div class="wrap author">
@@ -709,8 +840,8 @@ def homepage(c):
 def methode(c):
     url = f"{SITE}/method/"
     titel = "Method: how every number is computed | The Weekly 2% Edge"
-    omschr = ("How the logbook of a live BTC-EUR bot computes its weekly figure: realized profit after fees on both "
-              "sides, loss sales included, as a percentage of the capital in play, published one week late.")
+    omschr = ("How this bitcoin bot logbook measures weekly profit, fees, open positions and loss sales, with a "
+              "seven-day delay for weekly results.")
     fee_lek = LEKKEN[0]
     graph = {"@context": "https://schema.org", "@graph": [
         {"@type": "TechArticle", "@id": f"{url}#article", "headline": "How every number in the logbook is computed",
@@ -754,7 +885,7 @@ def methode(c):
 <p>Unlike the weekly figures, this range is not a week old: it covers the seven days up to the build, so a drop in open positions is visible before it can reach any weekly figure. The same goes for the strategy table below, which covers the 90 days up to the build.</p>
 
 <h2>The one-week delay</h2>
-<p>A week appears on the logbook {VERTRAGING_DAGEN} days after it ends. The page is checked daily, but it is only rebuilt when a new week becomes eligible, so the date on it changes only when there is something new. The weekly figures are a record of finished weeks, not a live feed.</p>
+<p>A week's result appears on the logbook {VERTRAGING_DAGEN} days after it ends. The delay applies to the weekly results; the open-position range and the strategy table are read on the build date, which the page states. The page is checked daily, but it is only rebuilt when a new week becomes eligible, so the date on it changes only when there is something new. The weekly figures are a record of finished weeks, not a live feed.</p>
 
 <h2>The goal line and the name</h2>
 <p>The name promised {NAAM_BELOFTE:g}% a week. Measured honestly, the realistic goal turned out to be {DOEL}% a week. The chart draws both lines, so every week can be read against the goal and against the name.</p>
@@ -773,7 +904,7 @@ def methode(c):
 </ul>
 
 <h2>Where the data comes from</h2>
-<p>All figures come from the bot's own records through its read-only dashboard, the same numbers I look at. The bot runs on Replit and trades on Bitvavo. A script reads the dashboard and builds the page; no number on it is typed in by hand. The weekly series is also available as a file: <a href="/weekly-series.csv">weekly-series.csv</a>.</p>
+<p>All figures come from the bot's own records through its read-only dashboard, the same numbers I look at. The bot runs on Replit and trades on Bitvavo. A script builds the weekly series and summaries from the dashboard; the dated leak measurements and reference goals are maintained separately. The weekly series is also available as a file: <a href="/weekly-series.csv">weekly-series.csv</a>.</p>
 <p><a href="/">&larr; Back to the logbook</a></p>
 </div></div></main>
 {voet()}
@@ -835,14 +966,15 @@ The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 ye
 
 ## Rules
 - Percentages only: never euro amounts, account size or order details
-- One week delayed: a week appears seven days after it ends
+- Weekly results one week delayed: a week appears seven days after it ends
 - No signals, no advice, no copy-trading; not an offer of any service
 - Past weeks say nothing about future weeks; crypto is volatile and you can lose your entire stake
 
 ## Data freshness
 - Latest week shown: {laatste[1]} {laatste[0].isocalendar()[0]} (week starting {laatste[0].isoformat()})
 - The page is checked daily and rebuilt only when a new week becomes eligible; this file is regenerated in the same run
-- The figures above come from the bot's read-only dashboard at build time; nothing is typed in by hand
+- The weekly series and summaries come from the dashboard at build time; leak measurements retain their stated measurement dates
+- Weekly results are delayed seven days; the open-position range and the strategy table are current as of the build date
 
 ## Contact
 - [Daniel Haket on LinkedIn]({LINKEDIN})
@@ -899,6 +1031,9 @@ def main():
         schrijf(W2E / "404.html", pagina_404())
         schrijf(W2E / "llms.txt", llms(c))
         schrijf(W2E / "weekly-series.csv", csv_tekst(weken))
+        og = og_beeld(weken)
+        if og and (not (W2E / "og-image.png").exists() or (W2E / "og-image.png").read_bytes() != og):
+            (W2E / "og-image.png").write_bytes(og)
         schrijf(sm, sitemap([("/", vandaag), ("/method/", vandaag if methode_nieuw or "/method/" not in oud else oud["/method/"])]))
     print(f"{len(reeks)} weken ({eerste[1]}-{laatste[1]}), mediaan {c['mediaan']:.2f}%, "
           f"doel geraakt {c['raak']}/{len(reeks)}, open {c['open_lo']:.2f}..{c['open_hi']:.2f}% -> {uit}")

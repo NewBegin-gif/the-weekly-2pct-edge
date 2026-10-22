@@ -205,6 +205,33 @@ button:hover{opacity:.9}
 .formula{font-family:var(--mono);font-size:.92rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--brass);border-radius:3px;padding:.9rem 1rem;color:var(--ink);overflow-x:auto}
 .crumbs{font-size:.85rem;color:var(--muted);margin-bottom:1.2rem}
 
+/* grootboek: folio per sectie, editiestrook */
+.folio{font:600 .72rem/1.4 var(--mono);letter-spacing:.12em;color:var(--brass);text-transform:uppercase;display:flex;align-items:center;gap:.7rem;margin:0 0 .9rem}
+.folio::after{content:"";flex:1;border-top:1px solid var(--rule-2);max-width:9rem}
+.folio b{font-weight:700;color:var(--ink)}
+.edition-bar{border-bottom:1px solid var(--rule);background:var(--sunk)}
+.edition{display:flex;flex-wrap:wrap;gap:.35rem 1.6rem;padding-top:.8rem;padding-bottom:.8rem;font:.75rem/1.5 var(--mono);color:var(--muted);letter-spacing:.02em}
+.edition strong{color:var(--ink);font-weight:600}
+.edition a{color:var(--ink-2)}
+.hero-num{font-variant-numeric:tabular-nums}
+.answer::before{border-left-color:var(--brass)}
+.leak-top a{text-decoration:none;color:inherit}
+.leak-top a:hover{color:var(--ink)}
+.leak .now{border-top-style:dashed;color:var(--ink)}
+.leak-fig{font-family:var(--mono);letter-spacing:-.06em}
+.chart .narrow .ax,.chart .narrow .ref-lbl{font-size:13px}
+.chart .narrow .val{font-size:12px}
+@media (max-width:520px){
+  .hero{padding:1.6rem 0 2rem}.hero-grid{gap:1.2rem}
+  .hero h1{font-size:clamp(1.85rem,8vw,2.15rem)}
+  .answer{padding:1.15rem 1rem 1rem 1.6rem}.answer::before{left:.7rem}
+  .hero-num{font-size:3.8rem}.answer-sub{margin-bottom:.75rem}
+  #strategies table{table-layout:fixed;font-size:.78rem}
+  #strategies th,#strategies td{padding:.6rem .35rem;white-space:normal;overflow-wrap:anywhere}
+  #strategies th:first-child{width:28%}
+  #strategies .code{font-size:1em}
+}
+
 @media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
 </style>
 </head>
