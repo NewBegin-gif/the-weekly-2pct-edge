@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Method: how every number is computed | The Weekly 2% Edge</title>
+<meta name="description" content="How the logbook of a live BTC-EUR bot computes its weekly figure: realized profit after fees on both sides, loss sales included, as a percentage of the capital in play, published one week late.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="Daniel Haket">
+<meta name="theme-color" content="#f6f3ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1318" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://theweekly2pctedge.com/method/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Weekly 2% Edge">
+<meta property="og:title" content="Method: how every number is computed | The Weekly 2% Edge">
+<meta property="og:description" content="How the logbook of a live BTC-EUR bot computes its weekly figure: realized profit after fees on both sides, loss sales included, as a percentage of the capital in play, published one week late.">
+<meta property="og:url" content="https://theweekly2pctedge.com/method/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://theweekly2pctedge.com/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, drawn against the 0.5% goal and the 2% in the name.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Method: how every number is computed | The Weekly 2% Edge">
+<meta name="twitter:description" content="How the logbook of a live BTC-EUR bot computes its weekly figure: realized profit after fees on both sides, loss sales included, as a percentage of the capital in play, published one week late.">
+<meta name="twitter:image" content="https://theweekly2pctedge.com/og-image.png">
+<meta name="twitter:image:alt" content="The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, drawn against the 0.5% goal and the 2% in the name.">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "@id": "https://theweekly2pctedge.com/method/#article",
+   "headline": "How every number in the logbook is computed",
+   "description": "How the logbook of a live BTC-EUR bot computes its weekly figure: realized profit after fees on both sides, loss sales included, as a percentage of the capital in play, published one week late.",
+   "url": "https://theweekly2pctedge.com/method/",
+   "mainEntityOfPage": "https://theweekly2pctedge.com/method/",
+   "inLanguage": "en",
+   "author": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   },
+   "publisher": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   },
+   "isPartOf": {
+    "@id": "https://theweekly2pctedge.com/#website"
+   },
+   "about": {
+    "@id": "https://theweekly2pctedge.com/#weekly-series"
+   },
+   "image": "https://theweekly2pctedge.com/og-image.png"
+  },
+  {
+   "@type": "Person",
+   "@id": "https://theweekly2pctedge.com/#daan",
+   "name": "Daniel Haket",
+   "alternateName": "Daan",
+   "description": "Former banker (23 years in international finance) in Rotterdam who built and runs the bot.",
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Rotterdam",
+    "addressCountry": "NL"
+   },
+   "sameAs": [
+    "https://www.linkedin.com/in/daniel-haket-8305a33"
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "The logbook",
+     "item": "https://theweekly2pctedge.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Method",
+     "item": "https://theweekly2pctedge.com/method/"
+    }
+   ]
+  }
+ ]
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CW1KZ258ZV"></script>
+<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-CW1KZ258ZV');</script>
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f6f3ec; --surface:#fffdf8; --sunk:#efeadf; --ink:#1b1f24; --ink-2:#434a54; --muted:#5f646c;
+  --rule:#e2dccd; --rule-2:#cfc7b4; --brass:#7d5e22; --hit:#1f7a52; --below:#3f73b8; --neg:#c2412d;
+  --btn:#1b1f24; --btn-ink:#fffdf8; --focus:#3f73b8;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Charter,"Bitstream Charter",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1318; --surface:#161b22; --sunk:#1c222b; --ink:#ece8df; --ink-2:#c3c6cb; --muted:#9aa1aa;
+  --rule:#262d36; --rule-2:#36404b; --brass:#d4ac5e; --hit:#2f9e68; --below:#5b8fd6; --neg:#e0604a;
+  --btn:#ece8df; --btn-ink:#0f1318; --focus:#5b8fd6;
+}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.65 var(--sans);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.18em;text-decoration-color:var(--rule-2)}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:3px}
+.skip{position:absolute;left:-999px;top:0;background:var(--surface);padding:.6rem 1rem;z-index:9}
+.skip:focus{left:1rem;top:1rem}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1rem}
+@media (min-width:700px){.wrap{padding:0 2rem}}
+.prose{max-width:42rem}
+h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--ink);letter-spacing:-.01em;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,6.2vw,3.4rem);letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem);margin-bottom:.75rem}
+h3{font-size:1.2rem;margin-bottom:.4rem}
+p{margin:0 0 1rem}
+strong{font-weight:650}
+.kicker{font:600 .75rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin:0 0 .9rem}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.num{font-variant-numeric:tabular-nums}
+
+/* kop */
+.top{border-bottom:1px solid var(--rule);background:var(--bg)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:3.75rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font:650 1.02rem/1 var(--serif);letter-spacing:-.01em}
+.brand svg{flex:none}
+.nav{display:flex;gap:1.1rem;font-size:.9rem}
+.nav a{text-decoration:none;color:var(--ink-2)}
+.nav a:hover,.nav a[aria-current]{color:var(--ink);text-decoration:underline}
+@media (max-width:520px){.nav .opt{display:none}}
+
+/* hero */
+.hero{padding:2.4rem 0 2.6rem;border-bottom:1px solid var(--rule)}
+.hero-grid{display:grid;gap:1.6rem;grid-template-areas:"head" "answer" "lead"}
+@media (min-width:900px){.hero{padding:4rem 0 4rem}.hero-grid{grid-template-columns:1.15fr 1fr;column-gap:3.5rem;row-gap:1.4rem;grid-template-areas:"head answer" "lead answer";align-items:start}}
+.hero-head{grid-area:head}.hero-lead{grid-area:lead}.answer{grid-area:answer}
+.hero-lead p{font-size:1.1rem;color:var(--ink-2);max-width:36rem}
+.answer{position:relative;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem 1.9rem;
+  box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(27,31,36,.35)}
+.answer::before{content:"";position:absolute;top:0;bottom:0;left:.85rem;border-left:3px double var(--neg);opacity:.55}
+.answer-label{font:600 .75rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 .35rem}
+.hero-num{font:700 clamp(3.6rem,15vw,5.4rem)/1 var(--sans);letter-spacing:-.04em;margin:0 0 .4rem;color:var(--ink)}
+.answer-sub{color:var(--ink-2);margin:0 0 1.1rem}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0 0 1rem;border-top:1px solid var(--rule)}
+.facts div{padding:.7rem .2rem .65rem 0;border-bottom:1px solid var(--rule)}
+.facts div:nth-child(odd){padding-right:.8rem;border-right:1px solid var(--rule)}
+.facts div:nth-child(even){padding-left:.8rem}
+.facts dt{font-size:.8rem;color:var(--muted);line-height:1.3}
+.facts dd{margin:.15rem 0 0;font-weight:650;font-size:1.1rem;line-height:1.25}
+.facts dd span{font-weight:400;font-size:.85rem;color:var(--muted)}
+.answer-note{font-size:.9rem;color:var(--ink-2);margin:0;padding:.75rem .85rem;background:var(--sunk);border-radius:3px}
+
+/* secties */
+section{padding:3.2rem 0;border-bottom:1px solid var(--rule)}
+@media (min-width:900px){section{padding:4.4rem 0}}
+.sec-head{max-width:42rem;margin-bottom:1.6rem}
+.sec-head p{color:var(--ink-2)}
+
+/* grafiek */
+.chart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1rem .6rem .5rem}
+@media (min-width:700px){.chart{padding:1.4rem 1.4rem .8rem}}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .narrow{display:none}
+@media (max-width:640px){.chart .wide{display:none}.chart .narrow{display:block}}
+.ax{font:11px var(--sans);fill:var(--muted);font-variant-numeric:tabular-nums}
+.ax-line{stroke:var(--rule);stroke-width:1}
+.zero{stroke:var(--ink-2);stroke-width:1}
+.ref{stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.ref-goal{stroke:var(--ink-2)}.ref-name{stroke:var(--brass)}
+.ref-lbl{font:600 11px var(--sans);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.ref-lbl.goal{fill:var(--ink-2)}.ref-lbl.name{fill:var(--brass)}
+.val{font:600 11px var(--sans);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;font-variant-numeric:tabular-nums}
+.b-hit{fill:var(--hit)}.b-below{fill:var(--below)}.b-neg{fill:var(--neg)}
+.wk .hit-area{fill:transparent}
+.wk:hover path{opacity:.75}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;list-style:none;margin:.9rem 0 0;padding:0 .2rem;font-size:.85rem;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:.45rem}
+.sw{width:.8rem;height:.8rem;border-radius:2px;display:inline-block;flex:none}
+.sw.hit{background:var(--hit)}.sw.below{background:var(--below)}.sw.neg{background:var(--neg)}
+.sw.line{height:0;border-top:2px dashed var(--ink-2);border-radius:0;width:1.1rem}
+.sw.line.name{border-color:var(--brass)}
+.chart-note{margin:1rem 0 0;font-size:.9rem;color:var(--muted);max-width:44rem}
+
+/* tabellen */
+details{margin-top:1.2rem;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+summary{cursor:pointer;padding:.85rem 1rem;font-weight:600;font-size:.95rem}
+details[open] summary{border-bottom:1px solid var(--rule)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem;font-variant-numeric:tabular-nums}
+caption{text-align:left;padding:0 0 .6rem;font-size:.85rem;color:var(--muted)}
+th,td{padding:.55rem .75rem;text-align:left;border-bottom:1px solid var(--rule);vertical-align:baseline}
+thead th{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule-2)}
+tbody tr:last-child td{border-bottom:0}
+.r{text-align:right;white-space:nowrap}
+td.lbl{white-space:nowrap}
+code,.code{font-family:var(--mono);font-size:.88em}
+.goal-met{font-size:.8rem;color:var(--hit);font-weight:600}
+.plain-tbl{background:var(--surface);border:1px solid var(--rule);border-radius:4px}
+
+/* gerealiseerd vs open */
+.two{display:grid;gap:1rem}
+@media (min-width:760px){.two{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.3rem 1.1rem}
+.card p:last-child{margin-bottom:0}
+.tag{display:inline-block;font:600 .7rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:.35rem .5rem;border-radius:2px;margin-bottom:.8rem}
+.tag.in{background:color-mix(in srgb,var(--hit) 16%,transparent);color:var(--ink)}
+.tag.out{background:color-mix(in srgb,var(--neg) 14%,transparent);color:var(--ink)}
+.card ul{margin:.4rem 0 0;padding-left:1.1rem;color:var(--ink-2)}
+.card li{margin-bottom:.3rem}
+.range{margin:1.25rem 0 0;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.3rem 1.1rem}
+.range h3{font-size:1.1rem}
+.track{position:relative;height:1.6rem;margin:1.2rem .4rem .3rem}
+.track .base{position:absolute;left:0;right:0;top:.6rem;height:.4rem;border-radius:.2rem;background:var(--sunk);border:1px solid var(--rule)}
+.track .band{position:absolute;top:.6rem;height:.4rem;border-radius:.2rem;background:var(--neg);opacity:.85}
+.track .zero-tick{position:absolute;top:0;height:1.6rem;width:0;border-left:2px solid var(--ink)}
+.track .dot{position:absolute;top:.4rem;width:.8rem;height:.8rem;margin-left:-.4rem;border-radius:50%;background:var(--neg);box-shadow:0 0 0 2px var(--surface)}
+.range-vals{display:flex;gap:2rem;margin:1rem 0 0;padding-top:.8rem;border-top:1px solid var(--rule)}
+.range-vals dt{font-size:.8rem;color:var(--muted)}
+.range-vals dd{margin:0;font-weight:650;font-size:1.25rem}
+.ticks{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin:0 .3rem;font-variant-numeric:tabular-nums}
+.callout{margin-top:1.25rem;border-left:3px solid var(--brass);padding:.2rem 0 .2rem 1rem;max-width:44rem}
+.callout p{color:var(--ink-2)}
+
+/* lekken */
+.leaks{display:grid;gap:1rem;counter-reset:lek}
+@media (min-width:760px){.leaks{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.leak{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.2rem 1.3rem 1.1rem;display:flex;flex-direction:column}
+.leak-top{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem}
+.leak-top time{letter-spacing:.02em;text-transform:none;text-align:right}
+.leak-fig{font:700 2rem/1 var(--sans);letter-spacing:-.02em;color:var(--neg);margin:0 0 .2rem}
+.leak-fig-sub{font-size:.85rem;color:var(--muted);margin:0 0 .9rem}
+.leak p.txt{color:var(--ink-2);font-size:.97rem}
+.leak .now{margin:auto 0 0;padding-top:.75rem;border-top:1px solid var(--rule);font-size:.88rem;font-weight:600}
+.leak .now::before{content:"Now: ";font-weight:400;color:var(--muted)}
+
+/* regels */
+.rules{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+@media (min-width:760px){.rules{grid-template-columns:1fr 1fr;gap:1rem 2rem}}
+.rules li{padding-left:1.6rem;position:relative;color:var(--ink-2)}
+.rules li::before{content:"";position:absolute;left:0;top:.62em;width:.75rem;border-top:2px solid var(--brass)}
+.rules strong{color:var(--ink)}
+
+/* auteur + aanmelden */
+.author{display:grid;gap:1.25rem}
+@media (min-width:760px){.author{grid-template-columns:auto 1fr;gap:2rem;align-items:start}}
+.mono-badge{width:4.5rem;height:4.5rem;border-radius:50%;display:grid;place-items:center;background:var(--sunk);border:1px solid var(--rule);font:600 1.5rem/1 var(--serif);color:var(--brass)}
+.signup{display:grid;gap:1rem}
+@media (min-width:760px){.signup{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.box{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.box p{color:var(--ink-2)}
+form{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem}
+input[type=email]{flex:1 1 12rem;min-width:0;font:inherit;font-size:1rem;padding:.7rem .85rem;border-radius:3px;border:1px solid var(--rule-2);background:var(--bg);color:var(--ink)}
+button{font:600 .95rem/1.2 var(--sans);padding:.75rem 1.1rem;border-radius:3px;border:0;background:var(--btn);color:var(--btn-ink);cursor:pointer}
+button:hover{opacity:.9}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* voet */
+.foot{padding:2.4rem 0 3rem;font-size:.88rem;color:var(--muted)}
+.foot .disclaimer{max-width:44rem;color:var(--ink-2)}
+.foot-links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin:1rem 0 0;padding:0;list-style:none}
+
+/* methode */
+.doc{padding:2.6rem 0 3.4rem}
+.doc h1{font-size:clamp(2rem,5.5vw,3rem);margin-bottom:1rem}
+.doc h2{font-size:1.5rem;margin:2.6rem 0 .7rem}
+.doc .lead{font-size:1.15rem;color:var(--ink-2)}
+.doc p,.doc li{color:var(--ink-2)}
+.doc ul{padding-left:1.2rem}
+.doc li{margin-bottom:.4rem}
+.formula span{display:block}.formula .in{padding-left:1.5rem}
+.formula{font-family:var(--mono);font-size:.92rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--brass);border-radius:3px;padding:.9rem 1rem;color:var(--ink);overflow-x:auto}
+.crumbs{font-size:.85rem;color:var(--muted);margin-bottom:1.2rem}
+
+@media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap">
+<a class="brand" href="/"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#1b1f24"/><path d="M7 23h18" stroke="#d4ac5e" stroke-width="1.6"/><rect x="9" y="15" width="3.2" height="8" rx="1" fill="#2f9e68"/><rect x="14.4" y="11" width="3.2" height="12" rx="1" fill="#2f9e68"/><rect x="19.8" y="17" width="3.2" height="6" rx="1" fill="#5b8fd6"/><path d="M6 8.5h20" stroke="#d4ac5e" stroke-width="1.3" stroke-dasharray="2.5 2"/></svg><span>The Weekly 2% Edge</span></a>
+<nav class="nav" aria-label="Main"><a href="/#weeks" class="opt">Weeks</a><a href="/#leaks" class="opt">Leaks</a><a href="/method/" aria-current="page">Method</a><a href="/#follow">Follow</a></nav>
+</div></header>
+<main id="main" class="doc"><div class="wrap"><div class="prose">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">The logbook</a> &rsaquo; Method</nav>
+<p class="kicker">Method</p>
+<h1>How every number on the logbook is computed</h1>
+<p class="lead">The logbook shows one thing per week: how much profit the bot locked in, as a percentage of the money it had in play. This page explains exactly what goes into that number, what stays out, and why it is published a week late.</p>
+
+<h2>The weekly figure</h2>
+<div class="formula"><span>weekly % =</span><span class="in">realized profit of all positions sold that week, after fees</span><span class="in">&divide; capital the bot had in play that week</span><span class="in">&times; 100</span></div>
+<ul>
+<li><strong>A week</strong> runs Monday to Sunday and carries its ISO week number (W17, W18, &hellip;).</li>
+<li><strong>A position counts in the week it is sold</strong>, not the week it was opened. Until 9 Aug 2026 the report filtered on the start of a position, so positions spanning two weeks went missing; that was fixed and checked against the trade records (leak 4 on the logbook).</li>
+<li><strong>The divisor is the capital the bot had in play that week</strong>, so deposits don't inflate the percentages.</li>
+</ul>
+
+<h2>Fees on both sides</h2>
+<p>Every trade pays the exchange twice: once on the buy, once on the sell. Both are taken off before a trade counts as profit. The bot books the real fee per fill. At the bot's volume, the exchange charges 0.18% per taker order and 0.09% per maker order (measured 5 Aug 2026; fee tiers read 8 Sep 2026).</p>
+<p>Fees matter more than they look: between late April and early August they came to roughly 20% of gross trading profit (leak 1).</p>
+
+<h2>Loss sales are included</h2>
+<p>The bot is built to sell a position only above its buy price, so almost every closed trade is a winner. That is a design choice, not skill. The rare forced exits at a loss are part of the weekly figure, the same as any other sale.</p>
+
+<h2>Realized vs. open</h2>
+<p>Because losing positions are usually held rather than sold, the weekly figure alone would flatter the bot. So the logbook shows the open side next to it: for each reading over the seven days before the page is built, the unrealized result of the positions still held (what they're worth minus what was paid) as a percentage of the total account value. The lowest and highest reading are shown.</p>
+<p>Unlike the weekly figures, this range is not a week old: it covers the seven days up to the build, so a drop in open positions is visible before it can reach any weekly figure. The same goes for the strategy table below, which covers the 90 days up to the build.</p>
+
+<h2>The one-week delay</h2>
+<p>A week appears on the logbook 7 days after it ends. The page is checked daily, but it is only rebuilt when a new week becomes eligible, so the date on it changes only when there is something new. The weekly figures are a record of finished weeks, not a live feed.</p>
+
+<h2>The goal line and the name</h2>
+<p>The name promised 2% a week. Measured honestly, the realistic goal turned out to be 0.5% a week. The chart draws both lines, so every week can be read against the goal and against the name.</p>
+
+<h2>The strategy table</h2>
+<p>The bot runs several strategies side by side. For each one, over the last 90 days: the number of closed trades, the median time a position was held, and the return per trade, which is net profit divided by the amount invested in those trades, after fees, closed trades only. That is not a weekly return.</p>
+
+<h2>The leaks</h2>
+<p>The 4 leaks on the logbook are measurements I made on this bot, each with the date it was measured or changed. They are not updated weekly; a new leak is added when one is measured.</p>
+
+<h2>What is never shown</h2>
+<ul>
+<li>Amounts in euros, the account size, or how much is in play.</li>
+<li>Order sizes, open orders, or anything that could be read as a signal.</li>
+<li>Advice, predictions, or a return anyone should expect.</li>
+</ul>
+
+<h2>Where the data comes from</h2>
+<p>All figures come from the bot's own records through its read-only dashboard, the same numbers I look at. The bot runs on Replit and trades on Bitvavo. A script reads the dashboard and builds the page; no number on it is typed in by hand. The weekly series is also available as a file: <a href="/weekly-series.csv">weekly-series.csv</a>.</p>
+<p><a href="/">&larr; Back to the logbook</a></p>
+</div></div></main>
+<footer class="foot"><div class="wrap">
+<p class="disclaimer">This is a personal logbook, not financial advice and not an offer of any service. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
+<ul class="foot-links">
+<li><a href="/">The logbook</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket on LinkedIn</a></li>
+</ul>
+</div></footer>
+</body>
+</html>

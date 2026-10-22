@@ -3,110 +3,481 @@
 <!--logboek-tot:W41 2026-10-05-->
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Weekly 2% Edge | A live bitcoin bot&#x27;s honest logbook</title>
+<meta name="description" content="What a live BTC-EUR trading bot actually made each week since April 2026, in percentages after fees, and where the edge leaks: fees, rules that backfired, reporting bugs. No signals, no advice.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="Daniel Haket">
+<meta name="theme-color" content="#f6f3ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1318" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<title>The Weekly 2% Edge | A live bitcoin bot's honest logbook</title>
-<meta name="description" content="What a live BTC-EUR trading bot actually made each week since April 2026, in percentages, and where the edge leaks: fees, rules that backfired, reporting bugs. No signals, no advice.">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="canonical" href="https://theweekly2pctedge.com/">
-<meta property="og:title" content="The Weekly 2% Edge | A live bitcoin bot's honest logbook">
-<meta property="og:description" content="Every week of a live BTC-EUR bot in percentages, and where the edge leaks. No signals, no advice.">
-<meta property="og:url" content="https://theweekly2pctedge.com/">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="The Weekly 2% Edge">
+<meta property="og:title" content="The Weekly 2% Edge | A live bitcoin bot&#x27;s honest logbook">
+<meta property="og:description" content="What a live BTC-EUR trading bot actually made each week since April 2026, in percentages after fees, and where the edge leaks: fees, rules that backfired, reporting bugs. No signals, no advice.">
+<meta property="og:url" content="https://theweekly2pctedge.com/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://theweekly2pctedge.com/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, drawn against the 0.5% goal and the 2% in the name.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Weekly 2% Edge | A live bitcoin bot&#x27;s honest logbook">
+<meta name="twitter:description" content="What a live BTC-EUR trading bot actually made each week since April 2026, in percentages after fees, and where the edge leaks: fees, rules that backfired, reporting bugs. No signals, no advice.">
+<meta name="twitter:image" content="https://theweekly2pctedge.com/og-image.png">
+<meta name="twitter:image:alt" content="The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, drawn against the 0.5% goal and the 2% in the name.">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebSite",
+   "@id": "https://theweekly2pctedge.com/#website",
+   "name": "The Weekly 2% Edge",
+   "url": "https://theweekly2pctedge.com/",
+   "inLanguage": "en",
+   "description": "The public logbook of a live BTC-EUR trading bot, in percentages.",
+   "publisher": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   },
+   "author": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   }
+  },
+  {
+   "@type": "Person",
+   "@id": "https://theweekly2pctedge.com/#daan",
+   "name": "Daniel Haket",
+   "alternateName": "Daan",
+   "description": "Former banker (23 years in international finance) in Rotterdam who built and runs the bot.",
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Rotterdam",
+    "addressCountry": "NL"
+   },
+   "sameAs": [
+    "https://www.linkedin.com/in/daniel-haket-8305a33"
+   ]
+  },
+  {
+   "@type": "WebPage",
+   "@id": "https://theweekly2pctedge.com/#webpage",
+   "url": "https://theweekly2pctedge.com/",
+   "name": "The Weekly 2% Edge | A live bitcoin bot's honest logbook",
+   "description": "What a live BTC-EUR trading bot actually made each week since April 2026, in percentages after fees, and where the edge leaks: fees, rules that backfired, reporting bugs. No signals, no advice.",
+   "isPartOf": {
+    "@id": "https://theweekly2pctedge.com/#website"
+   },
+   "about": {
+    "@id": "https://theweekly2pctedge.com/#weekly-series"
+   },
+   "author": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   },
+   "inLanguage": "en",
+   "dateModified": "2026-10-21",
+   "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "https://theweekly2pctedge.com/og-image.png",
+    "width": 1200,
+    "height": 630
+   }
+  },
+  {
+   "@type": "Dataset",
+   "@id": "https://theweekly2pctedge.com/#weekly-series",
+   "name": "Weekly realized profit of a live BTC-EUR trading bot",
+   "description": "Realized profit per calendar week (Monday to Sunday) of a live BTC-EUR trading bot on Bitvavo, as a percentage of the capital the bot had in play that week, after exchange fees on both the buy and the sell, rare forced loss sales included. Percentages only, no amounts. Each week is published one week after it ends. Covers W17 to W41 2026.",
+   "url": "https://theweekly2pctedge.com/",
+   "creator": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   },
+   "isAccessibleForFree": true,
+   "temporalCoverage": "2026-04-20/2026-10-11",
+   "dateModified": "2026-10-21",
+   "keywords": [
+    "bitcoin",
+    "BTC-EUR",
+    "trading bot",
+    "realized profit",
+    "weekly returns",
+    "trading fees"
+   ],
+   "measurementTechnique": "Realized profit of positions sold in the week, after fees on buy and sell, divided by the capital in play that week.",
+   "variableMeasured": {
+    "@type": "PropertyValue",
+    "name": "Realized weekly profit",
+    "unitText": "percent of capital in play"
+   },
+   "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "text/csv",
+    "contentUrl": "https://theweekly2pctedge.com/weekly-series.csv"
+   }
+  }
+ ]
+}
+</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-CW1KZ258ZV"></script>
 <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-CW1KZ258ZV');</script>
-<script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "WebSite", "name": "The Weekly 2% Edge", "url": "https://theweekly2pctedge.com/",
- "description": "The public logbook of a live BTC-EUR trading bot, in percentages.",
- "publisher": {"@type": "Person", "name": "Daniel Haket", "alternateName": "Daan",
-  "description": "Former banker in Rotterdam who built and runs the bot.", "sameAs": ["https://www.linkedin.com/in/daniel-haket-8305a33"]}}
-</script>
 <style>
-:root { --bg:#050b14; --card:#0b121f; --text:#f8fafc; --muted:#94a3b8; --accent:#6366f1; --hit:#22c55e; --neg:#f43f5e; --border:#1e293b; }
-* { box-sizing:border-box; margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
-body { background:var(--bg); color:var(--text); line-height:1.6; -webkit-font-smoothing:antialiased; }
-main { max-width:860px; margin:0 auto; padding:3rem 1.25rem 4rem; }
-.kicker { font-family:monospace; font-size:.75rem; letter-spacing:.12em; color:var(--accent); text-transform:uppercase; }
-h1 { font-size:clamp(1.8rem,4.5vw,2.6rem); line-height:1.15; margin:.6rem 0 1rem; }
-h2 { font-size:1.35rem; margin:3rem 0 1rem; }
-h3 { font-size:1.02rem; margin-bottom:.35rem; }
-p { color:#cbd5e1; margin-bottom:1rem; }
-.lead { font-size:1.1rem; }
-.kaarten { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1rem; margin:2rem 0; }
-.kaart { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.2rem; }
-.kaart b { display:block; font-size:1.6rem; font-variant-numeric:tabular-nums; }
-.kaart span { color:var(--muted); font-size:.85rem; }
-table { width:100%; border-collapse:collapse; font-size:.92rem; font-variant-numeric:tabular-nums; }
-td, th { padding:.4rem .5rem; border-bottom:1px solid var(--border); text-align:left; }
-th { color:var(--muted); font-weight:500; font-size:.8rem; }
-td.d { color:var(--muted); white-space:nowrap; }
-td.n, th.n { text-align:right; white-space:nowrap; }
-td.bar { width:55%; }
-td.bar span { display:block; height:.7rem; border-radius:3px; }
-.lek { background:var(--card); border:1px solid var(--border); border-left:3px solid var(--neg); border-radius:0 10px 10px 0; padding:1rem 1.2rem; margin-bottom:1rem; }
-.lek p { margin-bottom:.4rem; }
-.meta { color:var(--muted); font-size:.8rem; }
-.box { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.2rem 1.4rem; margin:1.5rem 0; }
-.disclaimer { font-size:.85rem; color:var(--muted); border-top:1px solid var(--border); padding-top:1.5rem; margin-top:3rem; }
-form { display:flex; gap:8px; flex-wrap:wrap; margin-top:.8rem; }
-input { flex:1; min-width:200px; padding:.7rem .9rem; border-radius:8px; border:1px solid var(--border); background:#030712; color:var(--text); }
-button { padding:.7rem 1.2rem; border-radius:8px; border:0; background:var(--accent); color:#fff; font-weight:600; cursor:pointer; }
+:root{
+  color-scheme:light dark;
+  --bg:#f6f3ec; --surface:#fffdf8; --sunk:#efeadf; --ink:#1b1f24; --ink-2:#434a54; --muted:#5f646c;
+  --rule:#e2dccd; --rule-2:#cfc7b4; --brass:#7d5e22; --hit:#1f7a52; --below:#3f73b8; --neg:#c2412d;
+  --btn:#1b1f24; --btn-ink:#fffdf8; --focus:#3f73b8;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Charter,"Bitstream Charter",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1318; --surface:#161b22; --sunk:#1c222b; --ink:#ece8df; --ink-2:#c3c6cb; --muted:#9aa1aa;
+  --rule:#262d36; --rule-2:#36404b; --brass:#d4ac5e; --hit:#2f9e68; --below:#5b8fd6; --neg:#e0604a;
+  --btn:#ece8df; --btn-ink:#0f1318; --focus:#5b8fd6;
+}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.65 var(--sans);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.18em;text-decoration-color:var(--rule-2)}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:3px}
+.skip{position:absolute;left:-999px;top:0;background:var(--surface);padding:.6rem 1rem;z-index:9}
+.skip:focus{left:1rem;top:1rem}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1rem}
+@media (min-width:700px){.wrap{padding:0 2rem}}
+.prose{max-width:42rem}
+h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--ink);letter-spacing:-.01em;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,6.2vw,3.4rem);letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem);margin-bottom:.75rem}
+h3{font-size:1.2rem;margin-bottom:.4rem}
+p{margin:0 0 1rem}
+strong{font-weight:650}
+.kicker{font:600 .75rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin:0 0 .9rem}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.num{font-variant-numeric:tabular-nums}
+
+/* kop */
+.top{border-bottom:1px solid var(--rule);background:var(--bg)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:3.75rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font:650 1.02rem/1 var(--serif);letter-spacing:-.01em}
+.brand svg{flex:none}
+.nav{display:flex;gap:1.1rem;font-size:.9rem}
+.nav a{text-decoration:none;color:var(--ink-2)}
+.nav a:hover,.nav a[aria-current]{color:var(--ink);text-decoration:underline}
+@media (max-width:520px){.nav .opt{display:none}}
+
+/* hero */
+.hero{padding:2.4rem 0 2.6rem;border-bottom:1px solid var(--rule)}
+.hero-grid{display:grid;gap:1.6rem;grid-template-areas:"head" "answer" "lead"}
+@media (min-width:900px){.hero{padding:4rem 0 4rem}.hero-grid{grid-template-columns:1.15fr 1fr;column-gap:3.5rem;row-gap:1.4rem;grid-template-areas:"head answer" "lead answer";align-items:start}}
+.hero-head{grid-area:head}.hero-lead{grid-area:lead}.answer{grid-area:answer}
+.hero-lead p{font-size:1.1rem;color:var(--ink-2);max-width:36rem}
+.answer{position:relative;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem 1.9rem;
+  box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(27,31,36,.35)}
+.answer::before{content:"";position:absolute;top:0;bottom:0;left:.85rem;border-left:3px double var(--neg);opacity:.55}
+.answer-label{font:600 .75rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 .35rem}
+.hero-num{font:700 clamp(3.6rem,15vw,5.4rem)/1 var(--sans);letter-spacing:-.04em;margin:0 0 .4rem;color:var(--ink)}
+.answer-sub{color:var(--ink-2);margin:0 0 1.1rem}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0 0 1rem;border-top:1px solid var(--rule)}
+.facts div{padding:.7rem .2rem .65rem 0;border-bottom:1px solid var(--rule)}
+.facts div:nth-child(odd){padding-right:.8rem;border-right:1px solid var(--rule)}
+.facts div:nth-child(even){padding-left:.8rem}
+.facts dt{font-size:.8rem;color:var(--muted);line-height:1.3}
+.facts dd{margin:.15rem 0 0;font-weight:650;font-size:1.1rem;line-height:1.25}
+.facts dd span{font-weight:400;font-size:.85rem;color:var(--muted)}
+.answer-note{font-size:.9rem;color:var(--ink-2);margin:0;padding:.75rem .85rem;background:var(--sunk);border-radius:3px}
+
+/* secties */
+section{padding:3.2rem 0;border-bottom:1px solid var(--rule)}
+@media (min-width:900px){section{padding:4.4rem 0}}
+.sec-head{max-width:42rem;margin-bottom:1.6rem}
+.sec-head p{color:var(--ink-2)}
+
+/* grafiek */
+.chart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1rem .6rem .5rem}
+@media (min-width:700px){.chart{padding:1.4rem 1.4rem .8rem}}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .narrow{display:none}
+@media (max-width:640px){.chart .wide{display:none}.chart .narrow{display:block}}
+.ax{font:11px var(--sans);fill:var(--muted);font-variant-numeric:tabular-nums}
+.ax-line{stroke:var(--rule);stroke-width:1}
+.zero{stroke:var(--ink-2);stroke-width:1}
+.ref{stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.ref-goal{stroke:var(--ink-2)}.ref-name{stroke:var(--brass)}
+.ref-lbl{font:600 11px var(--sans);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.ref-lbl.goal{fill:var(--ink-2)}.ref-lbl.name{fill:var(--brass)}
+.val{font:600 11px var(--sans);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;font-variant-numeric:tabular-nums}
+.b-hit{fill:var(--hit)}.b-below{fill:var(--below)}.b-neg{fill:var(--neg)}
+.wk .hit-area{fill:transparent}
+.wk:hover path{opacity:.75}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;list-style:none;margin:.9rem 0 0;padding:0 .2rem;font-size:.85rem;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:.45rem}
+.sw{width:.8rem;height:.8rem;border-radius:2px;display:inline-block;flex:none}
+.sw.hit{background:var(--hit)}.sw.below{background:var(--below)}.sw.neg{background:var(--neg)}
+.sw.line{height:0;border-top:2px dashed var(--ink-2);border-radius:0;width:1.1rem}
+.sw.line.name{border-color:var(--brass)}
+.chart-note{margin:1rem 0 0;font-size:.9rem;color:var(--muted);max-width:44rem}
+
+/* tabellen */
+details{margin-top:1.2rem;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+summary{cursor:pointer;padding:.85rem 1rem;font-weight:600;font-size:.95rem}
+details[open] summary{border-bottom:1px solid var(--rule)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem;font-variant-numeric:tabular-nums}
+caption{text-align:left;padding:0 0 .6rem;font-size:.85rem;color:var(--muted)}
+th,td{padding:.55rem .75rem;text-align:left;border-bottom:1px solid var(--rule);vertical-align:baseline}
+thead th{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule-2)}
+tbody tr:last-child td{border-bottom:0}
+.r{text-align:right;white-space:nowrap}
+td.lbl{white-space:nowrap}
+code,.code{font-family:var(--mono);font-size:.88em}
+.goal-met{font-size:.8rem;color:var(--hit);font-weight:600}
+.plain-tbl{background:var(--surface);border:1px solid var(--rule);border-radius:4px}
+
+/* gerealiseerd vs open */
+.two{display:grid;gap:1rem}
+@media (min-width:760px){.two{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.3rem 1.1rem}
+.card p:last-child{margin-bottom:0}
+.tag{display:inline-block;font:600 .7rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:.35rem .5rem;border-radius:2px;margin-bottom:.8rem}
+.tag.in{background:color-mix(in srgb,var(--hit) 16%,transparent);color:var(--ink)}
+.tag.out{background:color-mix(in srgb,var(--neg) 14%,transparent);color:var(--ink)}
+.card ul{margin:.4rem 0 0;padding-left:1.1rem;color:var(--ink-2)}
+.card li{margin-bottom:.3rem}
+.range{margin:1.25rem 0 0;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.3rem 1.1rem}
+.range h3{font-size:1.1rem}
+.track{position:relative;height:1.6rem;margin:1.2rem .4rem .3rem}
+.track .base{position:absolute;left:0;right:0;top:.6rem;height:.4rem;border-radius:.2rem;background:var(--sunk);border:1px solid var(--rule)}
+.track .band{position:absolute;top:.6rem;height:.4rem;border-radius:.2rem;background:var(--neg);opacity:.85}
+.track .zero-tick{position:absolute;top:0;height:1.6rem;width:0;border-left:2px solid var(--ink)}
+.track .dot{position:absolute;top:.4rem;width:.8rem;height:.8rem;margin-left:-.4rem;border-radius:50%;background:var(--neg);box-shadow:0 0 0 2px var(--surface)}
+.range-vals{display:flex;gap:2rem;margin:1rem 0 0;padding-top:.8rem;border-top:1px solid var(--rule)}
+.range-vals dt{font-size:.8rem;color:var(--muted)}
+.range-vals dd{margin:0;font-weight:650;font-size:1.25rem}
+.ticks{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin:0 .3rem;font-variant-numeric:tabular-nums}
+.callout{margin-top:1.25rem;border-left:3px solid var(--brass);padding:.2rem 0 .2rem 1rem;max-width:44rem}
+.callout p{color:var(--ink-2)}
+
+/* lekken */
+.leaks{display:grid;gap:1rem;counter-reset:lek}
+@media (min-width:760px){.leaks{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.leak{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.2rem 1.3rem 1.1rem;display:flex;flex-direction:column}
+.leak-top{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem}
+.leak-top time{letter-spacing:.02em;text-transform:none;text-align:right}
+.leak-fig{font:700 2rem/1 var(--sans);letter-spacing:-.02em;color:var(--neg);margin:0 0 .2rem}
+.leak-fig-sub{font-size:.85rem;color:var(--muted);margin:0 0 .9rem}
+.leak p.txt{color:var(--ink-2);font-size:.97rem}
+.leak .now{margin:auto 0 0;padding-top:.75rem;border-top:1px solid var(--rule);font-size:.88rem;font-weight:600}
+.leak .now::before{content:"Now: ";font-weight:400;color:var(--muted)}
+
+/* regels */
+.rules{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+@media (min-width:760px){.rules{grid-template-columns:1fr 1fr;gap:1rem 2rem}}
+.rules li{padding-left:1.6rem;position:relative;color:var(--ink-2)}
+.rules li::before{content:"";position:absolute;left:0;top:.62em;width:.75rem;border-top:2px solid var(--brass)}
+.rules strong{color:var(--ink)}
+
+/* auteur + aanmelden */
+.author{display:grid;gap:1.25rem}
+@media (min-width:760px){.author{grid-template-columns:auto 1fr;gap:2rem;align-items:start}}
+.mono-badge{width:4.5rem;height:4.5rem;border-radius:50%;display:grid;place-items:center;background:var(--sunk);border:1px solid var(--rule);font:600 1.5rem/1 var(--serif);color:var(--brass)}
+.signup{display:grid;gap:1rem}
+@media (min-width:760px){.signup{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.box{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.box p{color:var(--ink-2)}
+form{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem}
+input[type=email]{flex:1 1 12rem;min-width:0;font:inherit;font-size:1rem;padding:.7rem .85rem;border-radius:3px;border:1px solid var(--rule-2);background:var(--bg);color:var(--ink)}
+button{font:600 .95rem/1.2 var(--sans);padding:.75rem 1.1rem;border-radius:3px;border:0;background:var(--btn);color:var(--btn-ink);cursor:pointer}
+button:hover{opacity:.9}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* voet */
+.foot{padding:2.4rem 0 3rem;font-size:.88rem;color:var(--muted)}
+.foot .disclaimer{max-width:44rem;color:var(--ink-2)}
+.foot-links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin:1rem 0 0;padding:0;list-style:none}
+
+/* methode */
+.doc{padding:2.6rem 0 3.4rem}
+.doc h1{font-size:clamp(2rem,5.5vw,3rem);margin-bottom:1rem}
+.doc h2{font-size:1.5rem;margin:2.6rem 0 .7rem}
+.doc .lead{font-size:1.15rem;color:var(--ink-2)}
+.doc p,.doc li{color:var(--ink-2)}
+.doc ul{padding-left:1.2rem}
+.doc li{margin-bottom:.4rem}
+.formula span{display:block}.formula .in{padding-left:1.5rem}
+.formula{font-family:var(--mono);font-size:.92rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--brass);border-radius:3px;padding:.9rem 1rem;color:var(--ink);overflow-x:auto}
+.crumbs{font-size:.85rem;color:var(--muted);margin-bottom:1.2rem}
+
+@media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
 </style>
 </head>
 <body>
-<header style="border-bottom:1px solid var(--border);padding:1.1rem 1.25rem"><a href="/" style="color:var(--text);text-decoration:none;font-weight:700"><span style="color:var(--accent)">&#9679;</span> The Weekly 2% Edge</a></header>
-<main>
-<p class="kicker">Live bot logbook &middot; updated weekly, one week delayed</p>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap">
+<a class="brand" href="/"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#1b1f24"/><path d="M7 23h18" stroke="#d4ac5e" stroke-width="1.6"/><rect x="9" y="15" width="3.2" height="8" rx="1" fill="#2f9e68"/><rect x="14.4" y="11" width="3.2" height="12" rx="1" fill="#2f9e68"/><rect x="19.8" y="17" width="3.2" height="6" rx="1" fill="#5b8fd6"/><path d="M6 8.5h20" stroke="#d4ac5e" stroke-width="1.3" stroke-dasharray="2.5 2"/></svg><span>The Weekly 2% Edge</span></a>
+<nav class="nav" aria-label="Main"><a href="/#weeks" class="opt">Weeks</a><a href="/#leaks" class="opt">Leaks</a><a href="/method/">Method</a><a href="/#follow">Follow</a></nav>
+</div></header>
+<main id="main">
+
+<div class="hero"><div class="wrap hero-grid">
+<div class="hero-head">
+<p class="kicker">Live bot logbook &middot; W17 to W41 2026 &middot; one week delayed</p>
 <h1>The name promised 2% a week. Here is what the bot actually made.</h1>
-<p class="lead">Since April 2026 a bitcoin bot I built has traded BTC-EUR around the clock with real money. This page shows every week it has run, in percentages only, and the places where profit leaked away. I don't sell signals, copy-trading or advice. I publish the measuring tape, not a return promise.</p>
-<p>The realistic goal turned out to be <strong>0.5% a week</strong>, not 2%. Measured that way:</p>
-
-<div class="kaarten">
-<div class="kaart"><b>25</b><span>weeks logged (W17 to W41 2026)</span></div>
-<div class="kaart"><b>0.46%</b><span>median week (realized)</span></div>
-<div class="kaart"><b>11 of 25</b><span>weeks at or above 0.5%</span></div>
-<div class="kaart"><b>-0.09%</b><span>worst week &middot; best +1.32%</span></div>
 </div>
+<aside class="answer" aria-label="The short answer">
+<p class="answer-label">Median week &middot; realized, after fees</p>
+<p class="hero-num">+0.46%</p>
+<p class="answer-sub">of the capital in play, over 25 weeks (W17 to W41 2026). The realistic goal is 0.5% a week.</p>
+<dl class="facts">
+<div><dt>Goal of 0.5% reached</dt><dd>11 <span>of 25 weeks</span></dd></div>
+<div><dt>Average week</dt><dd>+0.49%</dd></div>
+<div><dt>Best week</dt><dd>+1.32%</dd></div>
+<div><dt>Losing weeks</dt><dd>1 <span>worst −0.09%</span></dd></div>
+</dl>
+<p class="answer-note">Not in these figures: positions the bot still holds. Over the last seven days they stood between <strong>−2.61%</strong> and <strong>+0.10%</strong> of the account. <a href="#realized-vs-open">Why that matters</a></p>
+</aside>
+<div class="hero-lead">
+<p>Since April 2026 a bitcoin bot I built has traded BTC-EUR around the clock with real money. This page shows every week it has run, in percentages only, and the places where profit leaked away.</p>
+<p>I don't sell signals, copy-trading or advice. I publish the measuring tape, not a return promise.</p>
+</div>
+</div></div>
 
+<section id="weeks"><div class="wrap">
+<div class="sec-head">
 <h2>Every week, realized profit as % of the capital in play</h2>
-<table>
-<tr><th>Week</th><th>Starts</th><th></th><th class="n">Realized</th></tr>
-<tr><td>W41</td><td class="d">05 Oct</td><td class="bar"><span style="width:36%;background:var(--accent)"></span></td><td class="n">+0.47%</td></tr><tr><td>W40</td><td class="d">28 Sep</td><td class="bar"><span style="width:56%;background:var(--hit)"></span></td><td class="n">+0.74%</td></tr><tr><td>W39</td><td class="d">21 Sep</td><td class="bar"><span style="width:35%;background:var(--accent)"></span></td><td class="n">+0.46%</td></tr><tr><td>W38</td><td class="d">14 Sep</td><td class="bar"><span style="width:80%;background:var(--hit)"></span></td><td class="n">+1.06%</td></tr><tr><td>W37</td><td class="d">07 Sep</td><td class="bar"><span style="width:29%;background:var(--accent)"></span></td><td class="n">+0.38%</td></tr><tr><td>W36</td><td class="d">31 Aug</td><td class="bar"><span style="width:57%;background:var(--hit)"></span></td><td class="n">+0.75%</td></tr><tr><td>W35</td><td class="d">24 Aug</td><td class="bar"><span style="width:76%;background:var(--hit)"></span></td><td class="n">+1.00%</td></tr><tr><td>W34</td><td class="d">17 Aug</td><td class="bar"><span style="width:100%;background:var(--hit)"></span></td><td class="n">+1.32%</td></tr><tr><td>W33</td><td class="d">10 Aug</td><td class="bar"><span style="width:2%;background:var(--accent)"></span></td><td class="n">+0.02%</td></tr><tr><td>W32</td><td class="d">03 Aug</td><td class="bar"><span style="width:14%;background:var(--accent)"></span></td><td class="n">+0.19%</td></tr><tr><td>W31</td><td class="d">27 Jul</td><td class="bar"><span style="width:14%;background:var(--accent)"></span></td><td class="n">+0.19%</td></tr><tr><td>W30</td><td class="d">20 Jul</td><td class="bar"><span style="width:23%;background:var(--accent)"></span></td><td class="n">+0.30%</td></tr><tr><td>W29</td><td class="d">13 Jul</td><td class="bar"><span style="width:34%;background:var(--accent)"></span></td><td class="n">+0.45%</td></tr><tr><td>W28</td><td class="d">06 Jul</td><td class="bar"><span style="width:58%;background:var(--hit)"></span></td><td class="n">+0.76%</td></tr><tr><td>W27</td><td class="d">29 Jun</td><td class="bar"><span style="width:40%;background:var(--hit)"></span></td><td class="n">+0.53%</td></tr><tr><td>W26</td><td class="d">22 Jun</td><td class="bar"><span style="width:21%;background:var(--accent)"></span></td><td class="n">+0.28%</td></tr><tr><td>W25</td><td class="d">15 Jun</td><td class="bar"><span style="width:26%;background:var(--accent)"></span></td><td class="n">+0.34%</td></tr><tr><td>W24</td><td class="d">08 Jun</td><td class="bar"><span style="width:41%;background:var(--hit)"></span></td><td class="n">+0.54%</td></tr><tr><td>W23</td><td class="d">01 Jun</td><td class="bar"><span style="width:7%;background:var(--neg)"></span></td><td class="n">-0.09%</td></tr><tr><td>W22</td><td class="d">25 May</td><td class="bar"><span style="width:3%;background:var(--accent)"></span></td><td class="n">+0.04%</td></tr><tr><td>W21</td><td class="d">18 May</td><td class="bar"><span style="width:11%;background:var(--accent)"></span></td><td class="n">+0.15%</td></tr><tr><td>W20</td><td class="d">11 May</td><td class="bar"><span style="width:56%;background:var(--hit)"></span></td><td class="n">+0.74%</td></tr><tr><td>W19</td><td class="d">04 May</td><td class="bar"><span style="width:34%;background:var(--accent)"></span></td><td class="n">+0.45%</td></tr><tr><td>W18</td><td class="d">27 Apr</td><td class="bar"><span style="width:46%;background:var(--hit)"></span></td><td class="n">+0.61%</td></tr><tr><td>W17</td><td class="d">20 Apr</td><td class="bar"><span style="width:39%;background:var(--hit)"></span></td><td class="n">+0.52%</td></tr>
-</table>
-<p class="meta">After exchange fees on both the buy and the sell. Green: at or above the 0.5% goal. Red: a losing week. Each week is measured against the capital the bot had in play that week, so deposits don't inflate the percentages.</p>
-
-<h2>What these numbers don't show</h2>
-<div class="box">
-<p><strong>Realized is not the whole picture.</strong> The bot is built to sell a position only above its buy price, so almost every closed trade is a winner. That is a design choice, not skill. Losses mostly wait in open positions instead of showing up in the weekly figure. The rare forced exits at a loss are included above.</p>
-<p>Over the last seven days (2026-10-14 to 2026-10-21), the open positions were worth between <strong>-2.61%</strong> and <strong>+0.10%</strong> of the account compared with what was paid for them. In a deep bitcoin drop, that number gets much larger before any of it shows up in the weekly figure.</p>
+<p>After exchange fees on both the buy and the sell, rare forced loss sales included. Each week is measured against the capital the bot had in play that week, so deposits don't inflate the percentages.</p>
 </div>
+<figure class="chart" style="margin:0">
+<svg class="wide" viewBox="0 0 960 340" role="img" aria-labelledby="cw-t cw-d"><title id="cw-t">Realized profit per week, % of capital in play</title><desc id="cw-d">Bar chart of realized profit per week, W17 to W41, as a percentage of the capital in play. Median +0.46%, best +1.32%, worst −0.09%. 11 of 25 weeks reached the 0.5% goal; no week came near the 2% in the name.</desc><line class="ax-line" x1="46" x2="890" y1="277.2" y2="277.2"/><text class="ax" x="38" y="281.2" text-anchor="end">0.0%</text><line class="ax-line" x1="46" x2="890" y1="217.0" y2="217.0"/><text class="ax" x="38" y="221.0" text-anchor="end">0.5%</text><line class="ax-line" x1="46" x2="890" y1="156.8" y2="156.8"/><text class="ax" x="38" y="160.8" text-anchor="end">1.0%</text><line class="ax-line" x1="46" x2="890" y1="96.6" y2="96.6"/><text class="ax" x="38" y="100.6" text-anchor="end">1.5%</text><line class="ax-line" x1="46" x2="890" y1="36.4" y2="36.4"/><text class="ax" x="38" y="40.4" text-anchor="end">2.0%</text><g class="wk"><title>W17 2026 (week of 20 Apr 2026): +0.52% realized · goal met</title><rect class="hit-area" x="46.0" y="22" width="33.8" height="284"/><path class="b-hit" d="M51.4,277.2V218.6Q51.4,214.6 55.4,214.6H70.4Q74.4,214.6 74.4,218.6V277.2Z"/></g><text class="ax" x="62.9" y="324" text-anchor="middle">W17</text><g class="wk"><title>W18 2026 (week of 27 Apr 2026): +0.61% realized · goal met</title><rect class="hit-area" x="79.8" y="22" width="33.8" height="284"/><path class="b-hit" d="M85.2,277.2V207.7Q85.2,203.7 89.2,203.7H104.1Q108.1,203.7 108.1,207.7V277.2Z"/></g><g class="wk"><title>W19 2026 (week of 4 May 2026): +0.45% realized</title><rect class="hit-area" x="113.5" y="22" width="33.8" height="284"/><path class="b-below" d="M118.9,277.2V227.0Q118.9,223.0 122.9,223.0H137.9Q141.9,223.0 141.9,227.0V277.2Z"/></g><text class="ax" x="130.4" y="324" text-anchor="middle">W19</text><g class="wk"><title>W20 2026 (week of 11 May 2026): +0.74% realized · goal met</title><rect class="hit-area" x="147.3" y="22" width="33.8" height="284"/><path class="b-hit" d="M152.7,277.2V192.1Q152.7,188.1 156.7,188.1H171.6Q175.6,188.1 175.6,192.1V277.2Z"/></g><g class="wk"><title>W21 2026 (week of 18 May 2026): +0.15% realized</title><rect class="hit-area" x="181.0" y="22" width="33.8" height="284"/><path class="b-below" d="M186.4,277.2V263.1Q186.4,259.1 190.4,259.1H205.4Q209.4,259.1 209.4,263.1V277.2Z"/></g><text class="ax" x="197.9" y="324" text-anchor="middle">W21</text><g class="wk"><title>W22 2026 (week of 25 May 2026): +0.04% realized</title><rect class="hit-area" x="214.8" y="22" width="33.8" height="284"/><path class="b-below" d="M220.2,277.2V276.3Q220.2,272.3 224.2,272.3H239.2Q243.2,272.3 243.2,276.3V277.2Z"/></g><g class="wk"><title>W23 2026 (week of 1 Jun 2026): −0.09% realized</title><rect class="hit-area" x="248.6" y="22" width="33.8" height="284"/><path class="b-neg" d="M254.0,277.2V284.0Q254.0,288.0 258.0,288.0H272.9Q276.9,288.0 276.9,284.0V277.2Z"/></g><text class="val" x="265.4" y="302.0" text-anchor="middle">−0.09%</text><g class="wk"><title>W24 2026 (week of 8 Jun 2026): +0.54% realized · goal met</title><rect class="hit-area" x="282.3" y="22" width="33.8" height="284"/><path class="b-hit" d="M287.7,277.2V216.2Q287.7,212.2 291.7,212.2H306.7Q310.7,212.2 310.7,216.2V277.2Z"/></g><g class="wk"><title>W25 2026 (week of 15 Jun 2026): +0.34% realized</title><rect class="hit-area" x="316.1" y="22" width="33.8" height="284"/><path class="b-below" d="M321.5,277.2V240.2Q321.5,236.2 325.5,236.2H340.4Q344.4,236.2 344.4,240.2V277.2Z"/></g><text class="ax" x="333.0" y="324" text-anchor="middle">W25</text><g class="wk"><title>W26 2026 (week of 22 Jun 2026): +0.28% realized</title><rect class="hit-area" x="349.8" y="22" width="33.8" height="284"/><path class="b-below" d="M355.2,277.2V247.5Q355.2,243.5 359.2,243.5H374.2Q378.2,243.5 378.2,247.5V277.2Z"/></g><g class="wk"><title>W27 2026 (week of 29 Jun 2026): +0.53% realized · goal met</title><rect class="hit-area" x="383.6" y="22" width="33.8" height="284"/><path class="b-hit" d="M389.0,277.2V217.4Q389.0,213.4 393.0,213.4H408.0Q412.0,213.4 412.0,217.4V277.2Z"/></g><text class="ax" x="400.5" y="324" text-anchor="middle">W27</text><g class="wk"><title>W28 2026 (week of 6 Jul 2026): +0.76% realized · goal met</title><rect class="hit-area" x="417.4" y="22" width="33.8" height="284"/><path class="b-hit" d="M422.8,277.2V189.7Q422.8,185.7 426.8,185.7H441.7Q445.7,185.7 445.7,189.7V277.2Z"/></g><g class="wk"><title>W29 2026 (week of 13 Jul 2026): +0.45% realized</title><rect class="hit-area" x="451.1" y="22" width="33.8" height="284"/><path class="b-below" d="M456.5,277.2V227.0Q456.5,223.0 460.5,223.0H475.5Q479.5,223.0 479.5,227.0V277.2Z"/></g><text class="ax" x="468.0" y="324" text-anchor="middle">W29</text><g class="wk"><title>W30 2026 (week of 20 Jul 2026): +0.30% realized</title><rect class="hit-area" x="484.9" y="22" width="33.8" height="284"/><path class="b-below" d="M490.3,277.2V245.1Q490.3,241.1 494.3,241.1H509.2Q513.2,241.1 513.2,245.1V277.2Z"/></g><g class="wk"><title>W31 2026 (week of 27 Jul 2026): +0.19% realized</title><rect class="hit-area" x="518.6" y="22" width="33.8" height="284"/><path class="b-below" d="M524.0,277.2V258.3Q524.0,254.3 528.0,254.3H543.0Q547.0,254.3 547.0,258.3V277.2Z"/></g><text class="ax" x="535.5" y="324" text-anchor="middle">W31</text><g class="wk"><title>W32 2026 (week of 3 Aug 2026): +0.19% realized</title><rect class="hit-area" x="552.4" y="22" width="33.8" height="284"/><path class="b-below" d="M557.8,277.2V258.3Q557.8,254.3 561.8,254.3H576.8Q580.8,254.3 580.8,258.3V277.2Z"/></g><g class="wk"><title>W33 2026 (week of 10 Aug 2026): +0.02% realized</title><rect class="hit-area" x="586.2" y="22" width="33.8" height="284"/><path class="b-below" d="M591.6,277.2V277.2Q591.6,274.8 594.0,274.8H612.1Q614.5,274.8 614.5,277.2V277.2Z"/></g><text class="ax" x="603.0" y="324" text-anchor="middle">W33</text><g class="wk"><title>W34 2026 (week of 17 Aug 2026): +1.32% realized · goal met</title><rect class="hit-area" x="619.9" y="22" width="33.8" height="284"/><path class="b-hit" d="M625.3,277.2V122.3Q625.3,118.3 629.3,118.3H644.3Q648.3,118.3 648.3,122.3V277.2Z"/></g><text class="val" x="636.8" y="112.3" text-anchor="middle">+1.32%</text><g class="wk"><title>W35 2026 (week of 24 Aug 2026): +1.00% realized · goal met</title><rect class="hit-area" x="653.7" y="22" width="33.8" height="284"/><path class="b-hit" d="M659.1,277.2V160.8Q659.1,156.8 663.1,156.8H678.0Q682.0,156.8 682.0,160.8V277.2Z"/></g><text class="ax" x="670.6" y="324" text-anchor="middle">W35</text><g class="wk"><title>W36 2026 (week of 31 Aug 2026): +0.75% realized · goal met</title><rect class="hit-area" x="687.4" y="22" width="33.8" height="284"/><path class="b-hit" d="M692.8,277.2V190.9Q692.8,186.9 696.8,186.9H711.8Q715.8,186.9 715.8,190.9V277.2Z"/></g><g class="wk"><title>W37 2026 (week of 7 Sep 2026): +0.38% realized</title><rect class="hit-area" x="721.2" y="22" width="33.8" height="284"/><path class="b-below" d="M726.6,277.2V235.4Q726.6,231.4 730.6,231.4H745.6Q749.6,231.4 749.6,235.4V277.2Z"/></g><text class="ax" x="738.1" y="324" text-anchor="middle">W37</text><g class="wk"><title>W38 2026 (week of 14 Sep 2026): +1.06% realized · goal met</title><rect class="hit-area" x="755.0" y="22" width="33.8" height="284"/><path class="b-hit" d="M760.4,277.2V153.6Q760.4,149.6 764.4,149.6H779.3Q783.3,149.6 783.3,153.6V277.2Z"/></g><g class="wk"><title>W39 2026 (week of 21 Sep 2026): +0.46% realized</title><rect class="hit-area" x="788.7" y="22" width="33.8" height="284"/><path class="b-below" d="M794.1,277.2V225.8Q794.1,221.8 798.1,221.8H813.1Q817.1,221.8 817.1,225.8V277.2Z"/></g><text class="ax" x="805.6" y="324" text-anchor="middle">W39</text><g class="wk"><title>W40 2026 (week of 28 Sep 2026): +0.74% realized · goal met</title><rect class="hit-area" x="822.5" y="22" width="33.8" height="284"/><path class="b-hit" d="M827.9,277.2V192.1Q827.9,188.1 831.9,188.1H846.8Q850.8,188.1 850.8,192.1V277.2Z"/></g><g class="wk"><title>W41 2026 (week of 5 Oct 2026): +0.47% realized</title><rect class="hit-area" x="856.2" y="22" width="33.8" height="284"/><path class="b-below" d="M861.6,277.2V224.6Q861.6,220.6 865.6,220.6H880.6Q884.6,220.6 884.6,224.6V277.2Z"/></g><text class="val" x="873.1" y="214.6" text-anchor="middle">+0.47%</text><text class="ax" x="873.1" y="324" text-anchor="middle">W41</text><line class="zero" x1="46" x2="890" y1="277.2" y2="277.2"/><line class="ref ref-goal" x1="46" x2="894" y1="217.0" y2="217.0"/><text class="ref-lbl goal" x="898" y="221.0">goal</text><line class="ref ref-name" x1="46" x2="894" y1="36.4" y2="36.4"/><text class="ref-lbl name" x="898" y="40.4">the name</text></svg>
+<svg class="narrow" viewBox="0 0 360 250" role="img" aria-labelledby="cn-t cn-d"><title id="cn-t">Realized profit per week, % of capital in play</title><desc id="cn-d">Bar chart of realized profit per week, W17 to W41, as a percentage of the capital in play. Median +0.46%, best +1.32%, worst −0.09%. 11 of 25 weeks reached the 0.5% goal; no week came near the 2% in the name.</desc><line class="ax-line" x1="34" x2="320" y1="195.4" y2="195.4"/><text class="ax" x="26" y="199.4" text-anchor="end">0.0%</text><line class="ax-line" x1="34" x2="320" y1="154.5" y2="154.5"/><text class="ax" x="26" y="158.5" text-anchor="end">0.5%</text><line class="ax-line" x1="34" x2="320" y1="113.6" y2="113.6"/><text class="ax" x="26" y="117.6" text-anchor="end">1.0%</text><line class="ax-line" x1="34" x2="320" y1="72.7" y2="72.7"/><text class="ax" x="26" y="76.7" text-anchor="end">1.5%</text><line class="ax-line" x1="34" x2="320" y1="31.8" y2="31.8"/><text class="ax" x="26" y="35.8" text-anchor="end">2.0%</text><g class="wk"><title>W17 2026 (week of 20 Apr 2026): +0.52% realized · goal met</title><rect class="hit-area" x="34.0" y="22" width="11.4" height="198"/><path class="b-hit" d="M35.8,195.4V156.8Q35.8,152.9 39.7,152.9H39.7Q43.6,152.9 43.6,156.8V195.4Z"/></g><g class="wk"><title>W18 2026 (week of 27 Apr 2026): +0.61% realized · goal met</title><rect class="hit-area" x="45.4" y="22" width="11.4" height="198"/><path class="b-hit" d="M47.3,195.4V149.4Q47.3,145.5 51.2,145.5H51.2Q55.0,145.5 55.0,149.4V195.4Z"/></g><g class="wk"><title>W19 2026 (week of 4 May 2026): +0.45% realized</title><rect class="hit-area" x="56.9" y="22" width="11.4" height="198"/><path class="b-below" d="M58.7,195.4V162.5Q58.7,158.6 62.6,158.6H62.6Q66.5,158.6 66.5,162.5V195.4Z"/></g><g class="wk"><title>W20 2026 (week of 11 May 2026): +0.74% realized · goal met</title><rect class="hit-area" x="68.3" y="22" width="11.4" height="198"/><path class="b-hit" d="M70.2,195.4V138.8Q70.2,134.9 74.0,134.9H74.0Q77.9,134.9 77.9,138.8V195.4Z"/></g><g class="wk"><title>W21 2026 (week of 18 May 2026): +0.15% realized</title><rect class="hit-area" x="79.8" y="22" width="11.4" height="198"/><path class="b-below" d="M81.6,195.4V187.0Q81.6,183.1 85.5,183.1H85.5Q89.4,183.1 89.4,187.0V195.4Z"/></g><text class="ax" x="85.5" y="238" text-anchor="middle">W21</text><g class="wk"><title>W22 2026 (week of 25 May 2026): +0.04% realized</title><rect class="hit-area" x="91.2" y="22" width="11.4" height="198"/><path class="b-below" d="M93.0,195.4V195.4Q93.0,192.1 96.3,192.1H97.5Q100.8,192.1 100.8,195.4V195.4Z"/></g><g class="wk"><title>W23 2026 (week of 1 Jun 2026): −0.09% realized</title><rect class="hit-area" x="102.6" y="22" width="11.4" height="198"/><path class="b-neg" d="M104.5,195.4V198.9Q104.5,202.8 108.4,202.8H108.4Q112.2,202.8 112.2,198.9V195.4Z"/></g><text class="val" x="108.4" y="216.8" text-anchor="middle">−0.09%</text><g class="wk"><title>W24 2026 (week of 8 Jun 2026): +0.54% realized · goal met</title><rect class="hit-area" x="114.1" y="22" width="11.4" height="198"/><path class="b-hit" d="M115.9,195.4V155.1Q115.9,151.2 119.8,151.2H119.8Q123.7,151.2 123.7,155.1V195.4Z"/></g><g class="wk"><title>W25 2026 (week of 15 Jun 2026): +0.34% realized</title><rect class="hit-area" x="125.5" y="22" width="11.4" height="198"/><path class="b-below" d="M127.4,195.4V171.5Q127.4,167.6 131.2,167.6H131.2Q135.1,167.6 135.1,171.5V195.4Z"/></g><g class="wk"><title>W26 2026 (week of 22 Jun 2026): +0.28% realized</title><rect class="hit-area" x="137.0" y="22" width="11.4" height="198"/><path class="b-below" d="M138.8,195.4V176.4Q138.8,172.5 142.7,172.5H142.7Q146.6,172.5 146.6,176.4V195.4Z"/></g><text class="ax" x="142.7" y="238" text-anchor="middle">W26</text><g class="wk"><title>W27 2026 (week of 29 Jun 2026): +0.53% realized · goal met</title><rect class="hit-area" x="148.4" y="22" width="11.4" height="198"/><path class="b-hit" d="M150.2,195.4V155.9Q150.2,152.1 154.1,152.1H154.1Q158.0,152.1 158.0,155.9V195.4Z"/></g><g class="wk"><title>W28 2026 (week of 6 Jul 2026): +0.76% realized · goal met</title><rect class="hit-area" x="159.8" y="22" width="11.4" height="198"/><path class="b-hit" d="M161.7,195.4V137.1Q161.7,133.2 165.6,133.2H165.6Q169.4,133.2 169.4,137.1V195.4Z"/></g><g class="wk"><title>W29 2026 (week of 13 Jul 2026): +0.45% realized</title><rect class="hit-area" x="171.3" y="22" width="11.4" height="198"/><path class="b-below" d="M173.1,195.4V162.5Q173.1,158.6 177.0,158.6H177.0Q180.9,158.6 180.9,162.5V195.4Z"/></g><g class="wk"><title>W30 2026 (week of 20 Jul 2026): +0.30% realized</title><rect class="hit-area" x="182.7" y="22" width="11.4" height="198"/><path class="b-below" d="M184.6,195.4V174.8Q184.6,170.9 188.4,170.9H188.4Q192.3,170.9 192.3,174.8V195.4Z"/></g><g class="wk"><title>W31 2026 (week of 27 Jul 2026): +0.19% realized</title><rect class="hit-area" x="194.2" y="22" width="11.4" height="198"/><path class="b-below" d="M196.0,195.4V183.8Q196.0,179.9 199.9,179.9H199.9Q203.8,179.9 203.8,183.8V195.4Z"/></g><text class="ax" x="199.9" y="238" text-anchor="middle">W31</text><g class="wk"><title>W32 2026 (week of 3 Aug 2026): +0.19% realized</title><rect class="hit-area" x="205.6" y="22" width="11.4" height="198"/><path class="b-below" d="M207.4,195.4V183.8Q207.4,179.9 211.3,179.9H211.3Q215.2,179.9 215.2,183.8V195.4Z"/></g><g class="wk"><title>W33 2026 (week of 10 Aug 2026): +0.02% realized</title><rect class="hit-area" x="217.0" y="22" width="11.4" height="198"/><path class="b-below" d="M218.9,195.4V195.4Q218.9,193.8 220.5,193.8H225.0Q226.6,193.8 226.6,195.4V195.4Z"/></g><g class="wk"><title>W34 2026 (week of 17 Aug 2026): +1.32% realized · goal met</title><rect class="hit-area" x="228.5" y="22" width="11.4" height="198"/><path class="b-hit" d="M230.3,195.4V91.3Q230.3,87.4 234.2,87.4H234.2Q238.1,87.4 238.1,91.3V195.4Z"/></g><text class="val" x="234.2" y="81.4" text-anchor="middle">+1.32%</text><g class="wk"><title>W35 2026 (week of 24 Aug 2026): +1.00% realized · goal met</title><rect class="hit-area" x="239.9" y="22" width="11.4" height="198"/><path class="b-hit" d="M241.8,195.4V117.5Q241.8,113.6 245.6,113.6H245.6Q249.5,113.6 249.5,117.5V195.4Z"/></g><g class="wk"><title>W36 2026 (week of 31 Aug 2026): +0.75% realized · goal met</title><rect class="hit-area" x="251.4" y="22" width="11.4" height="198"/><path class="b-hit" d="M253.2,195.4V137.9Q253.2,134.1 257.1,134.1H257.1Q261.0,134.1 261.0,137.9V195.4Z"/></g><text class="ax" x="257.1" y="238" text-anchor="middle">W36</text><g class="wk"><title>W37 2026 (week of 7 Sep 2026): +0.38% realized</title><rect class="hit-area" x="262.8" y="22" width="11.4" height="198"/><path class="b-below" d="M264.6,195.4V168.2Q264.6,164.3 268.5,164.3H268.5Q272.4,164.3 272.4,168.2V195.4Z"/></g><g class="wk"><title>W38 2026 (week of 14 Sep 2026): +1.06% realized · goal met</title><rect class="hit-area" x="274.2" y="22" width="11.4" height="198"/><path class="b-hit" d="M276.1,195.4V112.6Q276.1,108.7 280.0,108.7H280.0Q283.8,108.7 283.8,112.6V195.4Z"/></g><g class="wk"><title>W39 2026 (week of 21 Sep 2026): +0.46% realized</title><rect class="hit-area" x="285.7" y="22" width="11.4" height="198"/><path class="b-below" d="M287.5,195.4V161.7Q287.5,157.8 291.4,157.8H291.4Q295.3,157.8 295.3,161.7V195.4Z"/></g><g class="wk"><title>W40 2026 (week of 28 Sep 2026): +0.74% realized · goal met</title><rect class="hit-area" x="297.1" y="22" width="11.4" height="198"/><path class="b-hit" d="M299.0,195.4V138.8Q299.0,134.9 302.8,134.9H302.8Q306.7,134.9 306.7,138.8V195.4Z"/></g><g class="wk"><title>W41 2026 (week of 5 Oct 2026): +0.47% realized</title><rect class="hit-area" x="308.6" y="22" width="11.4" height="198"/><path class="b-below" d="M310.4,195.4V160.8Q310.4,157.0 314.3,157.0H314.3Q318.2,157.0 318.2,160.8V195.4Z"/></g><text class="ax" x="314.3" y="238" text-anchor="middle">W41</text><line class="zero" x1="34" x2="320" y1="195.4" y2="195.4"/><line class="ref ref-goal" x1="34" x2="324" y1="154.5" y2="154.5"/><text class="ref-lbl goal" x="328" y="158.5">goal</text><line class="ref ref-name" x1="34" x2="324" y1="31.8" y2="31.8"/><text class="ref-lbl name" x="328" y="35.8">name</text></svg>
+<ul class="legend" aria-label="Legend">
+<li><span class="sw hit"></span>At or above the 0.5% goal</li>
+<li><span class="sw below"></span>Positive, below the goal</li>
+<li><span class="sw neg"></span>Losing week</li>
+<li><span class="sw line"></span>Goal, 0.5%</li>
+<li><span class="sw line name"></span>The name, 2%</li>
+</ul>
+<figcaption class="chart-note">25 weeks, W17 to W41 2026. The newest week shown ended at least seven days before this page was built. Hover a bar for its value, or open the table.</figcaption>
+</figure>
+<details>
+<summary>All 25 weeks as a table</summary>
+<div class="tbl"><table>
+<caption class="sr">Realized profit per week, newest first</caption>
+<thead><tr><th scope="col">Week</th><th scope="col">Starts</th><th scope="col" class="r">Realized</th><th scope="col" class="r"><span class="sr">Status</span></th></tr></thead>
+<tbody><tr><td class="lbl">W41 2026</td><td><time datetime="2026-10-05">5 Oct</time></td><td class="r">+0.47%</td><td class="r"></td></tr><tr><td class="lbl">W40 2026</td><td><time datetime="2026-09-28">28 Sep</time></td><td class="r">+0.74%</td><td class="r"><span class=goal-met>goal met</span></td></tr><tr><td class="lbl">W39 2026</td><td><time datetime="2026-09-21">21 Sep</time></td><td class="r">+0.46%</td><td class="r"></td></tr><tr><td class="lbl">W38 2026</td><td><time datetime="2026-09-14">14 Sep</time></td><td class="r">+1.06%</td><td class="r"><span class=goal-met>goal met</span></td></tr><tr><td class="lbl">W37 2026</td><td><time datetime="2026-09-07">7 Sep</time></td><td class="r">+0.38%</td><td class="r"></td></tr><tr><td class="lbl">W36 2026</td><td><time datetime="2026-08-31">31 Aug</time></td><td class="r">+0.75%</td><td class="r"><span class=goal-met>goal met</span></td></tr><tr><td class="lbl">W35 2026</td><td><time datetime="2026-08-24">24 Aug</time></td><td class="r">+1.00%</td><td class="r"><span class=goal-met>goal met</span></td></tr><tr><td class="lbl">W34 2026</td><td><time datetime="2026-08-17">17 Aug</time></td><td class="r">+1.32%</td><td class="r"><span class=goal-met>goal met</span></td></tr><tr><td class="lbl">W33 2026</td><td><time datetime="2026-08-10">10 Aug</time></td><td class="r">+0.02%</td><td class="r"></td></tr><tr><td class="lbl">W32 2026</td><td><time datetime="2026-08-03">3 Aug</time></td><td class="r">+0.19%</td><td class="r"></td></tr><tr><td class="lbl">W31 2026</td><td><time datetime="2026-07-27">27 Jul</time></td><td class="r">+0.19%</td><td class="r"></td></tr><tr><td class="lbl">W30 2026</td><td><time datetime="2026-07-20">20 Jul</time></td><td class="r">+0.30%</td><td class="r"></td></tr><tr><td class="lbl">W29 2026</td><td><time datetime="2026-07-13">13 Jul</time></td><td class="r">+0.45%</td><td class="r"></td></tr><tr><td class="lbl">W28 2026</td><td><time datetime="2026-07-06">6 Jul</time></td><td class="r">+0.76%</td><td class="r"><span class=goal-met>goal met</span></td></tr><tr><td class="lbl">W27 2026</td><td><time datetime="2026-06-29">29 Jun</time></td><td class="r">+0.53%</td><td class="r"><span class=goal-met>goal met</span></td></tr><tr><td class="lbl">W26 2026</td><td><time datetime="2026-06-22">22 Jun</time></td><td class="r">+0.28%</td><td class="r"></td></tr><tr><td class="lbl">W25 2026</td><td><time datetime="2026-06-15">15 Jun</time></td><td class="r">+0.34%</td><td class="r"></td></tr><tr><td class="lbl">W24 2026</td><td><time datetime="2026-06-08">8 Jun</time></td><td class="r">+0.54%</td><td class="r"><span class=goal-met>goal met</span></td></tr><tr><td class="lbl">W23 2026</td><td><time datetime="2026-06-01">1 Jun</time></td><td class="r">−0.09%</td><td class="r">loss</td></tr><tr><td class="lbl">W22 2026</td><td><time datetime="2026-05-25">25 May</time></td><td class="r">+0.04%</td><td class="r"></td></tr><tr><td class="lbl">W21 2026</td><td><time datetime="2026-05-18">18 May</time></td><td class="r">+0.15%</td><td class="r"></td></tr><tr><td class="lbl">W20 2026</td><td><time datetime="2026-05-11">11 May</time></td><td class="r">+0.74%</td><td class="r"><span class=goal-met>goal met</span></td></tr><tr><td class="lbl">W19 2026</td><td><time datetime="2026-05-04">4 May</time></td><td class="r">+0.45%</td><td class="r"></td></tr><tr><td class="lbl">W18 2026</td><td><time datetime="2026-04-27">27 Apr</time></td><td class="r">+0.61%</td><td class="r"><span class=goal-met>goal met</span></td></tr><tr><td class="lbl">W17 2026</td><td><time datetime="2026-04-20">20 Apr</time></td><td class="r">+0.52%</td><td class="r"><span class=goal-met>goal met</span></td></tr></tbody>
+</table></div>
+</details>
+<p class="small muted" style="margin-top:.9rem">The same series as a file: <a href="/weekly-series.csv">weekly-series.csv</a> (week, Monday it starts, % realized).</p>
+</div></section>
 
+<section id="realized-vs-open"><div class="wrap">
+<div class="sec-head">
+<h2>Realized vs. open: the part most bot results leave out</h2>
+<p>Every weekly figure above is <em>realized</em>: profit that was locked in by selling. The bitcoin the bot still holds is <em>open</em>, and it is not in those figures.</p>
+</div>
+<div class="two">
+<div class="card">
+<span class="tag in">In the weekly figure</span>
+<h3>Realized</h3>
+<p>A position counts the moment it is sold, in the week of the sale.</p>
+<ul><li>Fees on the buy and the sell are already taken off.</li><li>The rare forced exits at a loss are included.</li><li>Once it's in, it doesn't change.</li></ul>
+</div>
+<div class="card">
+<span class="tag out">Not in the weekly figure</span>
+<h3>Open</h3>
+<p>Bitcoin bought but not yet sold. Its value moves with the price, every minute.</p>
+<ul><li>Nothing is locked in until it's sold.</li><li>A falling price shows up here first.</li><li>It reaches the weekly figure only when sold.</li></ul>
+</div>
+</div>
+<div class="range">
+<h3>Open positions, last seven days</h3>
+<p class="small muted" style="margin:0">14 Oct to 21 Oct 2026: what the open positions were worth compared with what was paid for them, as % of the account. Lowest and highest reading.</p>
+<div class="track" aria-hidden="true">
+<div class="base"></div><div class="band" style="left:6.5%;width:45.2%"></div>
+<div class="zero-tick" style="left:50%"></div>
+<span class="dot" style="left:6.5%"></span><span class="dot" style="left:51.7%"></span>
+</div>
+<div class="ticks" aria-hidden="true"><span>−3%</span><span>0%</span><span>+3%</span></div>
+<dl class="range-vals"><div><dt>Lowest reading</dt><dd>−2.61%</dd></div><div><dt>Highest reading</dt><dd>+0.10%</dd></div></dl>
+</div>
+<div class="callout">
+<p><strong>Why almost every closed trade is a winner.</strong> The bot is built to sell a position only above its buy price. That is a design choice, not skill. Losses mostly wait in open positions instead of showing up in the weekly figure. In a deep bitcoin drop, the open number gets much larger before any of it shows up in the weekly figure.</p>
+</div>
+</div></section>
+
+<section id="leaks"><div class="wrap">
+<div class="sec-head">
 <h2>Where the edge leaks</h2>
 <p>A bot that only ever sells at a profit still loses money in quieter ways. These are the leaks I measured on this bot, each with the date it was measured or fixed.</p>
-<div class="lek"><h3>Exchange fees took about a fifth of gross profit</h3><p>Between late April and early August, fees came to roughly 20% of gross trading profit. The bot now books the real fee per fill. The exchange charges 0.18% per taker order and 0.09% per maker order at the bot&#x27;s volume.</p><p class="meta">measured 5 Aug 2026; fee tiers read 8 Sep 2026</p></div><div class="lek"><h3>Lowering the profit target over time gave money away</h3><p>A &#x27;time-decay&#x27; rule lowered the sell target as a position aged. Of 152 sales it touched over 55 days, the original target was still reached in 78% of cases (median: 3 hours later). The rule gave up about 0.33% per trade, so it was switched off.</p><p class="meta">measured 5 Aug 2026</p></div><div class="lek"><h3>A safety filter froze the buy ladder</h3><p>A hard block on buying when RSI was above 70 also stopped the ladder from following the price, so a later shallow dip caught nothing. It became a taper: smaller orders between RSI 70 and 80, a hard block only above 80.</p><p class="meta">changed 9 Aug 2026</p></div><div class="lek"><h3>The weekly report undercounted by about half</h3><p>The report filtered on when a position started instead of when it was sold, so positions spanning two weeks disappeared. Fixed, and checked against the trade records.</p><p class="meta">fixed 9 Aug 2026</p></div>
+</div>
+<div class="leaks"><article class="leak"><div class="leak-top"><span>Leak 1</span><time datetime="2026-08-05">measured 5 Aug 2026; fee tiers read 8 Sep 2026</time></div><p class="leak-fig">~20%</p><p class="leak-fig-sub">of gross profit went to fees</p><h3>Exchange fees took about a fifth of gross profit</h3><p class="txt">Between late April and early August, fees came to roughly 20% of gross trading profit. The bot now books the real fee per fill. The exchange charges 0.18% per taker order and 0.09% per maker order at the bot&#x27;s volume.</p><p class="now">Real fee now booked per fill</p></article><article class="leak"><div class="leak-top"><span>Leak 2</span><time datetime="2026-08-05">measured 5 Aug 2026</time></div><p class="leak-fig">0.33%</p><p class="leak-fig-sub">given up per trade</p><h3>Lowering the profit target over time gave money away</h3><p class="txt">A &#x27;time-decay&#x27; rule lowered the sell target as a position aged. Of 152 sales it touched over 55 days, the original target was still reached in 78% of cases (median: 3 hours later). The rule gave up about 0.33% per trade, so it was switched off.</p><p class="now">Rule switched off</p></article><article class="leak"><div class="leak-top"><span>Leak 3</span><time datetime="2026-08-09">changed 9 Aug 2026</time></div><p class="leak-fig">RSI 70</p><p class="leak-fig-sub">hard block that froze the ladder</p><h3>A safety filter froze the buy ladder</h3><p class="txt">A hard block on buying when RSI was above 70 also stopped the ladder from following the price, so a later shallow dip caught nothing. It became a taper: smaller orders between RSI 70 and 80, a hard block only above 80.</p><p class="now">Now a taper; hard block only above 80</p></article><article class="leak"><div class="leak-top"><span>Leak 4</span><time datetime="2026-08-09">fixed 9 Aug 2026</time></div><p class="leak-fig">~½</p><p class="leak-fig-sub">of realized profit went uncounted</p><h3>The weekly report undercounted by about half</h3><p class="txt">The report filtered on when a position started instead of when it was sold, so positions spanning two weeks disappeared. Fixed, and checked against the trade records.</p><p class="now">Fixed and checked against trade records</p></article></div>
+</div></section>
 
+<section id="strategies"><div class="wrap">
+<div class="sec-head">
 <h2>Which strategy earns what, last 90 days</h2>
-<table>
-<tr><th>Strategy</th><th class="n">Closed trades</th><th class="n">Return per trade</th><th class="n">Median hold</th></tr>
-<tr><td>fine</td><td class="n">711</td><td class="n">+1.64%</td><td class="n">68 h</td></tr><tr><td>coarse</td><td class="n">60</td><td class="n">+1.76%</td><td class="n">61 h</td></tr><tr><td>rsi</td><td class="n">30</td><td class="n">+1.39%</td><td class="n">111 h</td></tr><tr><td>meanrev</td><td class="n">16</td><td class="n">+1.80%</td><td class="n">132 h</td></tr><tr><td>dust_bundle</td><td class="n">10</td><td class="n">+1.66%</td><td class="n">9 h</td></tr><tr><td>volsniper</td><td class="n">8</td><td class="n">+1.04%</td><td class="n">42 h</td></tr>
-</table>
-<p class="meta">Return per trade = net profit divided by the amount invested in those trades, after fees, closed trades only.</p>
+<p>The bot runs several strategies side by side. Names as the bot logs them.</p>
+</div>
+<div class="tbl plain-tbl"><table>
+<thead><tr><th scope="col">Strategy</th><th scope="col" class="r">Closed trades</th><th scope="col" class="r">Return per trade</th><th scope="col" class="r">Median hold</th></tr></thead>
+<tbody><tr><td><span class="code">fine</span></td><td class="r">711</td><td class="r">+1.64%</td><td class="r">68 h</td></tr><tr><td><span class="code">coarse</span></td><td class="r">60</td><td class="r">+1.76%</td><td class="r">61 h</td></tr><tr><td><span class="code">rsi</span></td><td class="r">30</td><td class="r">+1.39%</td><td class="r">111 h</td></tr><tr><td><span class="code">meanrev</span></td><td class="r">16</td><td class="r">+1.80%</td><td class="r">132 h</td></tr><tr><td><span class="code">dust_bundle</span></td><td class="r">10</td><td class="r">+1.66%</td><td class="r">9 h</td></tr><tr><td><span class="code">volsniper</span></td><td class="r">8</td><td class="r">+1.04%</td><td class="r">42 h</td></tr></tbody>
+</table></div>
+<p class="chart-note">Return per trade = net profit divided by the amount invested in those trades, after fees, closed trades only. It is not a weekly return: a trade can be open for days.</p>
+</div></section>
 
-<h2>How this is measured</h2>
-<p>Every figure comes from the bot's own records through its read-only dashboard, the same numbers I look at. This page shows percentages only: no amounts, no account size, no open orders. Weeks appear here one week after they end. The bot runs on Replit and trades on Bitvavo. Data read on 21 Oct 2026.</p>
+<section id="rules"><div class="wrap">
+<div class="sec-head">
+<h2>The rules of this logbook</h2>
+<p>Every figure comes from the bot's own records through its read-only dashboard, the same numbers I look at. A script builds this page; no number is typed in by hand. <a href="/method/">How each number is computed</a>.</p>
+</div>
+<ul class="rules">
+<li><strong>Percentages only.</strong> No amounts, no account size, no order details.</li>
+<li><strong>One week delayed.</strong> A week appears here seven days after it ends.</li>
+<li><strong>Fees on both sides.</strong> Every figure is after the exchange fee on the buy and on the sell.</li>
+<li><strong>Loss sales count.</strong> The rare forced exits at a loss are in the weekly figures.</li>
+<li><strong>Open positions shown next to it.</strong> Realized profit is never presented as the whole picture.</li>
+<li><strong>No signals, no advice, no copy-trading.</strong> This is a logbook, not a service.</li>
+</ul>
+<p class="small muted" style="margin-top:1.4rem">The bot runs on Replit and trades on Bitvavo. Data read on 21 Oct 2026.</p>
+</div></section>
 
+<section id="about"><div class="wrap author">
+<div class="mono-badge" aria-hidden="true">DH</div>
+<div class="prose">
+<h2>Who keeps this logbook</h2>
+<p>I'm Daan (Daniel Haket), a former banker: 23 years in international finance. I live in Rotterdam. I built this bot with Replit's AI agent, and it has traded BTC-EUR on Bitvavo with real money since April 2026.</p>
+<p>The name promised 2% a week. This page is the measuring tape: what the bot really does, week by week, including the parts that went wrong. <a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">LinkedIn</a></p>
+</div>
+</div></section>
+
+<section id="follow" style="border-bottom:0"><div class="wrap">
+<div class="sec-head"><h2>Follow the logbook</h2></div>
+<div class="signup">
 <div class="box">
 <h3>One honest email a week</h3>
 <p>What changed on the bot, what broke, and what I measured. No tips.</p>
-<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="weekmail"><input type="email" name="email" placeholder="you@example.com" required><button type="submit">Subscribe</button></form>
+<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="weekmail"><label class="sr" for="mail-week">Email address</label><input id="mail-week" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">Subscribe</button></form>
 </div>
-
 <div class="box" id="build-notes">
 <h3>The build notes of this bot</h3>
 <p>How it is built and guarded: the ladder, the safety checks, the monitoring, and the mistakes above in full detail. It's an engineering document, not a strategy that promises returns. It doesn't exist as a product yet. Leave your email if you'd want it, and I'll only write it if enough people do.</p>
-<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="bouwnotities"><input type="email" name="email" placeholder="you@example.com" required><button type="submit">I'd want the build notes</button></form>
+<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="bouwnotities"><label class="sr" for="mail-notes">Email address</label><input id="mail-notes" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">I'd want the build notes</button></form>
 </div>
+</div>
+</div></section>
 
-<p class="disclaimer">This is a personal logbook, not financial advice and not an offer of any service. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
 </main>
+<footer class="foot"><div class="wrap">
+<p class="disclaimer">This is a personal logbook, not financial advice and not an offer of any service. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
+<p>Weeks W17 to W41 2026 &middot; data read on 21 Oct 2026 &middot; a new week is added seven days after it ends.</p><ul class="foot-links">
+<li><a href="/">The logbook</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket on LinkedIn</a></li>
+</ul>
+</div></footer>
 </body>
 </html>

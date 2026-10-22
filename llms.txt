@@ -1,8 +1,36 @@
 # The Weekly 2% Edge
 
-> The public logbook of a live BTC-EUR trading bot: realized profit per week as a percentage of the capital in play (after fees, one week delayed), the open positions next to it, and the measured places where profit leaked away. Percentages only; no signals, no advice. Last updated 2026-10-22.
+> The public logbook of a live BTC-EUR trading bot: realized profit per week as a percentage of the capital in play (after fees on the buy and the sell, rare forced loss sales included, published one week late), the open positions next to it, and the measured places where profit leaked away. Percentages only; no signals, no advice. Data read on 2026-10-21.
 
-Reviews are written by Daan: a Dutch former banker (23 years in international finance) who runs his businesses from Rotterdam, the Netherlands. Most reviews are researched assessments, read from the vendor's own pages and from what other buyers report; where he has run a tool himself, the review says so. His own stack: a Hostinger VPS for his AI agent Victor, which maintains his sites; Replit, where he built a 24/7 crypto trading bot with Replit's AI agent; Bitvavo, the exchange that bot trades on; and Claude.
+The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 years in international finance) in Rotterdam, the Netherlands. He built the bot with Replit's AI agent; it runs on Replit and has traded BTC-EUR on Bitvavo with real money since April 2026. The name promised 2% a week; the site is the measuring tape, not a return promise.
 
 ## Key pages
-- [The logbook](https://theweekly2pctedge.com/): every week since W17 2026, the leaks, and returns per strategy
+- [The logbook](https://theweekly2pctedge.com/): every week since W17 2026 in a chart and table, realized vs. open positions, the 4 measured leaks, and returns per strategy over the last 90 days
+- [Method](https://theweekly2pctedge.com/method/): how every number is computed, what is included and what is never shown
+- [Weekly series (CSV)](https://theweekly2pctedge.com/weekly-series.csv): week, Monday it starts, realized % of capital in play
+
+## Current figures (W17 to W41 2026, 25 weeks)
+- Median week: +0.46% realized; average week +0.49%
+- Goal of 0.5% a week reached in 11 of 25 weeks; no week reached the 2% in the name
+- Best week +1.32%, worst week -0.09%
+- Open positions over 2026-10-14 to 2026-10-21 (not delayed): between -2.61% and +0.10% of the account versus what was paid
+
+## Method in short
+- Weekly figure = realized profit of positions sold that week (Monday to Sunday), after exchange fees on both sides, divided by the capital in play that week
+- Positions count in the week they are sold; rare forced loss sales are included
+- Open (unrealized) positions are shown separately because the bot normally only sells above its buy price
+- Return per trade (strategy table) = net profit divided by the amount invested in those trades, after fees, closed trades only
+
+## Rules
+- Percentages only: never euro amounts, account size or order details
+- One week delayed: a week appears seven days after it ends
+- No signals, no advice, no copy-trading; not an offer of any service
+- Past weeks say nothing about future weeks; crypto is volatile and you can lose your entire stake
+
+## Data freshness
+- Latest week shown: W41 2026 (week starting 2026-10-05)
+- The page is checked daily and rebuilt only when a new week becomes eligible; this file is regenerated in the same run
+- The figures above come from the bot's read-only dashboard at build time; nothing is typed in by hand
+
+## Contact
+- [Daniel Haket on LinkedIn](https://www.linkedin.com/in/daniel-haket-8305a33)
