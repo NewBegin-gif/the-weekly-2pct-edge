@@ -1,6 +1,6 @@
 # The Weekly 2% Edge
 
-> The public logbook of a live BTC-EUR trading bot: realized profit per week as a percentage of the capital in play (after fees on the buy and the sell, rare forced loss sales included, published one week late), the open positions next to it, and the measured places where profit leaked away. Percentages only; no signals, no advice. Data read on 2026-10-22.
+> The public logbook of a live BTC-EUR trading bot: realized profit per week as a percentage of the capital in play (after fees on the buy and the sell, rare forced loss sales included, published one week late), the open positions next to it, and the measured places where profit leaked away. Percentages only; no signals, no advice. Data read on 2026-10-23.
 
 The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 years in international finance) in Rotterdam, the Netherlands. He built the bot with Replit's AI agent; it runs on Replit and has traded BTC-EUR on Bitvavo with real money since April 2026. The name promised 2% a week; the site is the measuring tape, not a return promise.
 
@@ -13,7 +13,7 @@ The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 ye
 - Median week: +0.46% realized; average week +0.49%
 - Goal of 0.5% a week reached in 11 of 25 weeks; no week reached the 2% in the name
 - Best week +1.32%, worst week -0.09%
-- Open positions over 2026-10-15 to 2026-10-22 (not delayed): between -2.61% and +0.11% of the account versus what was paid
+- Open positions over 2026-10-16 to 2026-10-23 (not delayed): between -2.05% and +0.11% of the account versus what was paid
 
 ## Method in short
 - Weekly figure = realized profit of positions sold that week (Monday to Sunday), after exchange fees on both sides, divided by the capital in play that week
