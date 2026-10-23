@@ -49,6 +49,13 @@ VERTRAGING_DAGEN = 7
 GA4 = "G-CW1KZ258ZV"
 LINKEDIN = "https://www.linkedin.com/in/daniel-haket-8305a33"
 
+# Voorverkoop van de bouwnotities (Daan, 22 okt 2026): pas na 16 dec 2026 en alleen als de wachtlijst de drempel
+# haalt; 49 euro; als knop in het bestaande blok op de homepage, geen eigen pagina. Zolang checkout en leverdatum leeg
+# zijn blijft het wachtlijstformulier staan (vraagmeting, GA4 'bouwnotities_aanmelding'). Vul beide in om te schakelen.
+BOUWNOTITIES_CHECKOUT = ""  # Lemon Squeezy-checkoutlink, bv. "https://<winkel>.lemonsqueezy.com/buy/<id>"
+BOUWNOTITIES_LEVERDATUM = None  # datetime.date(...): uiterlijk geleverd, anders geld terug
+BOUWNOTITIES_PRIJS = "€49"
+
 # Gemeten lekken. Alleen percentages; bron = eigen metingen op de bot. 'cijfer' en 'nu' herhalen alleen wat in
 # 'uitleg' staat (kop van de kaart), 'iso' is de meetdatum voor <time>.
 LEKKEN = [
@@ -292,8 +299,9 @@ code,.code{font-family:var(--mono);font-size:.88em}
 .box p{color:var(--ink-2)}
 form{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem}
 input[type=email]{flex:1 1 12rem;min-width:0;font:inherit;font-size:1rem;padding:.7rem .85rem;border-radius:3px;border:1px solid var(--rule-2);background:var(--bg);color:var(--ink)}
-button{font:600 .95rem/1.2 var(--sans);padding:.75rem 1.1rem;border-radius:3px;border:0;background:var(--btn);color:var(--btn-ink);cursor:pointer}
-button:hover{opacity:.9}
+button,.btn{font:600 .95rem/1.2 var(--sans);padding:.75rem 1.1rem;border-radius:3px;border:0;background:var(--btn);color:var(--btn-ink);cursor:pointer}
+button:hover,.btn:hover{opacity:.9}
+.btn{display:inline-block;text-decoration:none;margin:.2rem 0 .8rem}
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* voet */
@@ -623,6 +631,37 @@ def persoon():
             "sameAs": [LINKEDIN]}
 
 
+def voorverkoop():
+    """True als de voorverkoop aan staat; half ingevuld is een fout, geen stille terugval."""
+    if not BOUWNOTITIES_CHECKOUT and BOUWNOTITIES_LEVERDATUM is None:
+        return False
+    if not BOUWNOTITIES_CHECKOUT.startswith("https://") or not isinstance(BOUWNOTITIES_LEVERDATUM, datetime.date):
+        raise SystemExit("bouwnotities: vul BOUWNOTITIES_CHECKOUT (https://...) én BOUWNOTITIES_LEVERDATUM "
+                         "(datetime.date) in, of laat ze allebei leeg")
+    if BOUWNOTITIES_LEVERDATUM < datetime.date.today():
+        print(f"LET OP: leverdatum bouwnotities ({BOUWNOTITIES_LEVERDATUM}) is voorbij; de pagina belooft nog steeds "
+              f"levering op die datum")
+    return True
+
+
+def bouwnotities_blok():
+    uitleg = ("How it is built and guarded: the ladder, the safety checks, the monitoring, and the mistakes above in "
+              "full detail. It's an engineering document, not a strategy that promises returns.")
+    if not voorverkoop():
+        return f"""<div class="box" id="build-notes">
+<h3>The build notes of this bot</h3>
+<p>{uitleg} It doesn't exist as a product yet. Leave your email if you'd want it, and I'll only write it if enough people do.</p>
+<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="bouwnotities"><label class="sr" for="mail-notes">Email address</label><input id="mail-notes" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">I'd want the build notes</button></form>
+</div>"""
+    return f"""<div class="box" id="build-notes">
+<h3>The build notes of this bot</h3>
+<p>{uitleg}</p>
+<p><strong>Pre-order: {e(BOUWNOTITIES_PRIJS)}, one-off.</strong> Delivered by <time datetime="{BOUWNOTITIES_LEVERDATUM}">{lang(BOUWNOTITIES_LEVERDATUM)}</time>. If it isn't delivered by then, you get your money back in full.</p>
+<a class="btn" href="{e(BOUWNOTITIES_CHECKOUT)}" onclick="if(window.gtag)gtag('event','bouwnotities_voorverkoop_klik')">Pre-order the build notes</a>
+<p class="small muted">Checkout, payment and VAT are handled by Lemon Squeezy.</p>
+</div>"""
+
+
 def homepage(c):
     weken, reeks = c["weken"], c["reeks"]
     eerste, laatste = weken[0], weken[-1]
@@ -822,11 +861,7 @@ def homepage(c):
 <p>What changed on the bot, what broke, and what I measured. No tips.</p>
 <form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="weekmail"><label class="sr" for="mail-week">Email address</label><input id="mail-week" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">Subscribe</button></form>
 </div>
-<div class="box" id="build-notes">
-<h3>The build notes of this bot</h3>
-<p>How it is built and guarded: the ladder, the safety checks, the monitoring, and the mistakes above in full detail. It's an engineering document, not a strategy that promises returns. It doesn't exist as a product yet. Leave your email if you'd want it, and I'll only write it if enough people do.</p>
-<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="bouwnotities"><label class="sr" for="mail-notes">Email address</label><input id="mail-notes" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">I'd want the build notes</button></form>
-</div>
+{bouwnotities_blok()}
 </div>
 </div></section>
 
@@ -951,7 +986,7 @@ The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 ye
 - [The logbook]({SITE}/): every week since {weken[0][1]} {weken[0][0].isocalendar()[0]} in a chart and table, realized vs. open positions, the {len(LEKKEN)} measured leaks, and returns per strategy over the last 90 days
 - [Method]({SITE}/method/): how every number is computed, what is included and what is never shown
 - [Weekly series (CSV)]({SITE}/weekly-series.csv): week, Monday it starts, realized % of capital in play
-
+{f"- [Build notes, pre-order]({SITE}/#build-notes): an engineering document on how the bot is built and guarded, {BOUWNOTITIES_PRIJS}, delivered by {BOUWNOTITIES_LEVERDATUM}; not a strategy or a return promise" + chr(10) if voorverkoop() else ""}
 ## Current figures ({c["periode"]}, {len(reeks)} weeks)
 - Median week: {pct(c["mediaan"]).replace(chr(8722), "-")} realized; average week {pct(c["gemiddeld"]).replace(chr(8722), "-")}
 - Goal of {DOEL}% a week reached in {c["raak"]} of {len(reeks)} weeks; {naam_tekst}
