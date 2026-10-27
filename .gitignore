@@ -7,3 +7,6 @@
 *.bak.*
 *.tmp-*
 *.orig
+# Python-bytecode hoort niet in de webroot (rsync sluit alleen *.py uit)
+__pycache__/
+*.pyc

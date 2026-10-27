@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bitcoin bot bouwen? Het eerlijke logboek van een echte bot</title>
+<meta name="description" content="Zelf een bitcoin trading bot maken? Zie eerst wat een echte Bitvavo-bot elke week verdiende, in procenten na kosten. Plus het bouwpakket voor je AI.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="Daniel Haket">
+<meta name="theme-color" content="#f6f3ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1318" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://mijnbitcoinstrategie.nl/">
+<link rel="alternate" hreflang="en" href="https://theweekly2pctedge.com/">
+<link rel="alternate" hreflang="nl-NL" href="https://mijnbitcoinstrategie.nl/">
+<link rel="alternate" hreflang="nl-BE" href="https://mijnbitcoinstrategie.nl/">
+<link rel="alternate" hreflang="x-default" href="https://theweekly2pctedge.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mijn Bitcoinstrategie">
+<meta property="og:title" content="Bitcoin bot bouwen? Het eerlijke logboek van een echte bot">
+<meta property="og:description" content="Zelf een bitcoin trading bot maken? Zie eerst wat een echte Bitvavo-bot elke week verdiende, in procenten na kosten. Plus het bouwpakket voor je AI.">
+<meta property="og:url" content="https://mijnbitcoinstrategie.nl/">
+<meta property="og:locale" content="nl_NL">
+<meta property="og:image" content="https://mijnbitcoinstrategie.nl/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Mijn Bitcoinstrategie: de gerealiseerde weekwinst van een live bitcoinbot in procenten, tegen het doel van 0,5% en de 2% uit de naam.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bitcoin bot bouwen? Het eerlijke logboek van een echte bot">
+<meta name="twitter:description" content="Zelf een bitcoin trading bot maken? Zie eerst wat een echte Bitvavo-bot elke week verdiende, in procenten na kosten. Plus het bouwpakket voor je AI.">
+<meta name="twitter:image" content="https://mijnbitcoinstrategie.nl/og-image.png">
+<meta name="twitter:image:alt" content="Mijn Bitcoinstrategie: de gerealiseerde weekwinst van een live bitcoinbot in procenten, tegen het doel van 0,5% en de 2% uit de naam.">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebSite",
+   "@id": "https://mijnbitcoinstrategie.nl/#website",
+   "name": "Mijn Bitcoinstrategie",
+   "url": "https://mijnbitcoinstrategie.nl/",
+   "inLanguage": "nl",
+   "description": "Het openbare logboek van een live BTC-EUR-handelsbot, in procenten, en het bouwpakket om er zelf een te maken.",
+   "publisher": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   },
+   "author": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   }
+  },
+  {
+   "@type": "Person",
+   "@id": "https://theweekly2pctedge.com/#daan",
+   "name": "Daniel Haket",
+   "alternateName": "Daan",
+   "description": "Oud-bankier (23 jaar in de internationale financiële wereld) in Rotterdam die de bot bouwde en draait.",
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Rotterdam",
+    "addressCountry": "NL"
+   },
+   "sameAs": [
+    "https://www.linkedin.com/in/daniel-haket-8305a33"
+   ]
+  },
+  {
+   "@type": "WebPage",
+   "@id": "https://mijnbitcoinstrategie.nl/#webpage",
+   "url": "https://mijnbitcoinstrategie.nl/",
+   "name": "Bitcoin bot bouwen? Het eerlijke logboek van een echte bot",
+   "description": "Zelf een bitcoin trading bot maken? Zie eerst wat een echte Bitvavo-bot elke week verdiende, in procenten na kosten. Plus het bouwpakket voor je AI.",
+   "isPartOf": {
+    "@id": "https://mijnbitcoinstrategie.nl/#website"
+   },
+   "about": {
+    "@id": "https://theweekly2pctedge.com/#weekly-series"
+   },
+   "author": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   },
+   "inLanguage": "nl",
+   "dateModified": "2026-10-26"
+  },
+  {
+   "@type": "Dataset",
+   "@id": "https://theweekly2pctedge.com/#weekly-series",
+   "name": "Gerealiseerde weekwinst van een live BTC-EUR-handelsbot",
+   "description": "Gerealiseerde winst per kalenderweek (maandag tot zondag) van een live BTC-EUR-handelsbot op Bitvavo, als percentage van het kapitaal dat de bot die week had ingezet, na beurskosten op aankoop en verkoop. Alleen percentages, geen bedragen. Elke week verschijnt een week na afloop. Periode: W17 tot W42 2026.",
+   "url": "https://theweekly2pctedge.com/",
+   "creator": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   },
+   "isAccessibleForFree": true,
+   "inLanguage": "nl",
+   "temporalCoverage": "2026-04-20/2026-10-18",
+   "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "text/csv",
+    "contentUrl": "https://theweekly2pctedge.com/weekly-series.csv"
+   }
+  }
+ ]
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CW1KZ258ZV"></script>
+<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-CW1KZ258ZV');</script>
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f6f3ec; --surface:#fffdf8; --sunk:#efeadf; --ink:#1b1f24; --ink-2:#434a54; --muted:#5f646c;
+  --rule:#e2dccd; --rule-2:#cfc7b4; --brass:#7d5e22; --hit:#1f7a52; --below:#3f73b8; --neg:#c2412d;
+  --btn:#1b1f24; --btn-ink:#fffdf8; --focus:#3f73b8;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Charter,"Bitstream Charter",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1318; --surface:#161b22; --sunk:#1c222b; --ink:#ece8df; --ink-2:#c3c6cb; --muted:#9aa1aa;
+  --rule:#262d36; --rule-2:#36404b; --brass:#d4ac5e; --hit:#2f9e68; --below:#5b8fd6; --neg:#e0604a;
+  --btn:#ece8df; --btn-ink:#0f1318; --focus:#5b8fd6;
+}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.65 var(--sans);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.18em;text-decoration-color:var(--rule-2)}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:3px}
+.skip{position:absolute;left:-999px;top:0;background:var(--surface);padding:.6rem 1rem;z-index:9}
+.skip:focus{left:1rem;top:1rem}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1rem}
+@media (min-width:700px){.wrap{padding:0 2rem}}
+.prose{max-width:42rem}
+h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--ink);letter-spacing:-.01em;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,6.2vw,3.4rem);letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem);margin-bottom:.75rem}
+h3{font-size:1.2rem;margin-bottom:.4rem}
+p{margin:0 0 1rem}
+strong{font-weight:650}
+.kicker{font:600 .75rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin:0 0 .9rem}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.num{font-variant-numeric:tabular-nums}
+
+/* kop */
+.top{border-bottom:1px solid var(--rule);background:var(--bg)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:3.75rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font:650 1.02rem/1 var(--serif);letter-spacing:-.01em}
+.brand svg{flex:none}
+.nav{display:flex;gap:1.1rem;font-size:.9rem}
+.nav a{text-decoration:none;color:var(--ink-2)}
+.nav a:hover,.nav a[aria-current]{color:var(--ink);text-decoration:underline}
+@media (max-width:520px){.nav .opt{display:none}}
+
+/* hero */
+.hero{padding:2.4rem 0 2.6rem;border-bottom:1px solid var(--rule)}
+.hero-grid{display:grid;gap:1.6rem;grid-template-areas:"head" "answer" "lead"}
+@media (min-width:900px){.hero{padding:4rem 0 4rem}.hero-grid{grid-template-columns:1.15fr 1fr;column-gap:3.5rem;row-gap:1.4rem;grid-template-areas:"head answer" "lead answer";align-items:start}}
+.hero-head{grid-area:head}.hero-lead{grid-area:lead}.answer{grid-area:answer}
+.hero-lead p{font-size:1.1rem;color:var(--ink-2);max-width:36rem}
+.answer{position:relative;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem 1.9rem;
+  box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(27,31,36,.35)}
+.answer::before{content:"";position:absolute;top:0;bottom:0;left:.85rem;border-left:3px double var(--neg);opacity:.55}
+.answer-label{font:600 .75rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 .35rem}
+.hero-num{font:700 clamp(3.6rem,15vw,5.4rem)/1 var(--sans);letter-spacing:-.04em;margin:0 0 .4rem;color:var(--ink)}
+.answer-sub{color:var(--ink-2);margin:0 0 1.1rem}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0 0 1rem;border-top:1px solid var(--rule)}
+.facts div{padding:.7rem .2rem .65rem 0;border-bottom:1px solid var(--rule)}
+.facts div:nth-child(odd){padding-right:.8rem;border-right:1px solid var(--rule)}
+.facts div:nth-child(even){padding-left:.8rem}
+.facts dt{font-size:.8rem;color:var(--muted);line-height:1.3}
+.facts dd{margin:.15rem 0 0;font-weight:650;font-size:1.1rem;line-height:1.25}
+.facts dd span{font-weight:400;font-size:.85rem;color:var(--muted)}
+.answer-note{font-size:.9rem;color:var(--ink-2);margin:0;padding:.75rem .85rem;background:var(--sunk);border-radius:3px}
+
+/* secties */
+section{padding:3.2rem 0;border-bottom:1px solid var(--rule)}
+@media (min-width:900px){section{padding:4.4rem 0}}
+.sec-head{max-width:42rem;margin-bottom:1.6rem}
+.sec-head p{color:var(--ink-2)}
+
+/* grafiek */
+.chart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1rem .6rem .5rem}
+@media (min-width:700px){.chart{padding:1.4rem 1.4rem .8rem}}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .narrow{display:none}
+@media (max-width:640px){.chart .wide{display:none}.chart .narrow{display:block}}
+.ax{font:11px var(--sans);fill:var(--muted);font-variant-numeric:tabular-nums}
+.ax-line{stroke:var(--rule);stroke-width:1}
+.zero{stroke:var(--ink-2);stroke-width:1}
+.ref{stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.ref-goal{stroke:var(--ink-2)}.ref-name{stroke:var(--brass)}
+.ref-lbl{font:600 11px var(--sans);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.ref-lbl.goal{fill:var(--ink-2)}.ref-lbl.name{fill:var(--brass)}
+.val{font:600 11px var(--sans);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;font-variant-numeric:tabular-nums}
+.b-hit{fill:var(--hit)}.b-below{fill:var(--below)}.b-neg{fill:var(--neg)}
+.wk .hit-area{fill:transparent}
+.wk:hover path{opacity:.75}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;list-style:none;margin:.9rem 0 0;padding:0 .2rem;font-size:.85rem;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:.45rem}
+.sw{width:.8rem;height:.8rem;border-radius:2px;display:inline-block;flex:none}
+.sw.hit{background:var(--hit)}.sw.below{background:var(--below)}.sw.neg{background:var(--neg)}
+.sw.line{height:0;border-top:2px dashed var(--ink-2);border-radius:0;width:1.1rem}
+.sw.line.name{border-color:var(--brass)}
+.chart-note{margin:1rem 0 0;font-size:.9rem;color:var(--muted);max-width:44rem}
+
+/* tabellen */
+details{margin-top:1.2rem;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+summary{cursor:pointer;padding:.85rem 1rem;font-weight:600;font-size:.95rem}
+details[open] summary{border-bottom:1px solid var(--rule)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem;font-variant-numeric:tabular-nums}
+caption{text-align:left;padding:0 0 .6rem;font-size:.85rem;color:var(--muted)}
+th,td{padding:.55rem .75rem;text-align:left;border-bottom:1px solid var(--rule);vertical-align:baseline}
+thead th{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule-2)}
+tbody tr:last-child td{border-bottom:0}
+.r{text-align:right;white-space:nowrap}
+td.lbl{white-space:nowrap}
+code,.code{font-family:var(--mono);font-size:.88em}
+.goal-met{font-size:.8rem;color:var(--hit);font-weight:600}
+.plain-tbl{background:var(--surface);border:1px solid var(--rule);border-radius:4px}
+
+/* gerealiseerd vs open */
+.two{display:grid;gap:1rem}
+@media (min-width:760px){.two{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.3rem 1.1rem}
+.card p:last-child{margin-bottom:0}
+.tag{display:inline-block;font:600 .7rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:.35rem .5rem;border-radius:2px;margin-bottom:.8rem}
+.tag.in{background:color-mix(in srgb,var(--hit) 16%,transparent);color:var(--ink)}
+.tag.out{background:color-mix(in srgb,var(--neg) 14%,transparent);color:var(--ink)}
+.card ul{margin:.4rem 0 0;padding-left:1.1rem;color:var(--ink-2)}
+.card li{margin-bottom:.3rem}
+.range{margin:1.25rem 0 0;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.3rem 1.1rem}
+.range h3{font-size:1.1rem}
+.track{position:relative;height:1.6rem;margin:1.2rem .4rem .3rem}
+.track .base{position:absolute;left:0;right:0;top:.6rem;height:.4rem;border-radius:.2rem;background:var(--sunk);border:1px solid var(--rule)}
+.track .band{position:absolute;top:.6rem;height:.4rem;border-radius:.2rem;background:var(--neg);opacity:.85}
+.track .zero-tick{position:absolute;top:0;height:1.6rem;width:0;border-left:2px solid var(--ink)}
+.track .dot{position:absolute;top:.4rem;width:.8rem;height:.8rem;margin-left:-.4rem;border-radius:50%;background:var(--neg);box-shadow:0 0 0 2px var(--surface)}
+.range-vals{display:flex;gap:2rem;margin:1rem 0 0;padding-top:.8rem;border-top:1px solid var(--rule)}
+.range-vals dt{font-size:.8rem;color:var(--muted)}
+.range-vals dd{margin:0;font-weight:650;font-size:1.25rem}
+.ticks{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin:0 .3rem;font-variant-numeric:tabular-nums}
+.callout{margin-top:1.25rem;border-left:3px solid var(--brass);padding:.2rem 0 .2rem 1rem;max-width:44rem}
+.callout p{color:var(--ink-2)}
+
+/* lekken */
+.leaks{display:grid;gap:1rem;counter-reset:lek}
+@media (min-width:760px){.leaks{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.leak{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.2rem 1.3rem 1.1rem;display:flex;flex-direction:column}
+.leak-top{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem}
+.leak-top time{letter-spacing:.02em;text-transform:none;text-align:right}
+.leak-fig{font:700 2rem/1 var(--sans);letter-spacing:-.02em;color:var(--neg);margin:0 0 .2rem}
+.leak-fig-sub{font-size:.85rem;color:var(--muted);margin:0 0 .9rem}
+.leak p.txt{color:var(--ink-2);font-size:.97rem}
+.leak .now{margin:auto 0 0;padding-top:.75rem;border-top:1px solid var(--rule);font-size:.88rem;font-weight:600}
+.leak .now::before{content:"Now: ";font-weight:400;color:var(--muted)}
+:lang(nl) .leak .now::before{content:"Nu: "}
+
+/* regels */
+.rules{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+@media (min-width:760px){.rules{grid-template-columns:1fr 1fr;gap:1rem 2rem}}
+.rules li{padding-left:1.6rem;position:relative;color:var(--ink-2)}
+.rules li::before{content:"";position:absolute;left:0;top:.62em;width:.75rem;border-top:2px solid var(--brass)}
+.rules strong{color:var(--ink)}
+
+/* auteur + aanmelden */
+.author{display:grid;gap:1.25rem}
+@media (min-width:760px){.author{grid-template-columns:auto 1fr;gap:2rem;align-items:start}}
+.mono-badge{width:4.5rem;height:4.5rem;border-radius:50%;display:grid;place-items:center;background:var(--sunk);border:1px solid var(--rule);font:600 1.5rem/1 var(--serif);color:var(--brass)}
+.signup{display:grid;gap:1rem}
+@media (min-width:760px){.signup{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.box{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.box p{color:var(--ink-2)}
+form{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem}
+input[type=email]{flex:1 1 12rem;min-width:0;font:inherit;font-size:1rem;padding:.7rem .85rem;border-radius:3px;border:1px solid var(--rule-2);background:var(--bg);color:var(--ink)}
+button,.btn{font:600 .95rem/1.2 var(--sans);padding:.75rem 1.1rem;border-radius:3px;border:0;background:var(--btn);color:var(--btn-ink);cursor:pointer}
+button:hover,.btn:hover{opacity:.9}
+.btn{display:inline-block;text-decoration:none;margin:.2rem 0 .8rem}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* voet */
+.foot{padding:2.4rem 0 3rem;font-size:.88rem;color:var(--muted)}
+.foot .disclaimer{max-width:44rem;color:var(--ink-2)}
+.foot-links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin:1rem 0 0;padding:0;list-style:none}
+
+/* methode */
+.doc{padding:2.6rem 0 3.4rem}
+.doc h1{font-size:clamp(2rem,5.5vw,3rem);margin-bottom:1rem}
+.doc h2{font-size:1.5rem;margin:2.6rem 0 .7rem}
+.doc .lead{font-size:1.15rem;color:var(--ink-2)}
+.doc p,.doc li{color:var(--ink-2)}
+.doc ul{padding-left:1.2rem}
+.doc li{margin-bottom:.4rem}
+.formula span{display:block}.formula .in{padding-left:1.5rem}
+.formula{font-family:var(--mono);font-size:.92rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--brass);border-radius:3px;padding:.9rem 1rem;color:var(--ink);overflow-x:auto}
+.crumbs{font-size:.85rem;color:var(--muted);margin-bottom:1.2rem}
+
+/* grootboek: folio per sectie, editiestrook */
+.folio{font:600 .72rem/1.4 var(--mono);letter-spacing:.12em;color:var(--brass);text-transform:uppercase;display:flex;align-items:center;gap:.7rem;margin:0 0 .9rem}
+.folio::after{content:"";flex:1;border-top:1px solid var(--rule-2);max-width:9rem}
+.folio b{font-weight:700;color:var(--ink)}
+.edition-bar{border-bottom:1px solid var(--rule);background:var(--sunk)}
+.edition{display:flex;flex-wrap:wrap;gap:.35rem 1.6rem;padding-top:.8rem;padding-bottom:.8rem;font:.75rem/1.5 var(--mono);color:var(--muted);letter-spacing:.02em}
+.edition strong{color:var(--ink);font-weight:600}
+.edition a{color:var(--ink-2)}
+.hero-num{font-variant-numeric:tabular-nums}
+.answer::before{border-left-color:var(--brass)}
+.leak-top a{text-decoration:none;color:inherit}
+.leak-top a:hover{color:var(--ink)}
+.leak .now{border-top-style:dashed;color:var(--ink)}
+.leak-fig{font-family:var(--mono);letter-spacing:-.06em}
+.chart .narrow .ax,.chart .narrow .ref-lbl{font-size:13px}
+.chart .narrow .val{font-size:12px}
+@media (max-width:520px){
+  .hero{padding:1.6rem 0 2rem}.hero-grid{gap:1.2rem}
+  .hero h1{font-size:clamp(1.85rem,8vw,2.15rem)}
+  .answer{padding:1.15rem 1rem 1rem 1.6rem}.answer::before{left:.7rem}
+  .hero-num{font-size:3.8rem}.answer-sub{margin-bottom:.75rem}
+  #strategies table{table-layout:fixed;font-size:.78rem}
+  #strategies th,#strategies td{padding:.6rem .35rem;white-space:normal;overflow-wrap:anywhere}
+  #strategies th:first-child{width:28%}
+  #strategies .code{font-size:1em}
+}
+
+/* koopweg: knop in de kopbalk */
+.nav{align-items:center}
+.nav .cta{background:var(--btn);color:var(--btn-ink);padding:.45rem .8rem;border-radius:3px;text-decoration:none;font-weight:600}
+.nav .cta:hover,.nav .cta[aria-current]{color:var(--btn-ink);text-decoration:none;opacity:.9}
+@media (max-width:520px){.nav{gap:.8rem;font-size:.85rem}.brand span{font-size:.92rem}}
+
+/* bouwpakket */
+.kit-grid{display:grid;gap:1.8rem;align-items:start}
+@media (min-width:900px){.kit-grid{grid-template-columns:1.2fr .9fr;gap:3.5rem}}
+.lead-groot{font-size:1.15rem;color:var(--ink-2);max-width:40rem}
+.kit-hero h1,.hero h1+.lead-groot{margin-top:0}.kit-hero h1,.hero .wrap>h1{margin-bottom:1rem}
+.echt{font-size:.95rem;color:var(--ink-2);border-left:3px solid var(--brass);padding-left:.9rem;max-width:40rem}
+.koopkaart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem;box-shadow:0 18px 40px -30px rgba(27,31,36,.35)}
+.box .koopkaart{border:0;padding:0;box-shadow:none;background:none}
+.koop-kop{font-size:1.35rem;margin-bottom:.5rem}
+.koop-groot{font:700 2.6rem/1 var(--sans);letter-spacing:-.03em;margin:.2rem 0 .5rem}
+.koop-groot .muted{font:500 1rem var(--sans);letter-spacing:0}
+.koop-sub{color:var(--ink-2);font-size:.95rem}
+.koopknoppen{display:grid;gap:.9rem;margin-top:.8rem}
+.koop{display:block;border-top:1px solid var(--rule);padding-top:.9rem;margin:0}
+.koop-naam{font-weight:650;margin:0}.koop-prijs{color:var(--ink-2);margin:0 0 .5rem;font-size:.92rem}
+.toestemming{display:flex;gap:.55rem;align-items:flex-start;font-size:.82rem;color:var(--ink-2);margin:.2rem 0 .7rem;line-height:1.45}
+.toestemming input{margin-top:.2rem;flex:none;width:1rem;height:1rem}
+.koop button{width:100%}
+.risico{font-size:.85rem;font-weight:600;color:var(--ink);margin:.9rem 0 0;padding:.6rem .75rem;background:var(--sunk);border-radius:3px}
+.stappen{list-style:none;margin:0;padding:0;display:grid;gap:1rem;counter-reset:stap}
+@media (min-width:760px){.stappen{grid-template-columns:repeat(4,1fr)}}
+.stappen li{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.1rem 1.1rem 1rem;position:relative}
+.stap-nr{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:50%;border:1.5px solid var(--brass);color:var(--brass);font:700 .95rem var(--mono);margin-bottom:.7rem}
+.stappen p{color:var(--ink-2);font-size:.95rem;margin:0}
+.teaser-knoppen{margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:center}
+.teaser-knoppen .btn{margin:0}
+.two-col{display:grid;gap:2rem}
+@media (min-width:860px){.two-col{grid-template-columns:1fr 1fr;gap:3rem}}
+.kaartlijst{list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
+@media (min-width:860px){#need .kaartlijst{grid-template-columns:repeat(3,1fr)}}
+.kaartlijst li{border-top:2px solid var(--ink);padding-top:.7rem}
+.kaartlijst h3{font-size:1.08rem}.kaartlijst p{color:var(--ink-2);font-size:.95rem;margin:0}
+.niet{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+.niet li{padding-left:1.7rem;position:relative;color:var(--ink-2)}
+.niet li::before{content:"✕";position:absolute;left:0;color:var(--neg);font-weight:700}
+.voorbeelden{list-style:none;padding:0;margin:0 0 1rem;display:grid;gap:.6rem}
+@media (min-width:760px){.voorbeelden{grid-template-columns:1fr 1fr}}
+.voorbeelden li{font-family:var(--mono);font-size:.88rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--below);border-radius:3px;padding:.75rem .9rem}
+.faqs{display:grid;gap:.6rem;max-width:46rem}
+details.faq{margin:0}
+details.faq p{padding:.2rem 1rem .9rem;margin:0;color:var(--ink-2)}
+.terug{margin-top:1.6rem}
+.kit-teaser{background:linear-gradient(var(--sunk),var(--sunk))}
+
+/* dashboard */
+.dash-stempel{font:.8rem/1.5 var(--mono);color:var(--muted);margin:0 0 1rem}
+.dash-stempel strong{color:var(--ink)}
+.dash-leeg{padding:1.2rem;background:var(--surface);border:1px dashed var(--rule-2);border-radius:4px;color:var(--ink-2)}
+.tegels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:0 0 1.2rem}
+@media (min-width:760px){.tegels{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1000px){.tegels{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.tegel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:.8rem .85rem .7rem;min-width:0}
+.tegel dt{font:600 .68rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tegel dd{margin:.3rem 0 .15rem;font:700 1.45rem/1.1 var(--sans);letter-spacing:-.02em}
+.tegel p{font-size:.76rem;color:var(--muted);margin:0;line-height:1.35}
+.spark{display:block;width:100%;height:28px;margin-top:.35rem}
+.spark path{fill:none;stroke:var(--brass);stroke-width:1.6}
+.dash-chart{margin-bottom:.4rem}
+.koerslijn{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.pt-koop{fill:var(--below);stroke:var(--surface);stroke-width:1.5}
+.pt-verkoop{fill:var(--hit);stroke:var(--surface);stroke-width:1.5}
+.pt-T{fill:var(--brass);stroke:var(--surface);stroke-width:2}
+.prijs-T{stroke:var(--brass);stroke-width:1;stroke-dasharray:4 4}
+.paneel{fill:var(--sunk);stroke:var(--rule)}
+.o-fine{fill:var(--below)}.o-coarse{fill:var(--below);opacity:.55}.o-verkoop{fill:var(--hit)}
+.kolkop{font-weight:600;fill:var(--ink-2)}
+.sw.dot{border-radius:50%}.sw.koop{background:var(--below)}.sw.verkoop{background:var(--hit)}
+.sw.o-fine{background:var(--below);height:.25rem;border-radius:2px}.sw.o-verkoop{background:var(--hit);height:.25rem;border-radius:2px}
+.dash-h3{margin:2rem 0 .8rem;font-size:1.25rem}
+.chart .narrow .px,.chart .narrow .kolkop{font-size:12px}
+
+/* werking */
+.stroom{list-style:none;margin:0;padding:0;display:grid;gap:.8rem;counter-reset:s}
+@media (min-width:860px){.stroom{grid-template-columns:repeat(5,1fr);gap:0}}
+.stroom li{counter-increment:s;background:var(--surface);border:1px solid var(--rule);padding:1rem 1rem .9rem;position:relative}
+@media (min-width:860px){.stroom li+li{border-left:0}.stroom li:not(:last-child)::after{content:"→";position:absolute;right:-.55rem;top:1rem;background:var(--bg);color:var(--brass);font-weight:700;z-index:1}}
+.stroom li::before{content:counter(s,decimal-leading-zero);font:700 .75rem var(--mono);color:var(--brass);display:block;margin-bottom:.4rem}
+.stroom p{font-size:.92rem;color:var(--ink-2);margin:0}
+.vol{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.vol-getal{font:700 3.4rem/1 var(--sans);letter-spacing:-.04em;margin:0 0 .3rem}
+.vol-sub{font-size:.85rem;color:var(--muted)}
+.keuzes{list-style:none;margin:0;padding:0;border-left:2px solid var(--rule-2);margin-left:.4rem}
+.keuze{position:relative;padding:0 0 1.6rem 1.5rem;max-width:46rem}
+.keuze::before{content:"";position:absolute;left:-.45rem;top:.3rem;width:.75rem;height:.75rem;border-radius:50%;background:var(--bg);border:2px solid var(--brass)}
+.keuze-wanneer{font:600 .72rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brass);margin:0 0 .35rem}
+.keuze p{color:var(--ink-2)}
+.keuze-ai{font-family:var(--mono);font-size:.86rem;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:.55rem .75rem;margin:0}
+.keuze-ai span{font-family:var(--sans);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:.15rem}
+.demo-balk{background:#c2412d;color:#fff;text-align:center;font:700 .8rem/1.4 var(--mono);padding:.4rem;letter-spacing:.06em}
+
+@media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Naar de inhoud</a>
+<header class="top"><div class="wrap">
+<a class="brand" href="/"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#1b1f24"/><path d="M7 23h18" stroke="#d4ac5e" stroke-width="1.6"/><rect x="9" y="15" width="3.2" height="8" rx="1" fill="#2f9e68"/><rect x="14.4" y="11" width="3.2" height="12" rx="1" fill="#2f9e68"/><rect x="19.8" y="17" width="3.2" height="6" rx="1" fill="#5b8fd6"/><path d="M6 8.5h20" stroke="#d4ac5e" stroke-width="1.3" stroke-dasharray="2.5 2"/></svg><span>Mijn Bitcoinstrategie</span></a>
+<nav class="nav" aria-label="Hoofdmenu"><a href="/zo-werkt-het/">Zo werkt het</a><a class="cta" href="/bouwpakket/#buy">Bouwpakket</a></nav>
+</div></header>
+<main id="main">
+
+<div class="hero"><div class="wrap hero-grid">
+<div class="hero-head">
+<p class="kicker">Live botlogboek &middot; W17 tot W42 2026 &middot; weken 7 dagen vertraagd</p>
+<h1>De naam beloofde 2% per week. Dit verdiende de bot echt.</h1>
+</div>
+<aside class="answer" aria-label="Het korte antwoord">
+<p class="answer-label">Mediane week &middot; gerealiseerd, na kosten</p>
+<p class="hero-num">+0,46%</p>
+<p class="answer-sub">van het ingezette kapitaal, over 26 weken (W17 tot W42 2026). Het realistische doel is 0,5% per week.</p>
+<dl class="facts">
+<div><dt>Doel van 0,5% gehaald</dt><dd>11 <span>van 26 weken</span></dd></div>
+<div><dt>Gemiddelde week</dt><dd>+0,48%</dd></div>
+<div><dt>Beste week</dt><dd>+1,32%</dd></div>
+<div><dt>Verliesweken</dt><dd>1 <span>slechtste −0,09%</span></dd></div>
+</dl>
+<p class="answer-note">Niet in deze cijfers: posities die de bot nog vasthoudt. De afgelopen zeven dagen stonden die tussen <strong>−3,09%</strong> en <strong>+0,11%</strong> van de rekening. <a href="#gerealiseerd-open">Waarom dat telt</a></p>
+</aside>
+<div class="hero-lead">
+<p>Sinds april 2026 handelt een bitcoinbot die ik bouwde dag en nacht BTC-EUR op Bitvavo, met echt geld. Hier staat elke week die hij draaide, alleen in procenten, en waar de winst weglekte.</p>
+<p>Wil je zelf een bitcoin trading bot maken? Kijk dan eerst hier. Ik verkoop geen signalen, geen copy-trading en geen advies: dit is het meetlint, geen rendementsbelofte.</p>
+</div>
+</div></div>
+<div class="edition-bar"><div class="wrap edition">
+<span>Logboek tot en met <strong>W42 2026</strong> (week van 12 okt 2026)</span>
+<span>Data gelezen <time datetime="2026-10-26">26 okt 2026</time></span>
+<a href="/zo-werkt-het/">Zo werkt het</a>
+</div></div>
+
+<section id="weken"><div class="wrap">
+<div class="sec-head">
+<p class="folio"><b>01</b> Weekoverzicht</p>
+<h2>Elke week: gerealiseerde winst als % van het ingezette kapitaal</h2>
+<p>Na beurskosten op zowel de aankoop als de verkoop, inclusief de zeldzame gedwongen verkopen met verlies. Elke week wordt afgezet tegen het kapitaal dat de bot die week had ingezet, dus stortingen blazen de percentages niet op.</p>
+</div>
+<figure class="chart" style="margin:0">
+<svg class="wide" viewBox="0 0 960 340" role="img" aria-labelledby="cw-t cw-d"><title id="cw-t">Gerealiseerde winst per week, % van het ingezette kapitaal</title><desc id="cw-d">Staafgrafiek van de gerealiseerde winst per week, W17 tot W42, als percentage van het ingezette kapitaal. Mediaan +0,46%, beste +1,32%, slechtste −0,09%. 11 van 26 weken haalden het doel van 0,5%.</desc><line class="ax-line" x1="46" x2="890" y1="277.2" y2="277.2"/><text class="ax" x="38" y="281.2" text-anchor="end">0,0%</text><line class="ax-line" x1="46" x2="890" y1="217.0" y2="217.0"/><text class="ax" x="38" y="221.0" text-anchor="end">0,5%</text><line class="ax-line" x1="46" x2="890" y1="156.8" y2="156.8"/><text class="ax" x="38" y="160.8" text-anchor="end">1,0%</text><line class="ax-line" x1="46" x2="890" y1="96.6" y2="96.6"/><text class="ax" x="38" y="100.6" text-anchor="end">1,5%</text><line class="ax-line" x1="46" x2="890" y1="36.4" y2="36.4"/><text class="ax" x="38" y="40.4" text-anchor="end">2,0%</text><g class="wk"><title>W17 2026 (week van 20 apr 2026): +0,52% gerealiseerd · doel gehaald</title><rect class="hit-area" x="46.0" y="22" width="32.5" height="284"/><path class="b-hit" d="M51.2,277.2V218.6Q51.2,214.6 55.2,214.6H69.3Q73.3,214.6 73.3,218.6V277.2Z"/></g><g class="wk"><title>W18 2026 (week van 27 apr 2026): +0,61% gerealiseerd · doel gehaald</title><rect class="hit-area" x="78.5" y="22" width="32.5" height="284"/><path class="b-hit" d="M83.7,277.2V207.7Q83.7,203.7 87.7,203.7H101.7Q105.7,203.7 105.7,207.7V277.2Z"/></g><text class="ax" x="94.7" y="324" text-anchor="middle">W18</text><g class="wk"><title>W19 2026 (week van 4 mei 2026): +0,45% gerealiseerd</title><rect class="hit-area" x="110.9" y="22" width="32.5" height="284"/><path class="b-below" d="M116.1,277.2V227.0Q116.1,223.0 120.1,223.0H134.2Q138.2,223.0 138.2,227.0V277.2Z"/></g><g class="wk"><title>W20 2026 (week van 11 mei 2026): +0,74% gerealiseerd · doel gehaald</title><rect class="hit-area" x="143.4" y="22" width="32.5" height="284"/><path class="b-hit" d="M148.6,277.2V192.1Q148.6,188.1 152.6,188.1H166.7Q170.7,188.1 170.7,192.1V277.2Z"/></g><text class="ax" x="159.6" y="324" text-anchor="middle">W20</text><g class="wk"><title>W21 2026 (week van 18 mei 2026): +0,15% gerealiseerd</title><rect class="hit-area" x="175.8" y="22" width="32.5" height="284"/><path class="b-below" d="M181.0,277.2V263.1Q181.0,259.1 185.0,259.1H199.1Q203.1,259.1 203.1,263.1V277.2Z"/></g><g class="wk"><title>W22 2026 (week van 25 mei 2026): +0,04% gerealiseerd</title><rect class="hit-area" x="208.3" y="22" width="32.5" height="284"/><path class="b-below" d="M213.5,277.2V276.3Q213.5,272.3 217.5,272.3H231.6Q235.6,272.3 235.6,276.3V277.2Z"/></g><text class="ax" x="224.5" y="324" text-anchor="middle">W22</text><g class="wk"><title>W23 2026 (week van 1 jun 2026): −0,09% gerealiseerd</title><rect class="hit-area" x="240.8" y="22" width="32.5" height="284"/><path class="b-neg" d="M246.0,277.2V284.0Q246.0,288.0 250.0,288.0H264.0Q268.0,288.0 268.0,284.0V277.2Z"/></g><text class="val" x="257.0" y="302.0" text-anchor="middle">−0,09%</text><g class="wk"><title>W24 2026 (week van 8 jun 2026): +0,54% gerealiseerd · doel gehaald</title><rect class="hit-area" x="273.2" y="22" width="32.5" height="284"/><path class="b-hit" d="M278.4,277.2V216.2Q278.4,212.2 282.4,212.2H296.5Q300.5,212.2 300.5,216.2V277.2Z"/></g><text class="ax" x="289.5" y="324" text-anchor="middle">W24</text><g class="wk"><title>W25 2026 (week van 15 jun 2026): +0,34% gerealiseerd</title><rect class="hit-area" x="305.7" y="22" width="32.5" height="284"/><path class="b-below" d="M310.9,277.2V240.2Q310.9,236.2 314.9,236.2H329.0Q333.0,236.2 333.0,240.2V277.2Z"/></g><g class="wk"><title>W26 2026 (week van 22 jun 2026): +0,28% gerealiseerd</title><rect class="hit-area" x="338.2" y="22" width="32.5" height="284"/><path class="b-below" d="M343.3,277.2V247.5Q343.3,243.5 347.3,243.5H361.4Q365.4,243.5 365.4,247.5V277.2Z"/></g><text class="ax" x="354.4" y="324" text-anchor="middle">W26</text><g class="wk"><title>W27 2026 (week van 29 jun 2026): +0,53% gerealiseerd · doel gehaald</title><rect class="hit-area" x="370.6" y="22" width="32.5" height="284"/><path class="b-hit" d="M375.8,277.2V217.4Q375.8,213.4 379.8,213.4H393.9Q397.9,213.4 397.9,217.4V277.2Z"/></g><g class="wk"><title>W28 2026 (week van 6 jul 2026): +0,76% gerealiseerd · doel gehaald</title><rect class="hit-area" x="403.1" y="22" width="32.5" height="284"/><path class="b-hit" d="M408.3,277.2V189.7Q408.3,185.7 412.3,185.7H426.3Q430.3,185.7 430.3,189.7V277.2Z"/></g><text class="ax" x="419.3" y="324" text-anchor="middle">W28</text><g class="wk"><title>W29 2026 (week van 13 jul 2026): +0,45% gerealiseerd</title><rect class="hit-area" x="435.5" y="22" width="32.5" height="284"/><path class="b-below" d="M440.7,277.2V227.0Q440.7,223.0 444.7,223.0H458.8Q462.8,223.0 462.8,227.0V277.2Z"/></g><g class="wk"><title>W30 2026 (week van 20 jul 2026): +0,30% gerealiseerd</title><rect class="hit-area" x="468.0" y="22" width="32.5" height="284"/><path class="b-below" d="M473.2,277.2V245.1Q473.2,241.1 477.2,241.1H491.3Q495.3,241.1 495.3,245.1V277.2Z"/></g><text class="ax" x="484.2" y="324" text-anchor="middle">W30</text><g class="wk"><title>W31 2026 (week van 27 jul 2026): +0,19% gerealiseerd</title><rect class="hit-area" x="500.5" y="22" width="32.5" height="284"/><path class="b-below" d="M505.7,277.2V258.3Q505.7,254.3 509.7,254.3H523.7Q527.7,254.3 527.7,258.3V277.2Z"/></g><g class="wk"><title>W32 2026 (week van 3 aug 2026): +0,19% gerealiseerd</title><rect class="hit-area" x="532.9" y="22" width="32.5" height="284"/><path class="b-below" d="M538.1,277.2V258.3Q538.1,254.3 542.1,254.3H556.2Q560.2,254.3 560.2,258.3V277.2Z"/></g><text class="ax" x="549.2" y="324" text-anchor="middle">W32</text><g class="wk"><title>W33 2026 (week van 10 aug 2026): +0,02% gerealiseerd</title><rect class="hit-area" x="565.4" y="22" width="32.5" height="284"/><path class="b-below" d="M570.6,277.2V277.2Q570.6,274.8 573.0,274.8H590.2Q592.7,274.8 592.7,277.2V277.2Z"/></g><g class="wk"><title>W34 2026 (week van 17 aug 2026): +1,32% gerealiseerd · doel gehaald</title><rect class="hit-area" x="597.8" y="22" width="32.5" height="284"/><path class="b-hit" d="M603.0,277.2V122.3Q603.0,118.3 607.0,118.3H621.1Q625.1,118.3 625.1,122.3V277.2Z"/></g><text class="val" x="614.1" y="112.3" text-anchor="middle">+1,32%</text><text class="ax" x="614.1" y="324" text-anchor="middle">W34</text><g class="wk"><title>W35 2026 (week van 24 aug 2026): +1,00% gerealiseerd · doel gehaald</title><rect class="hit-area" x="630.3" y="22" width="32.5" height="284"/><path class="b-hit" d="M635.5,277.2V160.8Q635.5,156.8 639.5,156.8H653.6Q657.6,156.8 657.6,160.8V277.2Z"/></g><g class="wk"><title>W36 2026 (week van 31 aug 2026): +0,75% gerealiseerd · doel gehaald</title><rect class="hit-area" x="662.8" y="22" width="32.5" height="284"/><path class="b-hit" d="M668.0,277.2V190.9Q668.0,186.9 672.0,186.9H686.0Q690.0,186.9 690.0,190.9V277.2Z"/></g><text class="ax" x="679.0" y="324" text-anchor="middle">W36</text><g class="wk"><title>W37 2026 (week van 7 sep 2026): +0,38% gerealiseerd</title><rect class="hit-area" x="695.2" y="22" width="32.5" height="284"/><path class="b-below" d="M700.4,277.2V235.4Q700.4,231.4 704.4,231.4H718.5Q722.5,231.4 722.5,235.4V277.2Z"/></g><g class="wk"><title>W38 2026 (week van 14 sep 2026): +1,06% gerealiseerd · doel gehaald</title><rect class="hit-area" x="727.7" y="22" width="32.5" height="284"/><path class="b-hit" d="M732.9,277.2V153.6Q732.9,149.6 736.9,149.6H751.0Q755.0,149.6 755.0,153.6V277.2Z"/></g><text class="ax" x="743.9" y="324" text-anchor="middle">W38</text><g class="wk"><title>W39 2026 (week van 21 sep 2026): +0,46% gerealiseerd</title><rect class="hit-area" x="760.2" y="22" width="32.5" height="284"/><path class="b-below" d="M765.3,277.2V225.8Q765.3,221.8 769.3,221.8H783.4Q787.4,221.8 787.4,225.8V277.2Z"/></g><g class="wk"><title>W40 2026 (week van 28 sep 2026): +0,74% gerealiseerd · doel gehaald</title><rect class="hit-area" x="792.6" y="22" width="32.5" height="284"/><path class="b-hit" d="M797.8,277.2V192.1Q797.8,188.1 801.8,188.1H815.9Q819.9,188.1 819.9,192.1V277.2Z"/></g><text class="ax" x="808.8" y="324" text-anchor="middle">W40</text><g class="wk"><title>W41 2026 (week van 5 okt 2026): +0,47% gerealiseerd</title><rect class="hit-area" x="825.1" y="22" width="32.5" height="284"/><path class="b-below" d="M830.3,277.2V224.6Q830.3,220.6 834.3,220.6H848.3Q852.3,220.6 852.3,224.6V277.2Z"/></g><g class="wk"><title>W42 2026 (week van 12 okt 2026): +0,30% gerealiseerd</title><rect class="hit-area" x="857.5" y="22" width="32.5" height="284"/><path class="b-below" d="M862.7,277.2V245.1Q862.7,241.1 866.7,241.1H880.8Q884.8,241.1 884.8,245.1V277.2Z"/></g><text class="val" x="873.8" y="235.1" text-anchor="middle">+0,30%</text><text class="ax" x="873.8" y="324" text-anchor="middle">W42</text><line class="zero" x1="46" x2="890" y1="277.2" y2="277.2"/><line class="ref ref-goal" x1="46" x2="894" y1="217.0" y2="217.0"/><text class="ref-lbl goal" x="898" y="221.0">doel</text><line class="ref ref-name" x1="46" x2="894" y1="36.4" y2="36.4"/><text class="ref-lbl name" x="898" y="40.4">de naam</text></svg>
+<svg class="narrow" viewBox="0 0 360 260" role="img" aria-labelledby="cn-t cn-d"><title id="cn-t">Gerealiseerde winst per week, % van het ingezette kapitaal</title><desc id="cn-d">Staafgrafiek van de gerealiseerde winst per week, W17 tot W42, als percentage van het ingezette kapitaal. Mediaan +0,46%, beste +1,32%, slechtste −0,09%. 11 van 26 weken haalden het doel van 0,5%.</desc><line class="ax-line" x1="42" x2="318" y1="203.0" y2="203.0"/><text class="ax" x="34" y="207.0" text-anchor="end">0,0%</text><line class="ax-line" x1="42" x2="318" y1="160.3" y2="160.3"/><text class="ax" x="34" y="164.3" text-anchor="end">0,5%</text><line class="ax-line" x1="42" x2="318" y1="117.6" y2="117.6"/><text class="ax" x="34" y="121.6" text-anchor="end">1,0%</text><line class="ax-line" x1="42" x2="318" y1="74.9" y2="74.9"/><text class="ax" x="34" y="78.9" text-anchor="end">1,5%</text><line class="ax-line" x1="42" x2="318" y1="32.2" y2="32.2"/><text class="ax" x="34" y="36.2" text-anchor="end">2,0%</text><g class="wk"><title>W17 2026 (week van 20 apr 2026): +0,52% gerealiseerd · doel gehaald</title><rect class="hit-area" x="42.0" y="22" width="10.6" height="206"/><path class="b-hit" d="M43.7,203.0V162.2Q43.7,158.6 47.3,158.6H47.3Q50.9,158.6 50.9,162.2V203.0Z"/></g><text class="ax" x="47.3" y="246" text-anchor="middle">W17</text><g class="wk"><title>W18 2026 (week van 27 apr 2026): +0,61% gerealiseerd · doel gehaald</title><rect class="hit-area" x="52.6" y="22" width="10.6" height="206"/><path class="b-hit" d="M54.3,203.0V154.5Q54.3,150.9 57.9,150.9H57.9Q61.5,150.9 61.5,154.5V203.0Z"/></g><g class="wk"><title>W19 2026 (week van 4 mei 2026): +0,45% gerealiseerd</title><rect class="hit-area" x="63.2" y="22" width="10.6" height="206"/><path class="b-below" d="M64.9,203.0V168.2Q64.9,164.6 68.5,164.6H68.5Q72.1,164.6 72.1,168.2V203.0Z"/></g><g class="wk"><title>W20 2026 (week van 11 mei 2026): +0,74% gerealiseerd · doel gehaald</title><rect class="hit-area" x="73.8" y="22" width="10.6" height="206"/><path class="b-hit" d="M75.5,203.0V143.4Q75.5,139.8 79.2,139.8H79.2Q82.8,139.8 82.8,143.4V203.0Z"/></g><g class="wk"><title>W21 2026 (week van 18 mei 2026): +0,15% gerealiseerd</title><rect class="hit-area" x="84.5" y="22" width="10.6" height="206"/><path class="b-below" d="M86.2,203.0V193.8Q86.2,190.2 89.8,190.2H89.8Q93.4,190.2 93.4,193.8V203.0Z"/></g><g class="wk"><title>W22 2026 (week van 25 mei 2026): +0,04% gerealiseerd</title><rect class="hit-area" x="95.1" y="22" width="10.6" height="206"/><path class="b-below" d="M96.8,203.0V203.0Q96.8,199.6 100.2,199.6H100.6Q104.0,199.6 104.0,203.0V203.0Z"/></g><text class="ax" x="100.4" y="246" text-anchor="middle">W22</text><g class="wk"><title>W23 2026 (week van 1 jun 2026): −0,09% gerealiseerd</title><rect class="hit-area" x="105.7" y="22" width="10.6" height="206"/><path class="b-neg" d="M107.4,203.0V207.1Q107.4,210.7 111.0,210.7H111.0Q114.6,210.7 114.6,207.1V203.0Z"/></g><text class="val" x="111.0" y="224.7" text-anchor="middle">−0,09%</text><g class="wk"><title>W24 2026 (week van 8 jun 2026): +0,54% gerealiseerd · doel gehaald</title><rect class="hit-area" x="116.3" y="22" width="10.6" height="206"/><path class="b-hit" d="M118.0,203.0V160.5Q118.0,156.9 121.6,156.9H121.6Q125.2,156.9 125.2,160.5V203.0Z"/></g><g class="wk"><title>W25 2026 (week van 15 jun 2026): +0,34% gerealiseerd</title><rect class="hit-area" x="126.9" y="22" width="10.6" height="206"/><path class="b-below" d="M128.6,203.0V177.6Q128.6,174.0 132.2,174.0H132.2Q135.8,174.0 135.8,177.6V203.0Z"/></g><g class="wk"><title>W26 2026 (week van 22 jun 2026): +0,28% gerealiseerd</title><rect class="hit-area" x="137.5" y="22" width="10.6" height="206"/><path class="b-below" d="M139.2,203.0V182.7Q139.2,179.1 142.8,179.1H142.8Q146.5,179.1 146.5,182.7V203.0Z"/></g><g class="wk"><title>W27 2026 (week van 29 jun 2026): +0,53% gerealiseerd · doel gehaald</title><rect class="hit-area" x="148.2" y="22" width="10.6" height="206"/><path class="b-hit" d="M149.9,203.0V161.4Q149.9,157.7 153.5,157.7H153.5Q157.1,157.7 157.1,161.4V203.0Z"/></g><text class="ax" x="153.5" y="246" text-anchor="middle">W27</text><g class="wk"><title>W28 2026 (week van 6 jul 2026): +0,76% gerealiseerd · doel gehaald</title><rect class="hit-area" x="158.8" y="22" width="10.6" height="206"/><path class="b-hit" d="M160.5,203.0V141.7Q160.5,138.1 164.1,138.1H164.1Q167.7,138.1 167.7,141.7V203.0Z"/></g><g class="wk"><title>W29 2026 (week van 13 jul 2026): +0,45% gerealiseerd</title><rect class="hit-area" x="169.4" y="22" width="10.6" height="206"/><path class="b-below" d="M171.1,203.0V168.2Q171.1,164.6 174.7,164.6H174.7Q178.3,164.6 178.3,168.2V203.0Z"/></g><g class="wk"><title>W30 2026 (week van 20 jul 2026): +0,30% gerealiseerd</title><rect class="hit-area" x="180.0" y="22" width="10.6" height="206"/><path class="b-below" d="M181.7,203.0V181.0Q181.7,177.4 185.3,177.4H185.3Q188.9,177.4 188.9,181.0V203.0Z"/></g><g class="wk"><title>W31 2026 (week van 27 jul 2026): +0,19% gerealiseerd</title><rect class="hit-area" x="190.6" y="22" width="10.6" height="206"/><path class="b-below" d="M192.3,203.0V190.4Q192.3,186.8 195.9,186.8H195.9Q199.5,186.8 199.5,190.4V203.0Z"/></g><g class="wk"><title>W32 2026 (week van 3 aug 2026): +0,19% gerealiseerd</title><rect class="hit-area" x="201.2" y="22" width="10.6" height="206"/><path class="b-below" d="M202.9,203.0V190.4Q202.9,186.8 206.5,186.8H206.5Q210.1,186.8 210.1,190.4V203.0Z"/></g><text class="ax" x="206.5" y="246" text-anchor="middle">W32</text><g class="wk"><title>W33 2026 (week van 10 aug 2026): +0,02% gerealiseerd</title><rect class="hit-area" x="211.8" y="22" width="10.6" height="206"/><path class="b-below" d="M213.5,203.0V203.0Q213.5,201.3 215.3,201.3H219.1Q220.8,201.3 220.8,203.0V203.0Z"/></g><g class="wk"><title>W34 2026 (week van 17 aug 2026): +1,32% gerealiseerd · doel gehaald</title><rect class="hit-area" x="222.5" y="22" width="10.6" height="206"/><path class="b-hit" d="M224.2,203.0V93.9Q224.2,90.3 227.8,90.3H227.8Q231.4,90.3 231.4,93.9V203.0Z"/></g><text class="val" x="227.8" y="84.3" text-anchor="middle">+1,32%</text><g class="wk"><title>W35 2026 (week van 24 aug 2026): +1,00% gerealiseerd · doel gehaald</title><rect class="hit-area" x="233.1" y="22" width="10.6" height="206"/><path class="b-hit" d="M234.8,203.0V121.2Q234.8,117.6 238.4,117.6H238.4Q242.0,117.6 242.0,121.2V203.0Z"/></g><g class="wk"><title>W36 2026 (week van 31 aug 2026): +0,75% gerealiseerd · doel gehaald</title><rect class="hit-area" x="243.7" y="22" width="10.6" height="206"/><path class="b-hit" d="M245.4,203.0V142.6Q245.4,139.0 249.0,139.0H249.0Q252.6,139.0 252.6,142.6V203.0Z"/></g><g class="wk"><title>W37 2026 (week van 7 sep 2026): +0,38% gerealiseerd</title><rect class="hit-area" x="254.3" y="22" width="10.6" height="206"/><path class="b-below" d="M256.0,203.0V174.2Q256.0,170.6 259.6,170.6H259.6Q263.2,170.6 263.2,174.2V203.0Z"/></g><text class="ax" x="259.6" y="246" text-anchor="middle">W37</text><g class="wk"><title>W38 2026 (week van 14 sep 2026): +1,06% gerealiseerd · doel gehaald</title><rect class="hit-area" x="264.9" y="22" width="10.6" height="206"/><path class="b-hit" d="M266.6,203.0V116.1Q266.6,112.5 270.2,112.5H270.2Q273.8,112.5 273.8,116.1V203.0Z"/></g><g class="wk"><title>W39 2026 (week van 21 sep 2026): +0,46% gerealiseerd</title><rect class="hit-area" x="275.5" y="22" width="10.6" height="206"/><path class="b-below" d="M277.2,203.0V167.3Q277.2,163.7 280.8,163.7H280.8Q284.5,163.7 284.5,167.3V203.0Z"/></g><g class="wk"><title>W40 2026 (week van 28 sep 2026): +0,74% gerealiseerd · doel gehaald</title><rect class="hit-area" x="286.2" y="22" width="10.6" height="206"/><path class="b-hit" d="M287.9,203.0V143.4Q287.9,139.8 291.5,139.8H291.5Q295.1,139.8 295.1,143.4V203.0Z"/></g><g class="wk"><title>W41 2026 (week van 5 okt 2026): +0,47% gerealiseerd</title><rect class="hit-area" x="296.8" y="22" width="10.6" height="206"/><path class="b-below" d="M298.5,203.0V166.5Q298.5,162.9 302.1,162.9H302.1Q305.7,162.9 305.7,166.5V203.0Z"/></g><g class="wk"><title>W42 2026 (week van 12 okt 2026): +0,30% gerealiseerd</title><rect class="hit-area" x="307.4" y="22" width="10.6" height="206"/><path class="b-below" d="M309.1,203.0V181.0Q309.1,177.4 312.7,177.4H312.7Q316.3,177.4 316.3,181.0V203.0Z"/></g><text class="ax" x="312.7" y="246" text-anchor="middle">W42</text><line class="zero" x1="42" x2="318" y1="203.0" y2="203.0"/><line class="ref ref-goal" x1="42" x2="322" y1="160.3" y2="160.3"/><text class="ref-lbl goal" x="326" y="164.3">doel</text><line class="ref ref-name" x1="42" x2="322" y1="32.2" y2="32.2"/><text class="ref-lbl name" x="326" y="36.2">naam</text></svg>
+<ul class="legend" aria-label="Legenda">
+<li><span class="sw hit"></span>Op of boven het doel van 0,5%</li>
+<li><span class="sw below"></span>Positief, onder het doel</li>
+<li><span class="sw neg"></span>Verliesweek</li>
+<li><span class="sw line"></span>Doel, 0,5%</li>
+<li><span class="sw line name"></span>De naam, 2%</li>
+</ul>
+<figcaption class="chart-note">26 weken, W17 tot W42 2026. De nieuwste week eindigde minstens zeven dagen voordat deze pagina gebouwd werd. Ga met de muis over een staaf voor de waarde, of open de tabel.</figcaption>
+</figure>
+<details>
+<summary>Alle 26 weken als tabel</summary>
+<div class="tbl"><table>
+<caption class="sr">Gerealiseerde winst per week, nieuwste eerst</caption>
+<thead><tr><th scope="col">Week</th><th scope="col">Begint</th><th scope="col" class="r">Gerealiseerd</th><th scope="col" class="r"><span class="sr">Status</span></th></tr></thead>
+<tbody><tr><td class="lbl">W42 2026</td><td><time datetime="2026-10-12">12 okt</time></td><td class="r">+0,30%</td><td class="r"></td></tr><tr><td class="lbl">W41 2026</td><td><time datetime="2026-10-05">5 okt</time></td><td class="r">+0,47%</td><td class="r"></td></tr><tr><td class="lbl">W40 2026</td><td><time datetime="2026-09-28">28 sep</time></td><td class="r">+0,74%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr><tr><td class="lbl">W39 2026</td><td><time datetime="2026-09-21">21 sep</time></td><td class="r">+0,46%</td><td class="r"></td></tr><tr><td class="lbl">W38 2026</td><td><time datetime="2026-09-14">14 sep</time></td><td class="r">+1,06%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr><tr><td class="lbl">W37 2026</td><td><time datetime="2026-09-07">7 sep</time></td><td class="r">+0,38%</td><td class="r"></td></tr><tr><td class="lbl">W36 2026</td><td><time datetime="2026-08-31">31 aug</time></td><td class="r">+0,75%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr><tr><td class="lbl">W35 2026</td><td><time datetime="2026-08-24">24 aug</time></td><td class="r">+1,00%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr><tr><td class="lbl">W34 2026</td><td><time datetime="2026-08-17">17 aug</time></td><td class="r">+1,32%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr><tr><td class="lbl">W33 2026</td><td><time datetime="2026-08-10">10 aug</time></td><td class="r">+0,02%</td><td class="r"></td></tr><tr><td class="lbl">W32 2026</td><td><time datetime="2026-08-03">3 aug</time></td><td class="r">+0,19%</td><td class="r"></td></tr><tr><td class="lbl">W31 2026</td><td><time datetime="2026-07-27">27 jul</time></td><td class="r">+0,19%</td><td class="r"></td></tr><tr><td class="lbl">W30 2026</td><td><time datetime="2026-07-20">20 jul</time></td><td class="r">+0,30%</td><td class="r"></td></tr><tr><td class="lbl">W29 2026</td><td><time datetime="2026-07-13">13 jul</time></td><td class="r">+0,45%</td><td class="r"></td></tr><tr><td class="lbl">W28 2026</td><td><time datetime="2026-07-06">6 jul</time></td><td class="r">+0,76%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr><tr><td class="lbl">W27 2026</td><td><time datetime="2026-06-29">29 jun</time></td><td class="r">+0,53%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr><tr><td class="lbl">W26 2026</td><td><time datetime="2026-06-22">22 jun</time></td><td class="r">+0,28%</td><td class="r"></td></tr><tr><td class="lbl">W25 2026</td><td><time datetime="2026-06-15">15 jun</time></td><td class="r">+0,34%</td><td class="r"></td></tr><tr><td class="lbl">W24 2026</td><td><time datetime="2026-06-08">8 jun</time></td><td class="r">+0,54%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr><tr><td class="lbl">W23 2026</td><td><time datetime="2026-06-01">1 jun</time></td><td class="r">−0,09%</td><td class="r">verlies</td></tr><tr><td class="lbl">W22 2026</td><td><time datetime="2026-05-25">25 mei</time></td><td class="r">+0,04%</td><td class="r"></td></tr><tr><td class="lbl">W21 2026</td><td><time datetime="2026-05-18">18 mei</time></td><td class="r">+0,15%</td><td class="r"></td></tr><tr><td class="lbl">W20 2026</td><td><time datetime="2026-05-11">11 mei</time></td><td class="r">+0,74%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr><tr><td class="lbl">W19 2026</td><td><time datetime="2026-05-04">4 mei</time></td><td class="r">+0,45%</td><td class="r"></td></tr><tr><td class="lbl">W18 2026</td><td><time datetime="2026-04-27">27 apr</time></td><td class="r">+0,61%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr><tr><td class="lbl">W17 2026</td><td><time datetime="2026-04-20">20 apr</time></td><td class="r">+0,52%</td><td class="r"><span class=goal-met>doel gehaald</span></td></tr></tbody>
+</table></div>
+</details>
+</div></section>
+
+<section id="gerealiseerd-open"><div class="wrap">
+<div class="sec-head">
+<p class="folio"><b>02</b> Open posities</p>
+<h2>Gerealiseerd en open: wat de meeste botresultaten weglaten</h2>
+<p>Elk weekcijfer hierboven is <em>gerealiseerd</em>: winst die vastligt omdat er verkocht is. De bitcoin die de bot nog vasthoudt is <em>open</em>, en die zit niet in die cijfers.</p>
+</div>
+<div class="two">
+<div class="card">
+<span class="tag in">In het weekcijfer</span>
+<h3>Gerealiseerd</h3>
+<p>Een positie telt mee op het moment dat hij verkocht wordt, in de week van de verkoop.</p>
+<ul><li>Kosten op aankoop en verkoop zijn er al af.</li><li>De zeldzame gedwongen verkopen met verlies tellen mee.</li><li>Eenmaal erin, verandert het niet meer.</li></ul>
+</div>
+<div class="card">
+<span class="tag out">Niet in het weekcijfer</span>
+<h3>Open</h3>
+<p>Bitcoin die gekocht maar nog niet verkocht is. De waarde beweegt elke minuut mee met de koers.</p>
+<ul><li>Er ligt niets vast tot er verkocht wordt.</li><li>Een dalende koers zie je hier het eerst.</li><li>Het komt pas in het weekcijfer bij verkoop.</li></ul>
+</div>
+</div>
+<div class="range">
+<h3>Open posities, afgelopen zeven dagen</h3>
+<p class="small muted" style="margin:0">19 okt tot 26 okt 2026: wat de open posities waard waren vergeleken met wat ervoor betaald is, als % van de rekening. Laagste en hoogste meting.</p>
+<div class="track" aria-hidden="true">
+<div class="base"></div><div class="band" style="left:11.4%;width:40.0%"></div>
+<div class="zero-tick" style="left:50%"></div>
+<span class="dot" style="left:11.4%"></span><span class="dot" style="left:51.4%"></span>
+</div>
+<div class="ticks" aria-hidden="true"><span>−4%</span><span>0%</span><span>+4%</span></div>
+<dl class="range-vals"><div><dt>Laagste meting</dt><dd>−3,09%</dd></div><div><dt>Hoogste meting</dt><dd>+0,11%</dd></div></dl>
+</div>
+<div class="callout">
+<p><strong>Waarom bijna elke afgesloten trade een winnaar is.</strong> De bot is zo gebouwd dat hij een positie alleen boven de aankoopprijs verkoopt. Dat is een ontwerpkeuze, geen kunde. Verliezen wachten vooral in open posities in plaats van in het weekcijfer te verschijnen. Bij een diepe daling van bitcoin wordt het open getal veel groter voordat er iets van in het weekcijfer komt.</p>
+</div>
+</div></section>
+
+<section id="lekken"><div class="wrap">
+<div class="sec-head">
+<p class="folio"><b>03</b> Gemeten lekken</p>
+<h2>Waar de winst weglekt</h2>
+<p>Een bot die alleen met winst verkoopt, verliest nog steeds geld op stillere manieren. Dit zijn de lekken die ik op deze bot gemeten heb, elk met de datum van meting of reparatie.</p>
+</div>
+<div class="leaks"><article class="leak" id="lek-1"><div class="leak-top"><a href="#lek-1" aria-label="Link naar lek 1">Lek 1</a><time datetime="2026-08-05">gemeten 5 aug 2026; tarieven gelezen 8 sep 2026</time></div><p class="leak-fig">~20%</p><p class="leak-fig-sub">van de brutowinst ging naar kosten</p><h3>Beurskosten slokten ongeveer een vijfde van de brutowinst op</h3><p class="txt">Tussen eind april en begin augustus ging ongeveer 20% van de bruto handelswinst naar beurskosten. De bot boekt nu de werkelijke kosten per vulling. De beurs rekent bij het volume van de bot 0,18% per taker-order en 0,09% per maker-order.</p><p class="now">Echte kosten nu per vulling geboekt</p></article><article class="leak" id="lek-2"><div class="leak-top"><a href="#lek-2" aria-label="Link naar lek 2">Lek 2</a><time datetime="2026-08-05">gemeten 5 aug 2026</time></div><p class="leak-fig">0,33%</p><p class="leak-fig-sub">weggegeven per trade</p><h3>Het winstdoel laten zakken met de tijd kostte geld</h3><p class="txt">Een &#x27;time-decay&#x27;-regel verlaagde het verkoopdoel naarmate een positie ouder werd. Van de 152 verkopen die hij in 55 dagen raakte, haalde 78% het oorspronkelijke doel alsnog (mediaan: 3 uur later). De regel gaf ongeveer 0,33% per trade weg, dus ging hij uit.</p><p class="now">Regel uitgezet</p></article><article class="leak" id="lek-3"><div class="leak-top"><a href="#lek-3" aria-label="Link naar lek 3">Lek 3</a><time datetime="2026-08-09">aangepast 9 aug 2026</time></div><p class="leak-fig">RSI 70</p><p class="leak-fig-sub">harde stop die de ladder bevroor</p><h3>Een veiligheidsfilter bevroor de koopladder</h3><p class="txt">Een harde koopstop bij een RSI boven 70 hield de ladder ook tegen om de koers te volgen, zodat een latere ondiepe dip niets opleverde. Het werd een afbouw: kleinere orders tussen RSI 70 en 80, pas boven 80 een harde stop.</p><p class="now">Nu een afbouw; harde stop pas boven 80</p></article><article class="leak" id="lek-4"><div class="leak-top"><a href="#lek-4" aria-label="Link naar lek 4">Lek 4</a><time datetime="2026-08-09">opgelost 9 aug 2026</time></div><p class="leak-fig">~½</p><p class="leak-fig-sub">van de winst van één week ontbrak in het rapport</p><h3>Eén weekrapport miste ongeveer de helft van de winst</h3><p class="txt">In één week van het wekelijkse Telegram-rapport van de bot ontbrak ongeveer de helft van de gerealiseerde winst. Het rapport keek naar het moment waarop een positie begon in plaats van waarop hij verkocht werd, waardoor posities over twee weken verdwenen. Opgelost en nagerekend met de handelsgegevens.</p><p class="now">Opgelost en nagerekend met de handelsgegevens</p></article></div>
+</div></section>
+
+<section id="kit" class="kit-teaser"><div class="wrap">
+<div class="sec-head">
+<p class="folio"><b>★</b> Bouwpakket</p>
+<h2>Bouw je eigen versie, met je AI</h2>
+<p>Het bouwpakket is het stappenplan van deze bot, geschreven zodat een AI-assistent het met je uitvoert. Geen signalen, geen copy-trading: je bouwt en draait je eigen software.</p>
+</div>
+<ol class="stappen"><li><span class="stap-nr">1</span><h3>Download het plan</h3><p>Eén document dat deze bot stap voor stap beschrijft, geschreven om door een AI-assistent uitgevoerd te worden.</p></li><li><span class="stap-nr">2</span><h3>Geef het aan je AI</h3><p>Upload het in Claude, ChatGPT of een vergelijkbare assistent en laat die je door elke stap leiden: code, database, meldingen, livegang.</p></li><li><span class="stap-nr">3</span><h3>Open een account bij een beurs</h3><p>Maak een account aan bij een cryptobeurs en een API-sleutel voor de bot. Het plan is geschreven voor de BTC-EUR-markt van Bitvavo.</p></li><li><span class="stap-nr">4</span><h3>Veel plezier</h3><p>Laat hem draaien, kijk mee, pas hem aan. Begin klein: hij handelt met echt geld, en dat kun je kwijtraken.</p></li></ol>
+<p class="teaser-knoppen"><a class="btn" href="/bouwpakket/">Bekijk het bouwpakket · €14</a> <a href="/zo-werkt-het/">Of zie eerst hoe het werkt</a></p>
+</div></section>
+
+<section id="strategieen"><div class="wrap">
+<div class="sec-head">
+<p class="folio"><b>04</b> Strategieën</p>
+<h2>Welke strategie wat oplevert, laatste 90 dagen</h2>
+<p>De bot draait meerdere strategieën naast elkaar. Namen zoals de bot ze logt; de 90 dagen lopen tot 26 okt 2026.</p>
+</div>
+<div class="tbl plain-tbl"><table>
+<thead><tr><th scope="col">Strategie</th><th scope="col" class="r">Afgesloten trades</th><th scope="col" class="r">Rendement per trade</th><th scope="col" class="r">Mediane duur</th></tr></thead>
+<tbody><tr><td><span class="code">fine</span></td><td class="r">693</td><td class="r">+1,65%</td><td class="r">71 u</td></tr><tr><td><span class="code">coarse</span></td><td class="r">60</td><td class="r">+1,76%</td><td class="r">61 u</td></tr><tr><td><span class="code">rsi</span></td><td class="r">30</td><td class="r">+1,39%</td><td class="r">111 u</td></tr><tr><td><span class="code">meanrev</span></td><td class="r">16</td><td class="r">+1,80%</td><td class="r">132 u</td></tr><tr><td><span class="code">dust_bundle</span></td><td class="r">10</td><td class="r">+1,66%</td><td class="r">9 u</td></tr><tr><td><span class="code">volsniper</span></td><td class="r">8</td><td class="r">+1,04%</td><td class="r">42 u</td></tr></tbody>
+</table></div>
+<p class="chart-note">Rendement per trade = nettowinst gedeeld door het bedrag dat in die trades zat, na kosten, alleen afgesloten trades. Het is geen weekrendement: een trade kan dagen openstaan.</p>
+</div></section>
+
+<section id="over"><div class="wrap author">
+<div class="mono-badge" aria-hidden="true">DH</div>
+<div class="prose">
+<h2>Wie dit logboek bijhoudt</h2>
+<p>Ik ben Daan (Daniel Haket), oud-bankier: 23 jaar in de internationale financiële wereld. Ik woon in Rotterdam. Ik bouwde deze bot met de AI-agent van Replit, en sinds april 2026 handelt hij met echt geld BTC-EUR op Bitvavo.</p>
+<p>De naam beloofde 2% per week. Dit logboek is het meetlint: wat de bot echt doet, week na week, ook wat er misging. <a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">LinkedIn</a></p>
+</div>
+</div></section>
+
+<section id="volgen" style="border-bottom:0"><div class="wrap">
+<div class="sec-head"><h2>Volg het logboek</h2></div>
+<div class="signup">
+<div class="box">
+<h3>Eén eerlijke mail per week (in het Engels)</h3>
+<p>Wat er aan de bot veranderde, wat er brak en wat ik mat. Geen tips.</p>
+<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank"><input type="hidden" name="utm_source" value="mijnbitcoinstrategie"><input type="hidden" name="utm_campaign" value="weekmail"><label class="sr" for="mail-week">E-mailadres</label><input id="mail-week" type="email" name="email" placeholder="jij@voorbeeld.nl" autocomplete="email" required><button type="submit">Aanmelden</button></form>
+</div>
+<div class="box">
+<div class="koopkaart" id="buy">
+<h3 class="koop-kop">Het bouwpakket</h3>
+<p class="koop-groot"><span class="prijs">€14</span> <span class="muted">eenmalig</span></p>
+<p class="koop-sub">Updates bij elke wijziging aan de bot: <span class="prijs">€5</span> per jaar, opzegbaar.</p>
+<p>Het bouwpakket is nog niet te koop. Laat je e-mailadres achter, dan hoor je het als het zover is.</p>
+<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="mijnbitcoinstrategie"><input type="hidden" name="utm_campaign" value="bouwnotities"><label class="sr" for="mail-notes">E-mailadres</label><input id="mail-notes" type="email" name="email" placeholder="jij@voorbeeld.nl" autocomplete="email" required><button type="submit">Laat het me weten</button></form>
+</div>
+</div>
+</div>
+</div></section>
+
+</main>
+<footer class="foot"><div class="wrap">
+<p class="disclaimer">Dit is een persoonlijk logboek, geen financieel advies en geen aanbod van een dienst. Crypto is volatiel en je kunt je hele inleg verliezen. Afgelopen weken zeggen niets over komende weken. Ik beheer geen geld voor anderen en verkoop geen signalen. &mdash; Daan, Rotterdam</p>
+<p>Weken W17 tot W42 2026 &middot; data gelezen op 26 okt 2026 &middot; een nieuwe week verschijnt zeven dagen na afloop.</p><ul class="foot-links">
+<li><a href="/">Het logboek</a></li><li><a href="/bouwpakket/">Bouwpakket</a></li><li><a href="/zo-werkt-het/">Zo werkt het</a></li><li><a href="https://theweekly2pctedge.com/" hreflang="en" lang="en">English</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket op LinkedIn</a></li>
+</ul>
+</div></footer>
+</body>
+</html>

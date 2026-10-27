@@ -19,7 +19,17 @@ elke dag van datum wisselen zonder nieuwe inhoud. Bij elke herschrijving komen m
   weekly-series.csv     de weekreeks (week, maandag, % gerealiseerd), de Dataset-download
   sitemap.xml           / en /method/ met lastmod
   og-image.png          bouw/og-basis.png met de staven van alle weken erop getekend (stdlib-PNG)
+  build-kit/index.html  het bouwpakket: wat je krijgt, 4 stappen, wat je nodig hebt, vragen, kopen (w2e_site.py)
+  how-it-works/index.html  dashboard (momentopname >= 24 uur oud), werking, volatiliteit, ontwerpkeuzes
+  sites/mijnbitcoinstrategie.nl/  het Nederlandse zusterdomein: /, /bouwpakket/, /zo-werkt-het/, 404, llms.txt,
+                        robots.txt, sitemap.xml, og-image.png, favicons (w2e_nl.py); eigen webroot bij het deployen
 robots.txt en de favicons zijn statisch. Alleen stdlib.
+Modules naast dit bestand (allemaal .py, dus niet in de webroot): w2e_data (API-momentopname, opgeschoond, en
+volatiliteit), w2e_dash (dashboard-SVG), w2e_site (paginabouw beide domeinen), w2e_nl (Nederlandse homepage en
+bestanden), w2e_inhoud (teksten), w2e_kassa (checkout-configuratie; zonder URL geen koopknop maar de wachtlijst).
+Elke pagina wordt vóór het schrijven gecontroleerd: JSON-LD moet parsen, titel <= 65 en description <= 160 tekens,
+en er mag geen geldbedrag in staan (geen_bedragen; BTC-koersen alleen in class "px", de productprijs in class "prijs").
+Bouwpakket en dashboard: Daan, 27 okt 2026.
 Vertraging (22 okt 2026, besluit na Codex-review): de weekresultaten zijn zeven dagen vertraagd; de open-bandbreedte
 en de strategietabel zijn gelezen op de bouwdatum, en dat staat er overal bij.
 
@@ -27,7 +37,11 @@ en de strategietabel zijn gelezen op de bouwdatum, en dat staat er overal bij.
     python3 bouw/build_logboek.py --forceer          # altijd herschrijven
     python3 bouw/build_logboek.py --uit <pad.html>   # los concept van de homepage, verder niets
     python3 bouw/build_logboek.py --bron <map>       # lees de drie API-antwoorden uit <map>/*.json (test zonder netwerk);
-                                                     # 'data gelezen' = laatste tijdstip in portfolio-history
+                                                     # 'data gelezen' = laatste tijdstip in portfolio-history;
+                                                     # extra bestanden: grid-multiplier.json, telegram-feed.json,
+                                                     # decision-stream-<TYPE>.json, bitvavo-candles.json (zie w2e_data)
+    python3 bouw/build_logboek.py --demo             # rode balk 'DEMO DATA' op elke pagina (alleen voor screenshots)
+Cache van de ladderstap: W2E_CACHE (standaard ~/.cache/w2e), elke run bijgewerkt, ook als er niets herschreven wordt.
 """
 import csv
 import datetime
@@ -40,6 +54,10 @@ import statistics
 import sys
 import urllib.request
 
+sys.dont_write_bytecode = True  # rsync sluit *.py uit, niet __pycache__/*.pyc
+sys.modules.setdefault("build_logboek", sys.modules[__name__])  # w2e_*-modules importeren dit bestand: één exemplaar
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # w2e_*.py naast dit bestand, ook met python3 -I
+
 W2E = pathlib.Path(__file__).resolve().parent.parent
 API = "https://bitcoin-cycle-bot-eu.replit.app/api/"
 SITE = "https://theweekly2pctedge.com"
@@ -48,13 +66,6 @@ NAAM_BELOFTE = 2.0
 VERTRAGING_DAGEN = 7
 GA4 = "G-CW1KZ258ZV"
 LINKEDIN = "https://www.linkedin.com/in/daniel-haket-8305a33"
-
-# Voorverkoop van de bouwnotities (Daan, 22 okt 2026): pas na 16 dec 2026 en alleen als de wachtlijst de drempel
-# haalt; 49 euro; als knop in het bestaande blok op de homepage, geen eigen pagina. Zolang checkout en leverdatum leeg
-# zijn blijft het wachtlijstformulier staan (vraagmeting, GA4 'bouwnotities_aanmelding'). Vul beide in om te schakelen.
-BOUWNOTITIES_CHECKOUT = ""  # Lemon Squeezy-checkoutlink, bv. "https://<winkel>.lemonsqueezy.com/buy/<id>"
-BOUWNOTITIES_LEVERDATUM = None  # datetime.date(...): uiterlijk geleverd, anders geld terug
-BOUWNOTITIES_PRIJS = "€49"
 
 # Gemeten lekken. Alleen percentages; bron = eigen metingen op de bot. 'cijfer' en 'nu' herhalen alleen wat in
 # 'uitleg' staat (kop van de kaart), 'iso' is de meetdatum voor <time>.
@@ -110,6 +121,9 @@ def pct(x, plus=True):
 
 def e(s):
     return html.escape(str(s), quote=True)
+
+
+MAANDEN_NL = ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"]
 
 
 def kort(d):
@@ -281,6 +295,7 @@ code,.code{font-family:var(--mono);font-size:.88em}
 .leak p.txt{color:var(--ink-2);font-size:.97rem}
 .leak .now{margin:auto 0 0;padding-top:.75rem;border-top:1px solid var(--rule);font-size:.88rem;font-weight:600}
 .leak .now::before{content:"Now: ";font-weight:400;color:var(--muted)}
+:lang(nl) .leak .now::before{content:"Nu: "}
 
 /* regels */
 .rules{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
@@ -348,6 +363,102 @@ button:hover,.btn:hover{opacity:.9}
   #strategies .code{font-size:1em}
 }
 
+/* koopweg: knop in de kopbalk */
+.nav{align-items:center}
+.nav .cta{background:var(--btn);color:var(--btn-ink);padding:.45rem .8rem;border-radius:3px;text-decoration:none;font-weight:600}
+.nav .cta:hover,.nav .cta[aria-current]{color:var(--btn-ink);text-decoration:none;opacity:.9}
+@media (max-width:520px){.nav{gap:.8rem;font-size:.85rem}.brand span{font-size:.92rem}}
+
+/* bouwpakket */
+.kit-grid{display:grid;gap:1.8rem;align-items:start}
+@media (min-width:900px){.kit-grid{grid-template-columns:1.2fr .9fr;gap:3.5rem}}
+.lead-groot{font-size:1.15rem;color:var(--ink-2);max-width:40rem}
+.kit-hero h1,.hero h1+.lead-groot{margin-top:0}.kit-hero h1,.hero .wrap>h1{margin-bottom:1rem}
+.echt{font-size:.95rem;color:var(--ink-2);border-left:3px solid var(--brass);padding-left:.9rem;max-width:40rem}
+.koopkaart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem;box-shadow:0 18px 40px -30px rgba(27,31,36,.35)}
+.box .koopkaart{border:0;padding:0;box-shadow:none;background:none}
+.koop-kop{font-size:1.35rem;margin-bottom:.5rem}
+.koop-groot{font:700 2.6rem/1 var(--sans);letter-spacing:-.03em;margin:.2rem 0 .5rem}
+.koop-groot .muted{font:500 1rem var(--sans);letter-spacing:0}
+.koop-sub{color:var(--ink-2);font-size:.95rem}
+.koopknoppen{display:grid;gap:.9rem;margin-top:.8rem}
+.koop{display:block;border-top:1px solid var(--rule);padding-top:.9rem;margin:0}
+.koop-naam{font-weight:650;margin:0}.koop-prijs{color:var(--ink-2);margin:0 0 .5rem;font-size:.92rem}
+.toestemming{display:flex;gap:.55rem;align-items:flex-start;font-size:.82rem;color:var(--ink-2);margin:.2rem 0 .7rem;line-height:1.45}
+.toestemming input{margin-top:.2rem;flex:none;width:1rem;height:1rem}
+.koop button{width:100%}
+.risico{font-size:.85rem;font-weight:600;color:var(--ink);margin:.9rem 0 0;padding:.6rem .75rem;background:var(--sunk);border-radius:3px}
+.stappen{list-style:none;margin:0;padding:0;display:grid;gap:1rem;counter-reset:stap}
+@media (min-width:760px){.stappen{grid-template-columns:repeat(4,1fr)}}
+.stappen li{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.1rem 1.1rem 1rem;position:relative}
+.stap-nr{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:50%;border:1.5px solid var(--brass);color:var(--brass);font:700 .95rem var(--mono);margin-bottom:.7rem}
+.stappen p{color:var(--ink-2);font-size:.95rem;margin:0}
+.teaser-knoppen{margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:center}
+.teaser-knoppen .btn{margin:0}
+.two-col{display:grid;gap:2rem}
+@media (min-width:860px){.two-col{grid-template-columns:1fr 1fr;gap:3rem}}
+.kaartlijst{list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
+@media (min-width:860px){#need .kaartlijst{grid-template-columns:repeat(3,1fr)}}
+.kaartlijst li{border-top:2px solid var(--ink);padding-top:.7rem}
+.kaartlijst h3{font-size:1.08rem}.kaartlijst p{color:var(--ink-2);font-size:.95rem;margin:0}
+.niet{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+.niet li{padding-left:1.7rem;position:relative;color:var(--ink-2)}
+.niet li::before{content:"✕";position:absolute;left:0;color:var(--neg);font-weight:700}
+.voorbeelden{list-style:none;padding:0;margin:0 0 1rem;display:grid;gap:.6rem}
+@media (min-width:760px){.voorbeelden{grid-template-columns:1fr 1fr}}
+.voorbeelden li{font-family:var(--mono);font-size:.88rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--below);border-radius:3px;padding:.75rem .9rem}
+.faqs{display:grid;gap:.6rem;max-width:46rem}
+details.faq{margin:0}
+details.faq p{padding:.2rem 1rem .9rem;margin:0;color:var(--ink-2)}
+.terug{margin-top:1.6rem}
+.kit-teaser{background:linear-gradient(var(--sunk),var(--sunk))}
+
+/* dashboard */
+.dash-stempel{font:.8rem/1.5 var(--mono);color:var(--muted);margin:0 0 1rem}
+.dash-stempel strong{color:var(--ink)}
+.dash-leeg{padding:1.2rem;background:var(--surface);border:1px dashed var(--rule-2);border-radius:4px;color:var(--ink-2)}
+.tegels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:0 0 1.2rem}
+@media (min-width:760px){.tegels{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1000px){.tegels{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.tegel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:.8rem .85rem .7rem;min-width:0}
+.tegel dt{font:600 .68rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tegel dd{margin:.3rem 0 .15rem;font:700 1.45rem/1.1 var(--sans);letter-spacing:-.02em}
+.tegel p{font-size:.76rem;color:var(--muted);margin:0;line-height:1.35}
+.spark{display:block;width:100%;height:28px;margin-top:.35rem}
+.spark path{fill:none;stroke:var(--brass);stroke-width:1.6}
+.dash-chart{margin-bottom:.4rem}
+.koerslijn{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.pt-koop{fill:var(--below);stroke:var(--surface);stroke-width:1.5}
+.pt-verkoop{fill:var(--hit);stroke:var(--surface);stroke-width:1.5}
+.pt-T{fill:var(--brass);stroke:var(--surface);stroke-width:2}
+.prijs-T{stroke:var(--brass);stroke-width:1;stroke-dasharray:4 4}
+.paneel{fill:var(--sunk);stroke:var(--rule)}
+.o-fine{fill:var(--below)}.o-coarse{fill:var(--below);opacity:.55}.o-verkoop{fill:var(--hit)}
+.kolkop{font-weight:600;fill:var(--ink-2)}
+.sw.dot{border-radius:50%}.sw.koop{background:var(--below)}.sw.verkoop{background:var(--hit)}
+.sw.o-fine{background:var(--below);height:.25rem;border-radius:2px}.sw.o-verkoop{background:var(--hit);height:.25rem;border-radius:2px}
+.dash-h3{margin:2rem 0 .8rem;font-size:1.25rem}
+.chart .narrow .px,.chart .narrow .kolkop{font-size:12px}
+
+/* werking */
+.stroom{list-style:none;margin:0;padding:0;display:grid;gap:.8rem;counter-reset:s}
+@media (min-width:860px){.stroom{grid-template-columns:repeat(5,1fr);gap:0}}
+.stroom li{counter-increment:s;background:var(--surface);border:1px solid var(--rule);padding:1rem 1rem .9rem;position:relative}
+@media (min-width:860px){.stroom li+li{border-left:0}.stroom li:not(:last-child)::after{content:"→";position:absolute;right:-.55rem;top:1rem;background:var(--bg);color:var(--brass);font-weight:700;z-index:1}}
+.stroom li::before{content:counter(s,decimal-leading-zero);font:700 .75rem var(--mono);color:var(--brass);display:block;margin-bottom:.4rem}
+.stroom p{font-size:.92rem;color:var(--ink-2);margin:0}
+.vol{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.vol-getal{font:700 3.4rem/1 var(--sans);letter-spacing:-.04em;margin:0 0 .3rem}
+.vol-sub{font-size:.85rem;color:var(--muted)}
+.keuzes{list-style:none;margin:0;padding:0;border-left:2px solid var(--rule-2);margin-left:.4rem}
+.keuze{position:relative;padding:0 0 1.6rem 1.5rem;max-width:46rem}
+.keuze::before{content:"";position:absolute;left:-.45rem;top:.3rem;width:.75rem;height:.75rem;border-radius:50%;background:var(--bg);border:2px solid var(--brass)}
+.keuze-wanneer{font:600 .72rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brass);margin:0 0 .35rem}
+.keuze p{color:var(--ink-2)}
+.keuze-ai{font-family:var(--mono);font-size:.86rem;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:.55rem .75rem;margin:0}
+.keuze-ai span{font-family:var(--sans);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:.15rem}
+.demo-balk{background:#c2412d;color:#fff;text-align:center;font:700 .8rem/1.4 var(--mono);padding:.4rem;letter-spacing:.06em}
+
 @media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
 """
 
@@ -406,14 +517,8 @@ def ld(obj):
 
 
 def bovenbalk(actief):
-    def link(href, tekst, sleutel, klasse=""):
-        attr = (' aria-current="page"' if sleutel == actief else "") + (f' class="{klasse}"' if klasse else "")
-        return f'<a href="{href}"{attr}>{tekst}</a>'
-    return f"""<a class="skip" href="#main">Skip to content</a>
-<header class="top"><div class="wrap">
-<a class="brand" href="/">{MERK}<span>The Weekly 2% Edge</span></a>
-<nav class="nav" aria-label="Main">{link("/#weeks", "Weeks", "weeks", "opt")}{link("/#leaks", "Leaks", "leaks", "opt")}{link("/method/", "Method", "method")}{link("/#follow", "Follow", "follow")}</nav>
-</div></header>"""
+    import w2e_site
+    return w2e_site.kopbalk(w2e_site.SITES["en"], {"method": "methode"}.get(actief, actief))
 
 
 VOET_DISCLAIMER = ("This is a personal logbook, not financial advice and not an offer of any service. Crypto is "
@@ -425,7 +530,7 @@ def voet(regel=""):
     return f"""<footer class="foot"><div class="wrap">
 <p class="disclaimer">{VOET_DISCLAIMER}</p>
 {f'<p>{regel}</p>' if regel else ''}<ul class="foot-links">
-<li><a href="/">The logbook</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="{LINKEDIN}" rel="me noopener">Daniel Haket on LinkedIn</a></li>
+<li><a href="/">The logbook</a></li><li><a href="/build-kit/">Build kit</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="https://mijnbitcoinstrategie.nl/" hreflang="nl" lang="nl">Nederlands</a></li><li><a href="{LINKEDIN}" rel="me noopener">Daniel Haket on LinkedIn</a></li>
 </ul>
 </div></footer>"""
 
@@ -447,8 +552,11 @@ def klasse(p):
     return "b-hit" if p >= DOEL else ("b-neg" if p < 0 else "b-below")
 
 
-def grafiek(weken, breedte, hoogte, links, rechts, boven, onder, max_labels, soort, titel_id):
+def grafiek(weken, breedte, hoogte, links, rechts, boven, onder, max_labels, soort, titel_id, taal="en"):
     reeks = [p for _, _, p in weken]
+    nl = taal == "nl"
+    pct_ = (lambda x: pct(x).replace(".", ",")) if nl else pct
+    datum_ = (lambda d: f"{d.day} {MAANDEN_NL[d.month - 1]} {d.year}") if nl else lang
     hi = max(NAAM_BELOFTE, max(reeks)) * 1.06
     lo = min(0.0, min(reeks) * 1.1)
     stap = 0.5 if hi <= 3 else 1.0
@@ -467,7 +575,7 @@ def grafiek(weken, breedte, hoogte, links, rechts, boven, onder, max_labels, soo
     while k * stap <= hi + 1e-9:
         t = k * stap
         delen.append(f'<line class="ax-line" x1="{links}" x2="{breedte - rechts}" y1="{y(t):.1f}" y2="{y(t):.1f}"/>'
-                     f'<text class="ax" x="{links - 8}" y="{y(t) + 4:.1f}" text-anchor="end">{f"{t:.1f}%".replace("-", chr(8722))}</text>')
+                     f'<text class="ax" x="{links - 8}" y="{y(t) + 4:.1f}" text-anchor="end">{f"{t:.1f}%".replace("-", chr(8722)).replace(".", "," if nl else ".")}</text>')
         k += 1
     # staven
     beste = max(range(n), key=lambda i: reeks[i])
@@ -483,8 +591,8 @@ def grafiek(weken, breedte, hoogte, links, rechts, boven, onder, max_labels, soo
         if abs(y1 - y0) < 1.5:
             y1 = y0 - 1.5 if p >= 0 else y0 + 1.5
         jaar = start.isocalendar()[0]
-        delen.append(f'<g class="wk"><title>{label} {jaar} (week of {lang(start)}): {pct(p)} realized'
-                     f'{" · goal met" if p >= DOEL else ""}</title>'
+        delen.append(f'<g class="wk"><title>{label} {jaar} ({"week van" if nl else "week of"} {datum_(start)}): {pct_(p)} '
+                     f'{"gerealiseerd" if nl else "realized"}{(" · doel gehaald" if nl else " · goal met") if p >= DOEL else ""}</title>'
                      f'<rect class="hit-area" x="{links + i * band:.1f}" y="{boven}" width="{band:.1f}" height="{ph}"/>'
                      f'<path class="{klasse(p)}" d="{balk_pad(x, y0, y1, bw)}"/></g>')
         ty = y1 - 6 if p >= 0 else y1 + 14
@@ -492,15 +600,25 @@ def grafiek(weken, breedte, hoogte, links, rechts, boven, onder, max_labels, soo
         botst = (x + bw / 2 + 24 > breedte - rechts
                  and any(abs(ty - 4 - y(v)) < 13 for v in (DOEL, NAAM_BELOFTE)))
         if i in label_bij and not botst:
-            delen.append(f'<text class="val" x="{x + bw / 2:.1f}" y="{ty:.1f}" text-anchor="middle">{pct(p)}</text>')
+            delen.append(f'<text class="val" x="{x + bw / 2:.1f}" y="{ty:.1f}" text-anchor="middle">{pct_(p)}</text>')
         if (n - 1 - i) % stride == 0 and not (i in label_bij and p < 0):
             delen.append(f'<text class="ax" x="{x + bw / 2:.1f}" y="{hoogte - onder + 18}" text-anchor="middle">{label}</text>')
     delen.append(f'<line class="zero" x1="{links}" x2="{breedte - rechts}" y1="{y0:.1f}" y2="{y0:.1f}"/>')
     # referentielijnen
-    for waarde, k, tekst in ((DOEL, "goal", "goal"), (NAAM_BELOFTE, "name", "the name" if rechts > 50 else "name")):
+    for waarde, k, tekst in ((DOEL, "goal", "doel" if nl else "goal"),
+                             (NAAM_BELOFTE, "name", ("de naam" if rechts > 50 else "naam") if nl else ("the name" if rechts > 50 else "name"))):
         delen.append(f'<line class="ref ref-{k}" x1="{links}" x2="{breedte - rechts + 4}" y1="{y(waarde):.1f}" y2="{y(waarde):.1f}"/>'
                      f'<text class="ref-lbl {k}" x="{breedte - rechts + 8}" y="{y(waarde) + 4:.1f}">{tekst}</text>')
     eerste, laatste = weken[0], weken[-1]
+    if nl:
+        doel_nl = f"{DOEL}".replace(".", ",")
+        beschrijving = (f"Staafgrafiek van de gerealiseerde winst per week, {eerste[1]} tot {laatste[1]}, als percentage van "
+                        f"het ingezette kapitaal. Mediaan {pct_(statistics.median(reeks))}, beste {pct_(max(reeks))}, "
+                        f"slechtste {pct_(min(reeks))}. {sum(p >= DOEL for p in reeks)} van {n} weken haalden het doel van "
+                        f"{doel_nl}%.")
+        return (f'<svg class="{soort}" viewBox="0 0 {breedte} {hoogte}" role="img" aria-labelledby="{titel_id}-t {titel_id}-d">'
+                f'<title id="{titel_id}-t">Gerealiseerde winst per week, % van het ingezette kapitaal</title>'
+                f'<desc id="{titel_id}-d">{e(beschrijving)}</desc>{"".join(delen)}</svg>')
     beschrijving = (f"Bar chart of realized profit per week, {eerste[1]} to {laatste[1]}, as a percentage of the capital "
                     f"in play. Median {pct(statistics.median(reeks))}, best {pct(max(reeks))}, worst {pct(min(reeks))}. "
                     f"{sum(p >= DOEL for p in reeks)} of {n} weeks reached the {DOEL}% goal; no week came near "
@@ -512,19 +630,20 @@ def grafiek(weken, breedte, hoogte, links, rechts, boven, onder, max_labels, soo
             f'<desc id="{titel_id}-d">{e(beschrijving)}</desc>{"".join(delen)}</svg>')
 
 
-def bereik_html(lo, hi):
+def bereik_html(lo, hi, taal="en"):
     """Horizontale strook: laagste tot hoogste open-resultaat, met de nullijn."""
     schaal = max(1.0, -(-max(abs(lo), abs(hi)) // 1))
     def pos(v):
         return (v + schaal) / (2 * schaal) * 100
     links, rechts = pos(min(lo, hi)), pos(max(lo, hi))
+    pct_ = (lambda x: pct(x).replace(".", ",")) if taal == "nl" else pct
     return f"""<div class="track" aria-hidden="true">
 <div class="base"></div><div class="band" style="left:{links:.1f}%;width:{max(.8, rechts - links):.1f}%"></div>
 <div class="zero-tick" style="left:50%"></div>
 <span class="dot" style="left:{links:.1f}%"></span><span class="dot" style="left:{rechts:.1f}%"></span>
 </div>
 <div class="ticks" aria-hidden="true"><span>{pct(-schaal).replace(".00", "")}</span><span>0%</span><span>{pct(schaal).replace(".00", "")}</span></div>
-<dl class="range-vals"><div><dt>Lowest reading</dt><dd>{pct(lo)}</dd></div><div><dt>Highest reading</dt><dd>{pct(hi)}</dd></div></dl>"""
+<dl class="range-vals"><div><dt>{"Laagste meting" if taal == "nl" else "Lowest reading"}</dt><dd>{pct_(lo)}</dd></div><div><dt>{"Hoogste meting" if taal == "nl" else "Highest reading"}</dt><dd>{pct_(hi)}</dd></div></dl>"""
 
 
 # ---------------------------------------------------------------- OG-beeld (stdlib: PNG lezen, staven tekenen, schrijven)
@@ -574,13 +693,13 @@ def png_lees(pad):
     return w, h, rijen
 
 
-def og_beeld(weken):
+def og_beeld(weken, basis=OG_BASIS):
     """Teken de staven op de basis en geef de PNG-bytes terug (of None als de basis ontbreekt)."""
     import struct
     import zlib
-    if not OG_BASIS.exists():
+    if not basis.exists():
         return None
-    w, h, px = png_lees(OG_BASIS)
+    w, h, px = png_lees(basis)
 
     def zet(x0, y0, x1, y1, kleur):
         x0, x1 = max(0, int(round(x0))), min(w, int(round(x1)))
@@ -631,37 +750,6 @@ def persoon():
             "sameAs": [LINKEDIN]}
 
 
-def voorverkoop():
-    """True als de voorverkoop aan staat; half ingevuld is een fout, geen stille terugval."""
-    if not BOUWNOTITIES_CHECKOUT and BOUWNOTITIES_LEVERDATUM is None:
-        return False
-    if not BOUWNOTITIES_CHECKOUT.startswith("https://") or not isinstance(BOUWNOTITIES_LEVERDATUM, datetime.date):
-        raise SystemExit("bouwnotities: vul BOUWNOTITIES_CHECKOUT (https://...) én BOUWNOTITIES_LEVERDATUM "
-                         "(datetime.date) in, of laat ze allebei leeg")
-    if BOUWNOTITIES_LEVERDATUM < datetime.date.today():
-        print(f"LET OP: leverdatum bouwnotities ({BOUWNOTITIES_LEVERDATUM}) is voorbij; de pagina belooft nog steeds "
-              f"levering op die datum")
-    return True
-
-
-def bouwnotities_blok():
-    uitleg = ("How it is built and guarded: the ladder, the safety checks, the monitoring, and the mistakes above in "
-              "full detail. It's an engineering document, not a strategy that promises returns.")
-    if not voorverkoop():
-        return f"""<div class="box" id="build-notes">
-<h3>The build notes of this bot</h3>
-<p>{uitleg} It doesn't exist as a product yet. Leave your email if you'd want it, and I'll only write it if enough people do.</p>
-<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="bouwnotities"><label class="sr" for="mail-notes">Email address</label><input id="mail-notes" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">I'd want the build notes</button></form>
-</div>"""
-    return f"""<div class="box" id="build-notes">
-<h3>The build notes of this bot</h3>
-<p>{uitleg}</p>
-<p><strong>Pre-order: {e(BOUWNOTITIES_PRIJS)}, one-off.</strong> Delivered by <time datetime="{BOUWNOTITIES_LEVERDATUM}">{lang(BOUWNOTITIES_LEVERDATUM)}</time>. If it isn't delivered by then, you get your money back in full.</p>
-<a class="btn" href="{e(BOUWNOTITIES_CHECKOUT)}" onclick="if(window.gtag)gtag('event','bouwnotities_voorverkoop_klik')">Pre-order the build notes</a>
-<p class="small muted">Checkout, payment and VAT are handled by Lemon Squeezy.</p>
-</div>"""
-
-
 def homepage(c):
     weken, reeks = c["weken"], c["reeks"]
     eerste, laatste = weken[0], weken[-1]
@@ -709,7 +797,9 @@ def homepage(c):
          "distribution": {"@type": "DataDownload", "encodingFormat": "text/csv", "contentUrl": f"{SITE}/weekly-series.csv"}},
     ]}
 
-    head = kop_html(TITEL, OMSCHRIJVING, f"{SITE}/", social(TITEL, OMSCHRIJVING, f"{SITE}/") + ld(graph))
+    import w2e_site
+    S = w2e_site.SITES["en"]
+    head = kop_html(TITEL, OMSCHRIJVING, f"{SITE}/", w2e_site.hreflang("home") + social(TITEL, OMSCHRIJVING, f"{SITE}/") + ld(graph))
     return f"""<!DOCTYPE html>
 <html lang="en">
 {c["marker"]}
@@ -814,6 +904,8 @@ def homepage(c):
 <div class="leaks">{lekken}</div>
 </div></section>
 
+{w2e_site.kit_teaser(S)}
+
 <section id="strategies"><div class="wrap">
 <div class="sec-head">
 <p class="folio"><b>04</b> Strategy ledger</p>
@@ -861,7 +953,9 @@ def homepage(c):
 <p>What changed on the bot, what broke, and what I measured. No tips.</p>
 <form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="weekmail"><label class="sr" for="mail-week">Email address</label><input id="mail-week" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">Subscribe</button></form>
 </div>
-{bouwnotities_blok()}
+<div class="box">
+{w2e_site.koopkaart(S, "h3")}
+</div>
 </div>
 </div></section>
 
@@ -970,7 +1064,9 @@ def pagina_404():
 """
 
 
-def llms(c):
+def llms(c, m=None, vol=None):
+    import w2e_dash
+    import w2e_kassa
     weken, reeks = c["weken"], c["reeks"]
     laatste = weken[-1]
     naam = sum(p >= NAAM_BELOFTE for p in reeks)
@@ -986,13 +1082,16 @@ The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 ye
 - [The logbook]({SITE}/): every week since {weken[0][1]} {weken[0][0].isocalendar()[0]} in a chart and table, realized vs. open positions, the {len(LEKKEN)} measured leaks, and returns per strategy over the last 90 days
 - [Method]({SITE}/method/): how every number is computed, what is included and what is never shown
 - [Weekly series (CSV)]({SITE}/weekly-series.csv): week, Monday it starts, realized % of capital in play
-{f"- [Build notes, pre-order]({SITE}/#build-notes): an engineering document on how the bot is built and guarded, {BOUWNOTITIES_PRIJS}, delivered by {BOUWNOTITIES_LEVERDATUM}; not a strategy or a return promise" + chr(10) if voorverkoop() else ""}
+- [Build kit]({SITE}/build-kit/): a step-by-step plan an AI assistant executes to build your own version of this bot; {w2e_kassa.prijs_tekst("en")} one-off, updates {w2e_kassa.jaar_tekst("en")} a year; engineering documentation, not signals or a return promise
+- [How it works]({SITE}/how-it-works/): the bot's dashboard as a snapshot at least 24 hours old (exposure, buy ladder, open sell orders, every sale), how a trade runs, why bitcoin, and each design decision with its date
+- Dutch version: https://mijnbitcoinstrategie.nl/
+
 ## Current figures ({c["periode"]}, {len(reeks)} weeks)
 - Median week: {pct(c["mediaan"]).replace(chr(8722), "-")} realized; average week {pct(c["gemiddeld"]).replace(chr(8722), "-")}
 - Goal of {DOEL}% a week reached in {c["raak"]} of {len(reeks)} weeks; {naam_tekst}
 - Best week {pct(max(reeks)).replace(chr(8722), "-")}, worst week {pct(min(reeks)).replace(chr(8722), "-")}
 - Open positions over {c["ph_van"]} to {c["ph_tot"]} (not delayed): between {pct(c["open_lo"]).replace(chr(8722), "-")} and {pct(c["open_hi"]).replace(chr(8722), "-")} of the account versus what was paid
-
+{f"- Exposure at the dashboard snapshot ({m['T']:%Y-%m-%d %H:%M} UTC): {m['exposure']['pct']:.1f}% of capital" + chr(10) if m and m.get("exposure") else ""}{f"- Realized annualised volatility of BTC-EUR: {vol['jaar_pct']:.0f}% ({vol['n']} daily returns up to {vol['tot'].isoformat()}, Bitvavo daily candles)" + chr(10) if vol else ""}
 ## Method in short
 - Weekly figure = realized profit of positions sold that week (Monday to Sunday), after exchange fees on both sides, divided by the capital in play that week
 - Positions count in the week they are sold; rare forced loss sales are included
@@ -1003,6 +1102,7 @@ The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 ye
 - Percentages only: never euro amounts, account size or order details
 - Weekly results one week delayed: a week appears seven days after it ends
 - No signals, no advice, no copy-trading; not an offer of any service
+- The build kit is documentation for building and running your own software; dashboard data is at least 24 hours old
 - Past weeks say nothing about future weeks; crypto is volatile and you can lose your entire stake
 
 ## Data freshness
@@ -1021,13 +1121,60 @@ def sitemap(lastmod):
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{regels}</urlset>\n'
 
 
+GEEN_BEDRAG = re.compile(r"€\s?\d|\d\s?€|\bEUR\s?\d|\d\s?EUR\b|\$\s?\d|\d\s?\$|\b\d[\d.,]*\s?(?:euro|dollar)s?\b", re.I)
+PRIJZEN_OK = ("€14", "€5", "$14", "$5", "€ 14", "€ 5")
+
+
+def geen_bedragen(naam, tekst):
+    """Stop de bouw als er een geldbedrag in de uitvoer staat. Toegestaan: BTC-koersen in een element met class "px"
+    (dat is een koers, geen bedrag) en de productprijs van het bouwpakket in een element met class "prijs"."""
+    zonder = re.sub(r'<(span|text|circle|rect)[^>]*class="[^"]*\b(?:px|prijs)\b[^"]*"[^>]*>.*?</\1>', "", tekst, flags=re.S)
+    zonder = re.sub(r'<script type="application/ld\+json">.*?</script>', "", zonder, flags=re.S)
+    for vast in PRIJZEN_OK:  # productprijs in lopende tekst ("Bekijk het bouwpakket · €14")
+        zonder = re.sub(re.escape(vast) + r"(?![\d.,])", "", zonder)
+    treffer = GEEN_BEDRAG.search(zonder)
+    if treffer:
+        rond = zonder[max(0, treffer.start() - 80):treffer.end() + 40].replace("\n", " ")
+        raise SystemExit(f"{naam}: geldbedrag in de uitvoer ({treffer.group(0)!r}): ...{rond}...")
+
+
+def controleer(naam, pagina):
+    for blok in re.findall(r'<script type="application/ld\+json">(.*?)</script>', pagina, re.S):
+        json.loads(blok)
+    titel = re.search(r"<title>(.*?)</title>", pagina, re.S)
+    omschr = re.search(r'<meta name="description" content="([^"]*)"', pagina)
+    if titel and len(html.unescape(titel.group(1))) > 65:
+        raise SystemExit(f"{naam}: <title> te lang ({len(html.unescape(titel.group(1)))} tekens)")
+    if omschr and len(html.unescape(omschr.group(1))) > 160:
+        raise SystemExit(f"{naam}: meta description te lang ({len(html.unescape(omschr.group(1)))} tekens)")
+    geen_bedragen(naam, pagina)
+    if "--demo" in sys.argv:  # alleen voor screenshots: elke pagina zegt dat de dashboardcijfers nep zijn
+        pagina = pagina.replace("<body>", '<body>\n<div class="demo-balk">DEMO DATA: dashboard figures are synthetic, for layout only</div>', 1)
+    return pagina
+
+
+def lastmod_oud(pad, site):
+    if not pad.exists():
+        return {}
+    return dict(re.findall(r"<loc>" + re.escape(site) + r"([^<]*)</loc><lastmod>([^<]*)</lastmod>", pad.read_text(encoding="utf-8")))
+
+
 def main():
+    import w2e_data
+    import w2e_nl
+    import w2e_site
     is_home = "--uit" not in sys.argv
     uit = W2E / "index.html" if is_home else pathlib.Path(sys.argv[sys.argv.index("--uit") + 1])
     vandaag = datetime.date.today()
+    nu = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
     ph = haal("portfolio-history")
     if "--bron" in sys.argv:  # test zonder netwerk: 'gelezen' is het moment van de laatste meting
         vandaag = datetime.date.fromisoformat(ph["timestamps"][-1][:10])
+        nu = datetime.datetime.fromisoformat(ph["timestamps"][-1])
+    # elke run: een opgeschoonde kopie van grid-multiplier in de cache, zodat er later een van >= 24 uur oud is
+    grid_nu = w2e_data.schoon_grid(w2e_data._haal("grid-multiplier"))
+    if "--bron" not in sys.argv:
+        w2e_data.cache_bewaar(nu, grid_nu)
     grens = vandaag - datetime.timedelta(days=VERTRAGING_DAGEN)
     weken = []
     for w in haal("weekly-performance")["weeks"]:
@@ -1052,24 +1199,55 @@ def main():
         ph_van=datetime.date.fromisoformat(ph["timestamps"][0][:10]),
         ph_tot=datetime.date.fromisoformat(ph["timestamps"][-1][:10]),
     )
-    pagina = homepage(c)
-    for blok in re.findall(r'<script type="application/ld\+json">(.*?)</script>', pagina, re.S):
-        json.loads(blok)
+    pagina = controleer("index.html", homepage(c))
     uit.write_text(pagina, encoding="utf-8")
     if is_home:
-        oud = {}
-        sm = W2E / "sitemap.xml"
-        if sm.exists():
-            oud = dict(re.findall(r"<loc>" + re.escape(SITE) + r"([^<]*)</loc><lastmod>([^<]*)</lastmod>",
-                                  sm.read_text(encoding="utf-8")))
-        methode_nieuw = schrijf(W2E / "method" / "index.html", methode(c))
-        schrijf(W2E / "404.html", pagina_404())
-        schrijf(W2E / "llms.txt", llms(c))
+        m = w2e_data.momentopname(nu, ph, grid_nu)
+        vol = w2e_data.volatiliteit()
+        EN, NL = w2e_site.SITES["en"], w2e_site.SITES["nl"]
+        # Engels (repo-root)
+        oud = lastmod_oud(W2E / "sitemap.xml", SITE)
+        nieuw = {
+            "/method/": schrijf(W2E / "method" / "index.html", controleer("method", methode(c))),
+            "/build-kit/": schrijf(W2E / "build-kit" / "index.html", controleer("build-kit", w2e_site.kit_pagina(EN, c))),
+            "/how-it-works/": schrijf(W2E / "how-it-works" / "index.html",
+                                      controleer("how-it-works", w2e_site.werking_pagina(EN, c, m, vol))),
+        }
+        schrijf(W2E / "404.html", controleer("404", pagina_404()))
+        tekst = llms(c, m, vol)
+        geen_bedragen("llms.txt", tekst)
+        schrijf(W2E / "llms.txt", tekst)
         schrijf(W2E / "weekly-series.csv", csv_tekst(weken))
         og = og_beeld(weken)
         if og and (not (W2E / "og-image.png").exists() or (W2E / "og-image.png").read_bytes() != og):
             (W2E / "og-image.png").write_bytes(og)
-        schrijf(sm, sitemap([("/", vandaag), ("/method/", vandaag if methode_nieuw or "/method/" not in oud else oud["/method/"])]))
+        schrijf(W2E / "sitemap.xml", sitemap([("/", vandaag)] + [(pad, vandaag if nieuw[pad] or pad not in oud else oud[pad])
+                                                                  for pad in ("/build-kit/", "/how-it-works/", "/method/")]))
+        # Nederlands (sites/mijnbitcoinstrategie.nl/, eigen webroot)
+        nl = W2E / "sites" / "mijnbitcoinstrategie.nl"
+        oud_nl = lastmod_oud(nl / "sitemap.xml", NL["url"])
+        schrijf(nl / "index.html", controleer("nl/index.html", w2e_nl.home(c)))
+        nieuw_nl = {
+            "/bouwpakket/": schrijf(nl / "bouwpakket" / "index.html", controleer("nl/bouwpakket", w2e_site.kit_pagina(NL, c))),
+            "/zo-werkt-het/": schrijf(nl / "zo-werkt-het" / "index.html",
+                                      controleer("nl/zo-werkt-het", w2e_site.werking_pagina(NL, c, m, vol))),
+        }
+        schrijf(nl / "404.html", controleer("nl/404", w2e_nl.pagina_404()))
+        tekst = w2e_nl.llms(c, m, vol)
+        geen_bedragen("nl/llms.txt", tekst)
+        schrijf(nl / "llms.txt", tekst)
+        schrijf(nl / "robots.txt", w2e_nl.ROBOTS)
+        schrijf(nl / "sitemap.xml", w2e_nl.sitemap([("/", vandaag)] + [(pad, vandaag if nieuw_nl[pad] or pad not in oud_nl else oud_nl[pad])
+                                                                        for pad in ("/bouwpakket/", "/zo-werkt-het/")]))
+        og = og_beeld(weken, W2E / "bouw" / "og-basis-nl.png")
+        if og and (not (nl / "og-image.png").exists() or (nl / "og-image.png").read_bytes() != og):
+            (nl / "og-image.png").write_bytes(og)
+        for icoon in ("favicon.ico", "favicon.svg", "favicon-48.png", "apple-touch-icon.png"):
+            bron, doel = W2E / icoon, nl / icoon
+            if bron.exists() and (not doel.exists() or doel.read_bytes() != bron.read_bytes()):
+                doel.write_bytes(bron.read_bytes())
+        print(f"dashboard: {'T = ' + str(m['T']) if m else 'geen momentopname'}; volatiliteit: "
+              f"{format(vol['jaar_pct'], '.1f') + '%' if vol else 'niet beschikbaar'}")
     print(f"{len(reeks)} weken ({eerste[1]}-{laatste[1]}), mediaan {c['mediaan']:.2f}%, "
           f"doel geraakt {c['raak']}/{len(reeks)}, open {c['open_lo']:.2f}..{c['open_hi']:.2f}% -> {uit}")
 

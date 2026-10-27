@@ -15,6 +15,10 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="canonical" href="https://theweekly2pctedge.com/">
+<link rel="alternate" hreflang="en" href="https://theweekly2pctedge.com/">
+<link rel="alternate" hreflang="nl-NL" href="https://mijnbitcoinstrategie.nl/">
+<link rel="alternate" hreflang="nl-BE" href="https://mijnbitcoinstrategie.nl/">
+<link rel="alternate" hreflang="x-default" href="https://theweekly2pctedge.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Weekly 2% Edge">
 <meta property="og:title" content="The Weekly 2% Edge | A live bitcoin bot&#x27;s honest logbook">
@@ -275,6 +279,7 @@ code,.code{font-family:var(--mono);font-size:.88em}
 .leak p.txt{color:var(--ink-2);font-size:.97rem}
 .leak .now{margin:auto 0 0;padding-top:.75rem;border-top:1px solid var(--rule);font-size:.88rem;font-weight:600}
 .leak .now::before{content:"Now: ";font-weight:400;color:var(--muted)}
+:lang(nl) .leak .now::before{content:"Nu: "}
 
 /* regels */
 .rules{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
@@ -342,6 +347,102 @@ button:hover,.btn:hover{opacity:.9}
   #strategies .code{font-size:1em}
 }
 
+/* koopweg: knop in de kopbalk */
+.nav{align-items:center}
+.nav .cta{background:var(--btn);color:var(--btn-ink);padding:.45rem .8rem;border-radius:3px;text-decoration:none;font-weight:600}
+.nav .cta:hover,.nav .cta[aria-current]{color:var(--btn-ink);text-decoration:none;opacity:.9}
+@media (max-width:520px){.nav{gap:.8rem;font-size:.85rem}.brand span{font-size:.92rem}}
+
+/* bouwpakket */
+.kit-grid{display:grid;gap:1.8rem;align-items:start}
+@media (min-width:900px){.kit-grid{grid-template-columns:1.2fr .9fr;gap:3.5rem}}
+.lead-groot{font-size:1.15rem;color:var(--ink-2);max-width:40rem}
+.kit-hero h1,.hero h1+.lead-groot{margin-top:0}.kit-hero h1,.hero .wrap>h1{margin-bottom:1rem}
+.echt{font-size:.95rem;color:var(--ink-2);border-left:3px solid var(--brass);padding-left:.9rem;max-width:40rem}
+.koopkaart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem;box-shadow:0 18px 40px -30px rgba(27,31,36,.35)}
+.box .koopkaart{border:0;padding:0;box-shadow:none;background:none}
+.koop-kop{font-size:1.35rem;margin-bottom:.5rem}
+.koop-groot{font:700 2.6rem/1 var(--sans);letter-spacing:-.03em;margin:.2rem 0 .5rem}
+.koop-groot .muted{font:500 1rem var(--sans);letter-spacing:0}
+.koop-sub{color:var(--ink-2);font-size:.95rem}
+.koopknoppen{display:grid;gap:.9rem;margin-top:.8rem}
+.koop{display:block;border-top:1px solid var(--rule);padding-top:.9rem;margin:0}
+.koop-naam{font-weight:650;margin:0}.koop-prijs{color:var(--ink-2);margin:0 0 .5rem;font-size:.92rem}
+.toestemming{display:flex;gap:.55rem;align-items:flex-start;font-size:.82rem;color:var(--ink-2);margin:.2rem 0 .7rem;line-height:1.45}
+.toestemming input{margin-top:.2rem;flex:none;width:1rem;height:1rem}
+.koop button{width:100%}
+.risico{font-size:.85rem;font-weight:600;color:var(--ink);margin:.9rem 0 0;padding:.6rem .75rem;background:var(--sunk);border-radius:3px}
+.stappen{list-style:none;margin:0;padding:0;display:grid;gap:1rem;counter-reset:stap}
+@media (min-width:760px){.stappen{grid-template-columns:repeat(4,1fr)}}
+.stappen li{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.1rem 1.1rem 1rem;position:relative}
+.stap-nr{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:50%;border:1.5px solid var(--brass);color:var(--brass);font:700 .95rem var(--mono);margin-bottom:.7rem}
+.stappen p{color:var(--ink-2);font-size:.95rem;margin:0}
+.teaser-knoppen{margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:center}
+.teaser-knoppen .btn{margin:0}
+.two-col{display:grid;gap:2rem}
+@media (min-width:860px){.two-col{grid-template-columns:1fr 1fr;gap:3rem}}
+.kaartlijst{list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
+@media (min-width:860px){#need .kaartlijst{grid-template-columns:repeat(3,1fr)}}
+.kaartlijst li{border-top:2px solid var(--ink);padding-top:.7rem}
+.kaartlijst h3{font-size:1.08rem}.kaartlijst p{color:var(--ink-2);font-size:.95rem;margin:0}
+.niet{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+.niet li{padding-left:1.7rem;position:relative;color:var(--ink-2)}
+.niet li::before{content:"✕";position:absolute;left:0;color:var(--neg);font-weight:700}
+.voorbeelden{list-style:none;padding:0;margin:0 0 1rem;display:grid;gap:.6rem}
+@media (min-width:760px){.voorbeelden{grid-template-columns:1fr 1fr}}
+.voorbeelden li{font-family:var(--mono);font-size:.88rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--below);border-radius:3px;padding:.75rem .9rem}
+.faqs{display:grid;gap:.6rem;max-width:46rem}
+details.faq{margin:0}
+details.faq p{padding:.2rem 1rem .9rem;margin:0;color:var(--ink-2)}
+.terug{margin-top:1.6rem}
+.kit-teaser{background:linear-gradient(var(--sunk),var(--sunk))}
+
+/* dashboard */
+.dash-stempel{font:.8rem/1.5 var(--mono);color:var(--muted);margin:0 0 1rem}
+.dash-stempel strong{color:var(--ink)}
+.dash-leeg{padding:1.2rem;background:var(--surface);border:1px dashed var(--rule-2);border-radius:4px;color:var(--ink-2)}
+.tegels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:0 0 1.2rem}
+@media (min-width:760px){.tegels{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1000px){.tegels{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.tegel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:.8rem .85rem .7rem;min-width:0}
+.tegel dt{font:600 .68rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tegel dd{margin:.3rem 0 .15rem;font:700 1.45rem/1.1 var(--sans);letter-spacing:-.02em}
+.tegel p{font-size:.76rem;color:var(--muted);margin:0;line-height:1.35}
+.spark{display:block;width:100%;height:28px;margin-top:.35rem}
+.spark path{fill:none;stroke:var(--brass);stroke-width:1.6}
+.dash-chart{margin-bottom:.4rem}
+.koerslijn{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.pt-koop{fill:var(--below);stroke:var(--surface);stroke-width:1.5}
+.pt-verkoop{fill:var(--hit);stroke:var(--surface);stroke-width:1.5}
+.pt-T{fill:var(--brass);stroke:var(--surface);stroke-width:2}
+.prijs-T{stroke:var(--brass);stroke-width:1;stroke-dasharray:4 4}
+.paneel{fill:var(--sunk);stroke:var(--rule)}
+.o-fine{fill:var(--below)}.o-coarse{fill:var(--below);opacity:.55}.o-verkoop{fill:var(--hit)}
+.kolkop{font-weight:600;fill:var(--ink-2)}
+.sw.dot{border-radius:50%}.sw.koop{background:var(--below)}.sw.verkoop{background:var(--hit)}
+.sw.o-fine{background:var(--below);height:.25rem;border-radius:2px}.sw.o-verkoop{background:var(--hit);height:.25rem;border-radius:2px}
+.dash-h3{margin:2rem 0 .8rem;font-size:1.25rem}
+.chart .narrow .px,.chart .narrow .kolkop{font-size:12px}
+
+/* werking */
+.stroom{list-style:none;margin:0;padding:0;display:grid;gap:.8rem;counter-reset:s}
+@media (min-width:860px){.stroom{grid-template-columns:repeat(5,1fr);gap:0}}
+.stroom li{counter-increment:s;background:var(--surface);border:1px solid var(--rule);padding:1rem 1rem .9rem;position:relative}
+@media (min-width:860px){.stroom li+li{border-left:0}.stroom li:not(:last-child)::after{content:"→";position:absolute;right:-.55rem;top:1rem;background:var(--bg);color:var(--brass);font-weight:700;z-index:1}}
+.stroom li::before{content:counter(s,decimal-leading-zero);font:700 .75rem var(--mono);color:var(--brass);display:block;margin-bottom:.4rem}
+.stroom p{font-size:.92rem;color:var(--ink-2);margin:0}
+.vol{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.vol-getal{font:700 3.4rem/1 var(--sans);letter-spacing:-.04em;margin:0 0 .3rem}
+.vol-sub{font-size:.85rem;color:var(--muted)}
+.keuzes{list-style:none;margin:0;padding:0;border-left:2px solid var(--rule-2);margin-left:.4rem}
+.keuze{position:relative;padding:0 0 1.6rem 1.5rem;max-width:46rem}
+.keuze::before{content:"";position:absolute;left:-.45rem;top:.3rem;width:.75rem;height:.75rem;border-radius:50%;background:var(--bg);border:2px solid var(--brass)}
+.keuze-wanneer{font:600 .72rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brass);margin:0 0 .35rem}
+.keuze p{color:var(--ink-2)}
+.keuze-ai{font-family:var(--mono);font-size:.86rem;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:.55rem .75rem;margin:0}
+.keuze-ai span{font-family:var(--sans);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:.15rem}
+.demo-balk{background:#c2412d;color:#fff;text-align:center;font:700 .8rem/1.4 var(--mono);padding:.4rem;letter-spacing:.06em}
+
 @media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
 </style>
 </head>
@@ -349,7 +450,7 @@ button:hover,.btn:hover{opacity:.9}
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap">
 <a class="brand" href="/"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#1b1f24"/><path d="M7 23h18" stroke="#d4ac5e" stroke-width="1.6"/><rect x="9" y="15" width="3.2" height="8" rx="1" fill="#2f9e68"/><rect x="14.4" y="11" width="3.2" height="12" rx="1" fill="#2f9e68"/><rect x="19.8" y="17" width="3.2" height="6" rx="1" fill="#5b8fd6"/><path d="M6 8.5h20" stroke="#d4ac5e" stroke-width="1.3" stroke-dasharray="2.5 2"/></svg><span>The Weekly 2% Edge</span></a>
-<nav class="nav" aria-label="Main"><a href="/#weeks" class="opt">Weeks</a><a href="/#leaks" class="opt">Leaks</a><a href="/method/">Method</a><a href="/#follow">Follow</a></nav>
+<nav class="nav" aria-label="Main"><a href="/how-it-works/">How it works</a><a href="/method/">Method</a><a class="cta" href="/build-kit/#buy">Build kit</a></nav>
 </div></header>
 <main id="main">
 
@@ -434,9 +535,9 @@ button:hover,.btn:hover{opacity:.9}
 <h3>Open positions, last seven days</h3>
 <p class="small muted" style="margin:0">19 Oct to 26 Oct 2026: what the open positions were worth compared with what was paid for them, as % of the account. Lowest and highest reading.</p>
 <div class="track" aria-hidden="true">
-<div class="base"></div><div class="band" style="left:11.3%;width:40.1%"></div>
+<div class="base"></div><div class="band" style="left:11.4%;width:40.0%"></div>
 <div class="zero-tick" style="left:50%"></div>
-<span class="dot" style="left:11.3%"></span><span class="dot" style="left:51.4%"></span>
+<span class="dot" style="left:11.4%"></span><span class="dot" style="left:51.4%"></span>
 </div>
 <div class="ticks" aria-hidden="true"><span>−4%</span><span>0%</span><span>+4%</span></div>
 <dl class="range-vals"><div><dt>Lowest reading</dt><dd>−3.09%</dd></div><div><dt>Highest reading</dt><dd>+0.11%</dd></div></dl>
@@ -453,6 +554,16 @@ button:hover,.btn:hover{opacity:.9}
 <p>A bot that only ever sells at a profit still loses money in quieter ways. These are the leaks I measured on this bot, each with the date it was measured or fixed.</p>
 </div>
 <div class="leaks"><article class="leak" id="leak-1"><div class="leak-top"><a href="#leak-1" aria-label="Link to leak 1">Leak 1</a><time datetime="2026-08-05">measured 5 Aug 2026; fee tiers read 8 Sep 2026</time></div><p class="leak-fig">~20%</p><p class="leak-fig-sub">of gross profit went to fees</p><h3>Exchange fees took about a fifth of gross profit</h3><p class="txt">Between late April and early August, fees came to roughly 20% of gross trading profit. The bot now books the real fee per fill. The exchange charges 0.18% per taker order and 0.09% per maker order at the bot&#x27;s volume.</p><p class="now">Real fee now booked per fill</p></article><article class="leak" id="leak-2"><div class="leak-top"><a href="#leak-2" aria-label="Link to leak 2">Leak 2</a><time datetime="2026-08-05">measured 5 Aug 2026</time></div><p class="leak-fig">0.33%</p><p class="leak-fig-sub">given up per trade</p><h3>Lowering the profit target over time gave money away</h3><p class="txt">A &#x27;time-decay&#x27; rule lowered the sell target as a position aged. Of 152 sales it touched over 55 days, the original target was still reached in 78% of cases (median: 3 hours later). The rule gave up about 0.33% per trade, so it was switched off.</p><p class="now">Rule switched off</p></article><article class="leak" id="leak-3"><div class="leak-top"><a href="#leak-3" aria-label="Link to leak 3">Leak 3</a><time datetime="2026-08-09">changed 9 Aug 2026</time></div><p class="leak-fig">RSI 70</p><p class="leak-fig-sub">hard block that froze the ladder</p><h3>A safety filter froze the buy ladder</h3><p class="txt">A hard block on buying when RSI was above 70 also stopped the ladder from following the price, so a later shallow dip caught nothing. It became a taper: smaller orders between RSI 70 and 80, a hard block only above 80.</p><p class="now">Now a taper; hard block only above 80</p></article><article class="leak" id="leak-4"><div class="leak-top"><a href="#leak-4" aria-label="Link to leak 4">Leak 4</a><time datetime="2026-08-09">fixed 9 Aug 2026</time></div><p class="leak-fig">~½</p><p class="leak-fig-sub">of one week&#x27;s realized profit missing from the report</p><h3>One weekly report missed about half of that week&#x27;s profit</h3><p class="txt">In one week of the bot&#x27;s Telegram weekly report, about half of the realized profit was missing. The report filtered on when a position started instead of when it was sold, so positions spanning two weeks disappeared. Fixed, and checked against the trade records.</p><p class="now">Fixed and checked against trade records</p></article></div>
+</div></section>
+
+<section id="kit" class="kit-teaser"><div class="wrap">
+<div class="sec-head">
+<p class="folio"><b>★</b> Build kit</p>
+<h2>Build your own version, with your AI</h2>
+<p>The build kit is this bot's step-by-step plan, written so an AI assistant can carry it out with you. No signals, no copy-trading: you build and run your own software.</p>
+</div>
+<ol class="stappen"><li><span class="stap-nr">1</span><h3>Download the plan</h3><p>One document that describes this bot step by step, written to be carried out by an AI assistant.</p></li><li><span class="stap-nr">2</span><h3>Hand it to your AI</h3><p>Upload it into Claude, ChatGPT or a similar assistant and let it walk you through every step: code, database, alerts, deployment.</p></li><li><span class="stap-nr">3</span><h3>Open an exchange account</h3><p>Create an account at a crypto exchange and an API key for the bot. The plan is written for Bitvavo&#x27;s BTC-EUR market.</p></li><li><span class="stap-nr">4</span><h3>Have fun</h3><p>Run it, watch it, change it. Start small: it trades with real money, and you can lose it.</p></li></ol>
+<p class="teaser-knoppen"><a class="btn" href="/build-kit/">See the build kit · $14</a> <a href="/how-it-works/">Or first see how it works</a></p>
 </div></section>
 
 <section id="strategies"><div class="wrap">
@@ -502,10 +613,14 @@ button:hover,.btn:hover{opacity:.9}
 <p>What changed on the bot, what broke, and what I measured. No tips.</p>
 <form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="weekmail"><label class="sr" for="mail-week">Email address</label><input id="mail-week" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">Subscribe</button></form>
 </div>
-<div class="box" id="build-notes">
-<h3>The build notes of this bot</h3>
-<p>How it is built and guarded: the ladder, the safety checks, the monitoring, and the mistakes above in full detail. It's an engineering document, not a strategy that promises returns. It doesn't exist as a product yet. Leave your email if you'd want it, and I'll only write it if enough people do.</p>
-<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="bouwnotities"><label class="sr" for="mail-notes">Email address</label><input id="mail-notes" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">I'd want the build notes</button></form>
+<div class="box">
+<div class="koopkaart" id="buy">
+<h3 class="koop-kop">The build kit</h3>
+<p class="koop-groot"><span class="prijs">$14</span> <span class="muted">one-off</span></p>
+<p class="koop-sub">Updates every time the bot changes: <span class="prijs">$5</span> a year, cancel any time.</p>
+<p>The build kit isn't on sale yet. Leave your email and you'll hear when it is.</p>
+<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="bouwnotities"><label class="sr" for="mail-notes">Email address</label><input id="mail-notes" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">Tell me when it's out</button></form>
+</div>
 </div>
 </div>
 </div></section>
@@ -514,7 +629,7 @@ button:hover,.btn:hover{opacity:.9}
 <footer class="foot"><div class="wrap">
 <p class="disclaimer">This is a personal logbook, not financial advice and not an offer of any service. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
 <p>Weeks W17 to W42 2026 &middot; data read on 26 Oct 2026 &middot; a new week is added seven days after it ends.</p><ul class="foot-links">
-<li><a href="/">The logbook</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket on LinkedIn</a></li>
+<li><a href="/">The logbook</a></li><li><a href="/build-kit/">Build kit</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="https://mijnbitcoinstrategie.nl/" hreflang="nl" lang="nl">Nederlands</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket on LinkedIn</a></li>
 </ul>
 </div></footer>
 </body>

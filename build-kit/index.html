@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build Your Own Bitcoin Trading Bot with AI: The Build Kit</title>
+<meta name="description" content="A step-by-step plan your AI assistant executes to build your own version of a live BTC-EUR bot. $14 one-off, updates $5 a year. No signals, no promises.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="Daniel Haket">
+<meta name="theme-color" content="#f6f3ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1318" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://theweekly2pctedge.com/build-kit/">
+<link rel="alternate" hreflang="en" href="https://theweekly2pctedge.com/build-kit/">
+<link rel="alternate" hreflang="nl-NL" href="https://mijnbitcoinstrategie.nl/bouwpakket/">
+<link rel="alternate" hreflang="nl-BE" href="https://mijnbitcoinstrategie.nl/bouwpakket/">
+<link rel="alternate" hreflang="x-default" href="https://theweekly2pctedge.com/build-kit/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Weekly 2% Edge">
+<meta property="og:title" content="Build Your Own Bitcoin Trading Bot with AI: The Build Kit">
+<meta property="og:description" content="A step-by-step plan your AI assistant executes to build your own version of a live BTC-EUR bot. $14 one-off, updates $5 a year. No signals, no promises.">
+<meta property="og:url" content="https://theweekly2pctedge.com/build-kit/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://theweekly2pctedge.com/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, drawn against the 0.5% goal and the 2% in the name.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Build Your Own Bitcoin Trading Bot with AI: The Build Kit">
+<meta name="twitter:description" content="A step-by-step plan your AI assistant executes to build your own version of a live BTC-EUR bot. $14 one-off, updates $5 a year. No signals, no promises.">
+<meta name="twitter:image" content="https://theweekly2pctedge.com/og-image.png">
+<meta name="twitter:image:alt" content="The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, drawn against the 0.5% goal and the 2% in the name.">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebPage",
+   "@id": "https://theweekly2pctedge.com/build-kit/",
+   "url": "https://theweekly2pctedge.com/build-kit/",
+   "name": "Build Your Own Bitcoin Trading Bot with AI: The Build Kit",
+   "description": "A step-by-step plan your AI assistant executes to build your own version of a live BTC-EUR bot. $14 one-off, updates $5 a year. No signals, no promises.",
+   "inLanguage": "en",
+   "isPartOf": {
+    "@id": "https://theweekly2pctedge.com/#website"
+   },
+   "about": {
+    "@id": "https://theweekly2pctedge.com/build-kit/#product"
+   },
+   "author": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   }
+  },
+  {
+   "@type": "Product",
+   "@id": "https://theweekly2pctedge.com/build-kit/#product",
+   "name": "Build kit: build your own bitcoin bot with AI",
+   "description": "A step-by-step plan your AI assistant executes to build your own version of a live BTC-EUR bot. $14 one-off, updates $5 a year. No signals, no promises.",
+   "image": "https://theweekly2pctedge.com/og-image.png",
+   "category": "Software documentation",
+   "brand": {
+    "@type": "Brand",
+    "name": "The Weekly 2% Edge"
+   },
+   "offers": [
+    {
+     "@type": "Offer",
+     "name": "Build kit",
+     "price": "14.00",
+     "priceCurrency": "USD",
+     "url": "https://theweekly2pctedge.com/build-kit/#buy",
+     "category": "one-off"
+    },
+    {
+     "@type": "Offer",
+     "name": "Update subscription",
+     "price": "5.00",
+     "priceCurrency": "USD",
+     "url": "https://theweekly2pctedge.com/build-kit/#buy",
+     "priceSpecification": {
+      "@type": "UnitPriceSpecification",
+      "price": "5.00",
+      "priceCurrency": "USD",
+      "referenceQuantity": {
+       "@type": "QuantitativeValue",
+       "value": 1,
+       "unitCode": "ANN"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "@type": "Person",
+   "@id": "https://theweekly2pctedge.com/#daan",
+   "name": "Daniel Haket",
+   "alternateName": "Daan",
+   "description": "Former banker (23 years in international finance) in Rotterdam who built and runs the bot.",
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Rotterdam",
+    "addressCountry": "NL"
+   },
+   "sameAs": [
+    "https://www.linkedin.com/in/daniel-haket-8305a33"
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "The logbook",
+     "item": "https://theweekly2pctedge.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Build kit",
+     "item": "https://theweekly2pctedge.com/build-kit/"
+    }
+   ]
+  },
+  {
+   "@type": "FAQPage",
+   "@id": "https://theweekly2pctedge.com/build-kit/#faq",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "Do I need to be able to code?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Your AI writes the code and walks you through the steps. You do need to be comfortable creating API keys, reading what the AI tells you, and checking the bot before it trades real money."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does it only work on Bitvavo?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The plan is written for Bitvavo's BTC-EUR market. You can ask your AI to adapt it to another exchange's API, but that is your own engineering and not something the plan covers."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Will it make money?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nobody can promise that, and this site doesn't. The logbook shows what this bot did each week, and the open positions next to it. Past weeks say nothing about future weeks; you can lose your entire stake."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "How much money do I need to start?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The plan doesn't prescribe an amount, and this site never publishes account sizes. The exchange has minimum order sizes. Only use money you can afford to lose entirely."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "What do the updates contain?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "When the bot changes in a way the plan should reflect, subscribers get the new version by email with a short changelog. The subscription renews yearly; you can cancel at any time."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Can I get a refund?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "It is a digital download. At checkout you agree to immediate delivery and acknowledge that you lose the 14-day right of withdrawal once delivery has started, as EU rules for digital content allow."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is this financial advice or a signal service?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. It is engineering documentation for building and running your own software. Nothing here tells you when to buy or sell."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CW1KZ258ZV"></script>
+<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-CW1KZ258ZV');</script>
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f6f3ec; --surface:#fffdf8; --sunk:#efeadf; --ink:#1b1f24; --ink-2:#434a54; --muted:#5f646c;
+  --rule:#e2dccd; --rule-2:#cfc7b4; --brass:#7d5e22; --hit:#1f7a52; --below:#3f73b8; --neg:#c2412d;
+  --btn:#1b1f24; --btn-ink:#fffdf8; --focus:#3f73b8;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Charter,"Bitstream Charter",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1318; --surface:#161b22; --sunk:#1c222b; --ink:#ece8df; --ink-2:#c3c6cb; --muted:#9aa1aa;
+  --rule:#262d36; --rule-2:#36404b; --brass:#d4ac5e; --hit:#2f9e68; --below:#5b8fd6; --neg:#e0604a;
+  --btn:#ece8df; --btn-ink:#0f1318; --focus:#5b8fd6;
+}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.65 var(--sans);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.18em;text-decoration-color:var(--rule-2)}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:3px}
+.skip{position:absolute;left:-999px;top:0;background:var(--surface);padding:.6rem 1rem;z-index:9}
+.skip:focus{left:1rem;top:1rem}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1rem}
+@media (min-width:700px){.wrap{padding:0 2rem}}
+.prose{max-width:42rem}
+h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--ink);letter-spacing:-.01em;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,6.2vw,3.4rem);letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem);margin-bottom:.75rem}
+h3{font-size:1.2rem;margin-bottom:.4rem}
+p{margin:0 0 1rem}
+strong{font-weight:650}
+.kicker{font:600 .75rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin:0 0 .9rem}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.num{font-variant-numeric:tabular-nums}
+
+/* kop */
+.top{border-bottom:1px solid var(--rule);background:var(--bg)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:3.75rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font:650 1.02rem/1 var(--serif);letter-spacing:-.01em}
+.brand svg{flex:none}
+.nav{display:flex;gap:1.1rem;font-size:.9rem}
+.nav a{text-decoration:none;color:var(--ink-2)}
+.nav a:hover,.nav a[aria-current]{color:var(--ink);text-decoration:underline}
+@media (max-width:520px){.nav .opt{display:none}}
+
+/* hero */
+.hero{padding:2.4rem 0 2.6rem;border-bottom:1px solid var(--rule)}
+.hero-grid{display:grid;gap:1.6rem;grid-template-areas:"head" "answer" "lead"}
+@media (min-width:900px){.hero{padding:4rem 0 4rem}.hero-grid{grid-template-columns:1.15fr 1fr;column-gap:3.5rem;row-gap:1.4rem;grid-template-areas:"head answer" "lead answer";align-items:start}}
+.hero-head{grid-area:head}.hero-lead{grid-area:lead}.answer{grid-area:answer}
+.hero-lead p{font-size:1.1rem;color:var(--ink-2);max-width:36rem}
+.answer{position:relative;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem 1.9rem;
+  box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(27,31,36,.35)}
+.answer::before{content:"";position:absolute;top:0;bottom:0;left:.85rem;border-left:3px double var(--neg);opacity:.55}
+.answer-label{font:600 .75rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 .35rem}
+.hero-num{font:700 clamp(3.6rem,15vw,5.4rem)/1 var(--sans);letter-spacing:-.04em;margin:0 0 .4rem;color:var(--ink)}
+.answer-sub{color:var(--ink-2);margin:0 0 1.1rem}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0 0 1rem;border-top:1px solid var(--rule)}
+.facts div{padding:.7rem .2rem .65rem 0;border-bottom:1px solid var(--rule)}
+.facts div:nth-child(odd){padding-right:.8rem;border-right:1px solid var(--rule)}
+.facts div:nth-child(even){padding-left:.8rem}
+.facts dt{font-size:.8rem;color:var(--muted);line-height:1.3}
+.facts dd{margin:.15rem 0 0;font-weight:650;font-size:1.1rem;line-height:1.25}
+.facts dd span{font-weight:400;font-size:.85rem;color:var(--muted)}
+.answer-note{font-size:.9rem;color:var(--ink-2);margin:0;padding:.75rem .85rem;background:var(--sunk);border-radius:3px}
+
+/* secties */
+section{padding:3.2rem 0;border-bottom:1px solid var(--rule)}
+@media (min-width:900px){section{padding:4.4rem 0}}
+.sec-head{max-width:42rem;margin-bottom:1.6rem}
+.sec-head p{color:var(--ink-2)}
+
+/* grafiek */
+.chart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1rem .6rem .5rem}
+@media (min-width:700px){.chart{padding:1.4rem 1.4rem .8rem}}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .narrow{display:none}
+@media (max-width:640px){.chart .wide{display:none}.chart .narrow{display:block}}
+.ax{font:11px var(--sans);fill:var(--muted);font-variant-numeric:tabular-nums}
+.ax-line{stroke:var(--rule);stroke-width:1}
+.zero{stroke:var(--ink-2);stroke-width:1}
+.ref{stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.ref-goal{stroke:var(--ink-2)}.ref-name{stroke:var(--brass)}
+.ref-lbl{font:600 11px var(--sans);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.ref-lbl.goal{fill:var(--ink-2)}.ref-lbl.name{fill:var(--brass)}
+.val{font:600 11px var(--sans);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;font-variant-numeric:tabular-nums}
+.b-hit{fill:var(--hit)}.b-below{fill:var(--below)}.b-neg{fill:var(--neg)}
+.wk .hit-area{fill:transparent}
+.wk:hover path{opacity:.75}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;list-style:none;margin:.9rem 0 0;padding:0 .2rem;font-size:.85rem;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:.45rem}
+.sw{width:.8rem;height:.8rem;border-radius:2px;display:inline-block;flex:none}
+.sw.hit{background:var(--hit)}.sw.below{background:var(--below)}.sw.neg{background:var(--neg)}
+.sw.line{height:0;border-top:2px dashed var(--ink-2);border-radius:0;width:1.1rem}
+.sw.line.name{border-color:var(--brass)}
+.chart-note{margin:1rem 0 0;font-size:.9rem;color:var(--muted);max-width:44rem}
+
+/* tabellen */
+details{margin-top:1.2rem;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+summary{cursor:pointer;padding:.85rem 1rem;font-weight:600;font-size:.95rem}
+details[open] summary{border-bottom:1px solid var(--rule)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem;font-variant-numeric:tabular-nums}
+caption{text-align:left;padding:0 0 .6rem;font-size:.85rem;color:var(--muted)}
+th,td{padding:.55rem .75rem;text-align:left;border-bottom:1px solid var(--rule);vertical-align:baseline}
+thead th{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule-2)}
+tbody tr:last-child td{border-bottom:0}
+.r{text-align:right;white-space:nowrap}
+td.lbl{white-space:nowrap}
+code,.code{font-family:var(--mono);font-size:.88em}
+.goal-met{font-size:.8rem;color:var(--hit);font-weight:600}
+.plain-tbl{background:var(--surface);border:1px solid var(--rule);border-radius:4px}
+
+/* gerealiseerd vs open */
+.two{display:grid;gap:1rem}
+@media (min-width:760px){.two{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.3rem 1.1rem}
+.card p:last-child{margin-bottom:0}
+.tag{display:inline-block;font:600 .7rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:.35rem .5rem;border-radius:2px;margin-bottom:.8rem}
+.tag.in{background:color-mix(in srgb,var(--hit) 16%,transparent);color:var(--ink)}
+.tag.out{background:color-mix(in srgb,var(--neg) 14%,transparent);color:var(--ink)}
+.card ul{margin:.4rem 0 0;padding-left:1.1rem;color:var(--ink-2)}
+.card li{margin-bottom:.3rem}
+.range{margin:1.25rem 0 0;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.3rem 1.1rem}
+.range h3{font-size:1.1rem}
+.track{position:relative;height:1.6rem;margin:1.2rem .4rem .3rem}
+.track .base{position:absolute;left:0;right:0;top:.6rem;height:.4rem;border-radius:.2rem;background:var(--sunk);border:1px solid var(--rule)}
+.track .band{position:absolute;top:.6rem;height:.4rem;border-radius:.2rem;background:var(--neg);opacity:.85}
+.track .zero-tick{position:absolute;top:0;height:1.6rem;width:0;border-left:2px solid var(--ink)}
+.track .dot{position:absolute;top:.4rem;width:.8rem;height:.8rem;margin-left:-.4rem;border-radius:50%;background:var(--neg);box-shadow:0 0 0 2px var(--surface)}
+.range-vals{display:flex;gap:2rem;margin:1rem 0 0;padding-top:.8rem;border-top:1px solid var(--rule)}
+.range-vals dt{font-size:.8rem;color:var(--muted)}
+.range-vals dd{margin:0;font-weight:650;font-size:1.25rem}
+.ticks{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin:0 .3rem;font-variant-numeric:tabular-nums}
+.callout{margin-top:1.25rem;border-left:3px solid var(--brass);padding:.2rem 0 .2rem 1rem;max-width:44rem}
+.callout p{color:var(--ink-2)}
+
+/* lekken */
+.leaks{display:grid;gap:1rem;counter-reset:lek}
+@media (min-width:760px){.leaks{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.leak{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.2rem 1.3rem 1.1rem;display:flex;flex-direction:column}
+.leak-top{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem}
+.leak-top time{letter-spacing:.02em;text-transform:none;text-align:right}
+.leak-fig{font:700 2rem/1 var(--sans);letter-spacing:-.02em;color:var(--neg);margin:0 0 .2rem}
+.leak-fig-sub{font-size:.85rem;color:var(--muted);margin:0 0 .9rem}
+.leak p.txt{color:var(--ink-2);font-size:.97rem}
+.leak .now{margin:auto 0 0;padding-top:.75rem;border-top:1px solid var(--rule);font-size:.88rem;font-weight:600}
+.leak .now::before{content:"Now: ";font-weight:400;color:var(--muted)}
+:lang(nl) .leak .now::before{content:"Nu: "}
+
+/* regels */
+.rules{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+@media (min-width:760px){.rules{grid-template-columns:1fr 1fr;gap:1rem 2rem}}
+.rules li{padding-left:1.6rem;position:relative;color:var(--ink-2)}
+.rules li::before{content:"";position:absolute;left:0;top:.62em;width:.75rem;border-top:2px solid var(--brass)}
+.rules strong{color:var(--ink)}
+
+/* auteur + aanmelden */
+.author{display:grid;gap:1.25rem}
+@media (min-width:760px){.author{grid-template-columns:auto 1fr;gap:2rem;align-items:start}}
+.mono-badge{width:4.5rem;height:4.5rem;border-radius:50%;display:grid;place-items:center;background:var(--sunk);border:1px solid var(--rule);font:600 1.5rem/1 var(--serif);color:var(--brass)}
+.signup{display:grid;gap:1rem}
+@media (min-width:760px){.signup{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.box{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.box p{color:var(--ink-2)}
+form{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem}
+input[type=email]{flex:1 1 12rem;min-width:0;font:inherit;font-size:1rem;padding:.7rem .85rem;border-radius:3px;border:1px solid var(--rule-2);background:var(--bg);color:var(--ink)}
+button,.btn{font:600 .95rem/1.2 var(--sans);padding:.75rem 1.1rem;border-radius:3px;border:0;background:var(--btn);color:var(--btn-ink);cursor:pointer}
+button:hover,.btn:hover{opacity:.9}
+.btn{display:inline-block;text-decoration:none;margin:.2rem 0 .8rem}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* voet */
+.foot{padding:2.4rem 0 3rem;font-size:.88rem;color:var(--muted)}
+.foot .disclaimer{max-width:44rem;color:var(--ink-2)}
+.foot-links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin:1rem 0 0;padding:0;list-style:none}
+
+/* methode */
+.doc{padding:2.6rem 0 3.4rem}
+.doc h1{font-size:clamp(2rem,5.5vw,3rem);margin-bottom:1rem}
+.doc h2{font-size:1.5rem;margin:2.6rem 0 .7rem}
+.doc .lead{font-size:1.15rem;color:var(--ink-2)}
+.doc p,.doc li{color:var(--ink-2)}
+.doc ul{padding-left:1.2rem}
+.doc li{margin-bottom:.4rem}
+.formula span{display:block}.formula .in{padding-left:1.5rem}
+.formula{font-family:var(--mono);font-size:.92rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--brass);border-radius:3px;padding:.9rem 1rem;color:var(--ink);overflow-x:auto}
+.crumbs{font-size:.85rem;color:var(--muted);margin-bottom:1.2rem}
+
+/* grootboek: folio per sectie, editiestrook */
+.folio{font:600 .72rem/1.4 var(--mono);letter-spacing:.12em;color:var(--brass);text-transform:uppercase;display:flex;align-items:center;gap:.7rem;margin:0 0 .9rem}
+.folio::after{content:"";flex:1;border-top:1px solid var(--rule-2);max-width:9rem}
+.folio b{font-weight:700;color:var(--ink)}
+.edition-bar{border-bottom:1px solid var(--rule);background:var(--sunk)}
+.edition{display:flex;flex-wrap:wrap;gap:.35rem 1.6rem;padding-top:.8rem;padding-bottom:.8rem;font:.75rem/1.5 var(--mono);color:var(--muted);letter-spacing:.02em}
+.edition strong{color:var(--ink);font-weight:600}
+.edition a{color:var(--ink-2)}
+.hero-num{font-variant-numeric:tabular-nums}
+.answer::before{border-left-color:var(--brass)}
+.leak-top a{text-decoration:none;color:inherit}
+.leak-top a:hover{color:var(--ink)}
+.leak .now{border-top-style:dashed;color:var(--ink)}
+.leak-fig{font-family:var(--mono);letter-spacing:-.06em}
+.chart .narrow .ax,.chart .narrow .ref-lbl{font-size:13px}
+.chart .narrow .val{font-size:12px}
+@media (max-width:520px){
+  .hero{padding:1.6rem 0 2rem}.hero-grid{gap:1.2rem}
+  .hero h1{font-size:clamp(1.85rem,8vw,2.15rem)}
+  .answer{padding:1.15rem 1rem 1rem 1.6rem}.answer::before{left:.7rem}
+  .hero-num{font-size:3.8rem}.answer-sub{margin-bottom:.75rem}
+  #strategies table{table-layout:fixed;font-size:.78rem}
+  #strategies th,#strategies td{padding:.6rem .35rem;white-space:normal;overflow-wrap:anywhere}
+  #strategies th:first-child{width:28%}
+  #strategies .code{font-size:1em}
+}
+
+/* koopweg: knop in de kopbalk */
+.nav{align-items:center}
+.nav .cta{background:var(--btn);color:var(--btn-ink);padding:.45rem .8rem;border-radius:3px;text-decoration:none;font-weight:600}
+.nav .cta:hover,.nav .cta[aria-current]{color:var(--btn-ink);text-decoration:none;opacity:.9}
+@media (max-width:520px){.nav{gap:.8rem;font-size:.85rem}.brand span{font-size:.92rem}}
+
+/* bouwpakket */
+.kit-grid{display:grid;gap:1.8rem;align-items:start}
+@media (min-width:900px){.kit-grid{grid-template-columns:1.2fr .9fr;gap:3.5rem}}
+.lead-groot{font-size:1.15rem;color:var(--ink-2);max-width:40rem}
+.kit-hero h1,.hero h1+.lead-groot{margin-top:0}.kit-hero h1,.hero .wrap>h1{margin-bottom:1rem}
+.echt{font-size:.95rem;color:var(--ink-2);border-left:3px solid var(--brass);padding-left:.9rem;max-width:40rem}
+.koopkaart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem;box-shadow:0 18px 40px -30px rgba(27,31,36,.35)}
+.box .koopkaart{border:0;padding:0;box-shadow:none;background:none}
+.koop-kop{font-size:1.35rem;margin-bottom:.5rem}
+.koop-groot{font:700 2.6rem/1 var(--sans);letter-spacing:-.03em;margin:.2rem 0 .5rem}
+.koop-groot .muted{font:500 1rem var(--sans);letter-spacing:0}
+.koop-sub{color:var(--ink-2);font-size:.95rem}
+.koopknoppen{display:grid;gap:.9rem;margin-top:.8rem}
+.koop{display:block;border-top:1px solid var(--rule);padding-top:.9rem;margin:0}
+.koop-naam{font-weight:650;margin:0}.koop-prijs{color:var(--ink-2);margin:0 0 .5rem;font-size:.92rem}
+.toestemming{display:flex;gap:.55rem;align-items:flex-start;font-size:.82rem;color:var(--ink-2);margin:.2rem 0 .7rem;line-height:1.45}
+.toestemming input{margin-top:.2rem;flex:none;width:1rem;height:1rem}
+.koop button{width:100%}
+.risico{font-size:.85rem;font-weight:600;color:var(--ink);margin:.9rem 0 0;padding:.6rem .75rem;background:var(--sunk);border-radius:3px}
+.stappen{list-style:none;margin:0;padding:0;display:grid;gap:1rem;counter-reset:stap}
+@media (min-width:760px){.stappen{grid-template-columns:repeat(4,1fr)}}
+.stappen li{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.1rem 1.1rem 1rem;position:relative}
+.stap-nr{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:50%;border:1.5px solid var(--brass);color:var(--brass);font:700 .95rem var(--mono);margin-bottom:.7rem}
+.stappen p{color:var(--ink-2);font-size:.95rem;margin:0}
+.teaser-knoppen{margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:center}
+.teaser-knoppen .btn{margin:0}
+.two-col{display:grid;gap:2rem}
+@media (min-width:860px){.two-col{grid-template-columns:1fr 1fr;gap:3rem}}
+.kaartlijst{list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
+@media (min-width:860px){#need .kaartlijst{grid-template-columns:repeat(3,1fr)}}
+.kaartlijst li{border-top:2px solid var(--ink);padding-top:.7rem}
+.kaartlijst h3{font-size:1.08rem}.kaartlijst p{color:var(--ink-2);font-size:.95rem;margin:0}
+.niet{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+.niet li{padding-left:1.7rem;position:relative;color:var(--ink-2)}
+.niet li::before{content:"✕";position:absolute;left:0;color:var(--neg);font-weight:700}
+.voorbeelden{list-style:none;padding:0;margin:0 0 1rem;display:grid;gap:.6rem}
+@media (min-width:760px){.voorbeelden{grid-template-columns:1fr 1fr}}
+.voorbeelden li{font-family:var(--mono);font-size:.88rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--below);border-radius:3px;padding:.75rem .9rem}
+.faqs{display:grid;gap:.6rem;max-width:46rem}
+details.faq{margin:0}
+details.faq p{padding:.2rem 1rem .9rem;margin:0;color:var(--ink-2)}
+.terug{margin-top:1.6rem}
+.kit-teaser{background:linear-gradient(var(--sunk),var(--sunk))}
+
+/* dashboard */
+.dash-stempel{font:.8rem/1.5 var(--mono);color:var(--muted);margin:0 0 1rem}
+.dash-stempel strong{color:var(--ink)}
+.dash-leeg{padding:1.2rem;background:var(--surface);border:1px dashed var(--rule-2);border-radius:4px;color:var(--ink-2)}
+.tegels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:0 0 1.2rem}
+@media (min-width:760px){.tegels{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1000px){.tegels{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.tegel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:.8rem .85rem .7rem;min-width:0}
+.tegel dt{font:600 .68rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tegel dd{margin:.3rem 0 .15rem;font:700 1.45rem/1.1 var(--sans);letter-spacing:-.02em}
+.tegel p{font-size:.76rem;color:var(--muted);margin:0;line-height:1.35}
+.spark{display:block;width:100%;height:28px;margin-top:.35rem}
+.spark path{fill:none;stroke:var(--brass);stroke-width:1.6}
+.dash-chart{margin-bottom:.4rem}
+.koerslijn{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.pt-koop{fill:var(--below);stroke:var(--surface);stroke-width:1.5}
+.pt-verkoop{fill:var(--hit);stroke:var(--surface);stroke-width:1.5}
+.pt-T{fill:var(--brass);stroke:var(--surface);stroke-width:2}
+.prijs-T{stroke:var(--brass);stroke-width:1;stroke-dasharray:4 4}
+.paneel{fill:var(--sunk);stroke:var(--rule)}
+.o-fine{fill:var(--below)}.o-coarse{fill:var(--below);opacity:.55}.o-verkoop{fill:var(--hit)}
+.kolkop{font-weight:600;fill:var(--ink-2)}
+.sw.dot{border-radius:50%}.sw.koop{background:var(--below)}.sw.verkoop{background:var(--hit)}
+.sw.o-fine{background:var(--below);height:.25rem;border-radius:2px}.sw.o-verkoop{background:var(--hit);height:.25rem;border-radius:2px}
+.dash-h3{margin:2rem 0 .8rem;font-size:1.25rem}
+.chart .narrow .px,.chart .narrow .kolkop{font-size:12px}
+
+/* werking */
+.stroom{list-style:none;margin:0;padding:0;display:grid;gap:.8rem;counter-reset:s}
+@media (min-width:860px){.stroom{grid-template-columns:repeat(5,1fr);gap:0}}
+.stroom li{counter-increment:s;background:var(--surface);border:1px solid var(--rule);padding:1rem 1rem .9rem;position:relative}
+@media (min-width:860px){.stroom li+li{border-left:0}.stroom li:not(:last-child)::after{content:"→";position:absolute;right:-.55rem;top:1rem;background:var(--bg);color:var(--brass);font-weight:700;z-index:1}}
+.stroom li::before{content:counter(s,decimal-leading-zero);font:700 .75rem var(--mono);color:var(--brass);display:block;margin-bottom:.4rem}
+.stroom p{font-size:.92rem;color:var(--ink-2);margin:0}
+.vol{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.vol-getal{font:700 3.4rem/1 var(--sans);letter-spacing:-.04em;margin:0 0 .3rem}
+.vol-sub{font-size:.85rem;color:var(--muted)}
+.keuzes{list-style:none;margin:0;padding:0;border-left:2px solid var(--rule-2);margin-left:.4rem}
+.keuze{position:relative;padding:0 0 1.6rem 1.5rem;max-width:46rem}
+.keuze::before{content:"";position:absolute;left:-.45rem;top:.3rem;width:.75rem;height:.75rem;border-radius:50%;background:var(--bg);border:2px solid var(--brass)}
+.keuze-wanneer{font:600 .72rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brass);margin:0 0 .35rem}
+.keuze p{color:var(--ink-2)}
+.keuze-ai{font-family:var(--mono);font-size:.86rem;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:.55rem .75rem;margin:0}
+.keuze-ai span{font-family:var(--sans);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:.15rem}
+.demo-balk{background:#c2412d;color:#fff;text-align:center;font:700 .8rem/1.4 var(--mono);padding:.4rem;letter-spacing:.06em}
+
+@media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap">
+<a class="brand" href="/"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#1b1f24"/><path d="M7 23h18" stroke="#d4ac5e" stroke-width="1.6"/><rect x="9" y="15" width="3.2" height="8" rx="1" fill="#2f9e68"/><rect x="14.4" y="11" width="3.2" height="12" rx="1" fill="#2f9e68"/><rect x="19.8" y="17" width="3.2" height="6" rx="1" fill="#5b8fd6"/><path d="M6 8.5h20" stroke="#d4ac5e" stroke-width="1.3" stroke-dasharray="2.5 2"/></svg><span>The Weekly 2% Edge</span></a>
+<nav class="nav" aria-label="Main"><a href="/how-it-works/">How it works</a><a href="/method/">Method</a><a class="cta" href="/build-kit/#buy" aria-current="page">Build kit</a></nav>
+</div></header>
+<main id="main">
+<div class="hero kit-hero"><div class="wrap kit-grid">
+<div>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">The logbook</a> &rsaquo; Build kit</nav>
+<p class="kicker">Build kit · for your AI assistant</p>
+<h1>Build your own bitcoin trading bot, with your AI doing the building</h1>
+<p class="lead-groot">This is the step-by-step plan of the bitcoin bot in the logbook, written so an AI assistant builds it with you. You get the logic, the safety checks and the lessons from every mistake. You don't get a promise about what it will make.</p>
+<p class="echt">The same bot is in the logbook: 26 weeks, a median of +0.46% realized per week after fees, with the open positions shown next to it. <a href="/">See the logbook</a> · <a href="/how-it-works/">See the dashboard and design decisions</a></p>
+</div>
+<div class="koopkaart" id="buy">
+<h2 class="koop-kop">The build kit</h2>
+<p class="koop-groot"><span class="prijs">$14</span> <span class="muted">one-off</span></p>
+<p class="koop-sub">Updates every time the bot changes: <span class="prijs">$5</span> a year, cancel any time.</p>
+<p>The build kit isn't on sale yet. Leave your email and you'll hear when it is.</p>
+<form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="bouwnotities"><label class="sr" for="mail-notes">Email address</label><input id="mail-notes" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">Tell me when it's out</button></form>
+</div>
+</div></div>
+
+<section id="steps"><div class="wrap">
+<div class="sec-head"><h2>How it works, in four steps</h2></div>
+<ol class="stappen"><li><span class="stap-nr">1</span><h3>Download the plan</h3><p>One document that describes this bot step by step, written to be carried out by an AI assistant.</p></li><li><span class="stap-nr">2</span><h3>Hand it to your AI</h3><p>Upload it into Claude, ChatGPT or a similar assistant and let it walk you through every step: code, database, alerts, deployment.</p></li><li><span class="stap-nr">3</span><h3>Open an exchange account</h3><p>Create an account at a crypto exchange and an API key for the bot. The plan is written for Bitvavo&#x27;s BTC-EUR market.</p></li><li><span class="stap-nr">4</span><h3>Have fun</h3><p>Run it, watch it, change it. Start small: it trades with real money, and you can lose it.</p></li></ol>
+</div></section>
+
+<section id="get"><div class="wrap two-col">
+<div><h2>What you get</h2><ul class="kaartlijst"><li><h3>The build plan</h3><p>One document covering the whole bot: the buy ladder, the sell logic, the safety checks, the database, Telegram alerts, the dashboard and how to keep it running 24/7. Written as instructions an AI can execute, step by step.</p></li><li><h3>Delivered by email</h3><p>Right after payment you get a download link (valid for 72 hours, up to 5 downloads).</p></li><li><h3>Updates, if you want them</h3><p>With the update subscription, every time the bot changes in a way the plan should reflect, you get the new version by email with a short changelog. It renews yearly; cancel any time.</p></li></ul></div>
+<div><h2>What it isn't</h2><ul class="niet"><li>Not signals and not copy-trading: nothing here tells you when to buy or sell.</li><li>Not managed money: you run your own bot, on your own account.</li><li>Not a return promise: the logbook shows what this bot did, including the open positions that are down.</li></ul></div>
+</div></section>
+
+<section id="need"><div class="wrap">
+<div class="sec-head"><h2>What you need</h2></div>
+<ul class="kaartlijst"><li><h3>An AI assistant</h3><p>Claude, ChatGPT or similar, one that can read a long document.</p></li><li><h3>An exchange account with API keys</h3><p>The plan is written for Bitvavo (BTC-EUR). Another exchange means asking your AI to adapt the exchange calls: your own engineering.</p></li><li><h3>Telegram or Discord</h3><p>For alerts: fills, sales, warnings, the daily summary.</p></li><li><h3>A GitHub account</h3><p>To keep your code versioned, so every change can be rolled back.</p></li><li><h3>Somewhere to run it</h3><p>The bot runs around the clock. Replit or a small VPS both work; they have their own monthly costs.</p></li><li><h3>Money you can afford to lose</h3><p>The bot trades with real funds on your exchange account. Nothing here protects you from a falling bitcoin price.</p></li></ul>
+</div></section>
+
+<section id="yours"><div class="wrap">
+<div class="sec-head"><h2>Make it yours</h2><p>Make it yours, before or after you build it. Every rule in the plan is a sentence your AI can change: tell it what you want different and it rewrites the code. A few examples:</p></div>
+<ul class="voorbeelden"><li>“Use 15 rungs on the fine ladder instead of 20.”</li><li>“Send my alerts to Discord instead of Telegram.”</li><li>“Don&#x27;t buy at all while the daily RSI is above 75.”</li><li>“Add a stop-loss at −15%.” (This bot deliberately has none; see the design decisions.)</li></ul>
+<p><a href="/how-it-works/#decisions">Every design decision, with its date and why</a></p>
+</div></section>
+
+<section id="faq" style="border-bottom:0"><div class="wrap">
+<div class="sec-head"><h2>Questions</h2></div>
+<div class="faqs"><details class="faq"><summary>Do I need to be able to code?</summary><p>No. Your AI writes the code and walks you through the steps. You do need to be comfortable creating API keys, reading what the AI tells you, and checking the bot before it trades real money.</p></details><details class="faq"><summary>Does it only work on Bitvavo?</summary><p>The plan is written for Bitvavo&#x27;s BTC-EUR market. You can ask your AI to adapt it to another exchange&#x27;s API, but that is your own engineering and not something the plan covers.</p></details><details class="faq"><summary>Will it make money?</summary><p>Nobody can promise that, and this site doesn&#x27;t. The logbook shows what this bot did each week, and the open positions next to it. Past weeks say nothing about future weeks; you can lose your entire stake.</p></details><details class="faq"><summary>How much money do I need to start?</summary><p>The plan doesn&#x27;t prescribe an amount, and this site never publishes account sizes. The exchange has minimum order sizes. Only use money you can afford to lose entirely.</p></details><details class="faq"><summary>What do the updates contain?</summary><p>When the bot changes in a way the plan should reflect, subscribers get the new version by email with a short changelog. The subscription renews yearly; you can cancel at any time.</p></details><details class="faq"><summary>Can I get a refund?</summary><p>It is a digital download. At checkout you agree to immediate delivery and acknowledge that you lose the 14-day right of withdrawal once delivery has started, as EU rules for digital content allow.</p></details><details class="faq"><summary>Is this financial advice or a signal service?</summary><p>No. It is engineering documentation for building and running your own software. Nothing here tells you when to buy or sell.</p></details></div>
+<p class="terug"><a class="btn" href="#buy">Back to the build kit · $14</a></p>
+</div></section>
+</main>
+<footer class="foot"><div class="wrap">
+<p class="disclaimer">This is a personal logbook, not financial advice and not an offer of any service. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
+<ul class="foot-links">
+<li><a href="/">The logbook</a></li><li><a href="/build-kit/">Build kit</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="https://mijnbitcoinstrategie.nl/" hreflang="nl" lang="nl">Nederlands</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket on LinkedIn</a></li>
+</ul>
+</div></footer>
+</body>
+</html>
