@@ -27,7 +27,7 @@ The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 ye
 ## Rules
 - Percentages only: never euro amounts, account size or order details
 - Weekly results one week delayed: a week appears seven days after it ends
-- No signals, no advice, no copy-trading; not an offer of any service
+- No signals, no advice, no copy-trading, no investment service; the build kit is software documentation
 - The build kit is documentation for building and running your own software; dashboard data is at least 24 hours old
 - Past weeks say nothing about future weeks; crypto is volatile and you can lose your entire stake
 

@@ -29,7 +29,9 @@ TEKSTEN = {
         "update_onderwerp": "Build kit update: version {versie}",
         "update": ("The bot changed, so the build plan did too. Version {versie} is ready.\n\nWhat changed:\n{changelog}\n\n"
                    "Download (valid for {uur} hours, up to {max} downloads):\n{link}\n\nYou get this because you "
-                   "subscribed to build kit updates. Your subscription runs until {tot}.\n\nDaan\n"),
+                   "subscribed to build kit updates. Your subscription runs until {tot}; you can cancel any time via the link in "
+                   "your Paddle receipt.\n\nPast weeks say nothing about future weeks, and you can lose your entire stake. "
+                   "This is engineering documentation, not financial advice and not a signal service.\n\nDaan\n"),
     },
     "nl": {
         "kit_onderwerp": "Je bouwpakket staat klaar",
@@ -42,7 +44,9 @@ TEKSTEN = {
         "update_onderwerp": "Update bouwpakket: versie {versie}",
         "update": ("De bot is veranderd, en het bouwplan dus ook. Versie {versie} staat klaar.\n\nWat er veranderde:\n"
                    "{changelog}\n\nDownload ({uur} uur geldig, maximaal {max} downloads):\n{link}\n\nJe krijgt dit "
-                   "omdat je een update-abonnement op het bouwpakket hebt. Het loopt tot {tot}.\n\nDaan\n"),
+                   "omdat je een update-abonnement op het bouwpakket hebt. Het loopt tot {tot}; opzeggen kan altijd via de link in "
+                   "je betaalbewijs van Paddle.\n\nAfgelopen weken zeggen niets over komende weken, en je kunt je hele inleg "
+                   "verliezen. Dit is technische documentatie, geen financieel advies en geen signaaldienst.\n\nDaan\n"),
     },
 }
 

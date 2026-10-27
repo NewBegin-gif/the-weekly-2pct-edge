@@ -23,7 +23,7 @@ De site is van Daan (Daniel Haket), oud-bankier (23 jaar in de internationale fi
 
 ## Actualiteit
 - Laatste week: W42 2026 (begint 2026-10-12)
-- Wordt dagelijks gecontroleerd en alleen herbouwd als er een nieuwe week bij komt; dit bestand in dezelfde run
+- Wordt dagelijks gecontroleerd en alleen herbouwd als er een nieuwe week bij komt; dit bestand wordt in dezelfde ronde bijgewerkt
 
 ## Contact
 - [Daniel Haket op LinkedIn](https://www.linkedin.com/in/daniel-haket-8305a33)

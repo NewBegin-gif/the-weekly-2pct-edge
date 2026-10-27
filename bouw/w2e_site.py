@@ -103,7 +103,8 @@ def kopbalk(S, actief):
 </div></header>"""
 
 
-DISCLAIMER_NL = ("Dit is een persoonlijk logboek, geen financieel advies en geen aanbod van een dienst. Crypto is "
+DISCLAIMER_NL = ("Dit is een persoonlijk logboek, geen financieel advies en geen beleggingsdienst; het bouwpakket is "
+                 "software-documentatie. Crypto is "
                  "volatiel en je kunt je hele inleg verliezen. Afgelopen weken zeggen niets over komende weken. Ik "
                  "beheer geen geld voor anderen en verkoop geen signalen. &mdash; Daan, Rotterdam")
 
@@ -155,7 +156,7 @@ def koopkaart(S, kop_niveau="h2"):
     return f"""<div class="koopkaart" id="buy">
 <{kop_niveau} class="koop-kop">{"Het bouwpakket" if nl else "The build kit"}</{kop_niveau}>
 <p class="koop-groot"><span class="prijs">{prijs}</span> <span class="muted">{"eenmalig" if nl else "one-off"}</span></p>
-<p class="koop-sub">{"Updates bij elke wijziging aan de bot:" if nl else "Updates every time the bot changes:"} <span class="prijs">{jaar}</span> {"per jaar, opzegbaar" if nl else "a year, cancel any time"}.</p>
+<p class="koop-sub">{"Updates zodra de bot of het plan verandert:" if nl else "Updates whenever the bot or the plan changes:"} <span class="prijs">{jaar}</span> {"per jaar, opzegbaar" if nl else "a year, cancel any time"}.</p>
 {K.koopblok(taal, wachtlijst(S))}
 </div>"""
 
@@ -187,6 +188,7 @@ def kit_teaser(S):
 </div>
 {stappen_html(S["taal"])}
 <p class="teaser-knoppen"><a class="btn" href="{S["paden"]["kit"]}">{knop}</a> <a href="{S["paden"]["werking"]}">{meer}</a></p>
+{K.risico_html(S["taal"])}
 </div></section>"""
 
 
@@ -203,11 +205,14 @@ def kit_pagina(S, c):
                "name": "Bouwpakket: bouw je eigen bitcoinbot met AI" if nl else "Build kit: build your own bitcoin bot with AI",
                "description": omschr, "image": S["url"] + "/og-image.png", "category": "Software documentation",
                "brand": {"@type": "Brand", "name": S["naam"]}, "offers": K.aanbiedingen_ld(taal, url(S, "kit") + "#buy")}
+    # Product/Offer alleen als er echt iets te koop is: zonder kassa zou Google een product tonen dat niet te kopen is
+    te_koop = K.live(taal)
+    webpagina = {"@type": "WebPage", "@id": url(S, "kit"), "url": url(S, "kit"), "name": titel, "description": omschr,
+                 "inLanguage": taal, "isPartOf": {"@id": url(S, "home") + "#website"}, "author": {"@id": f"{B.SITE}/#daan"}}
+    if te_koop:
+        webpagina["about"] = {"@id": url(S, "kit") + "#product"}
     graph = {"@context": "https://schema.org", "@graph": [
-        {"@type": "WebPage", "@id": url(S, "kit"), "url": url(S, "kit"), "name": titel, "description": omschr,
-         "inLanguage": taal, "isPartOf": {"@id": url(S, "home") + "#website"}, "about": {"@id": url(S, "kit") + "#product"},
-         "author": {"@id": f"{B.SITE}/#daan"}},
-        product, persoon(S), kruimel(S, "kit", "Bouwpakket" if nl else "Build kit"),
+        webpagina, *([product] if te_koop else []), persoon(S), kruimel(S, "kit", "Bouwpakket" if nl else "Build kit"),
         {"@type": "FAQPage", "@id": url(S, "kit") + "#faq",
          "mainEntity": [{"@type": "Question", "name": v, "acceptedAnswer": {"@type": "Answer", "text": a}} for v, a in faq]},
     ]}
@@ -216,18 +221,22 @@ def kit_pagina(S, c):
     if nl:
         intro = ("Dit is het stappenplan van de bitcoinbot uit het logboek, geschreven zodat een AI-assistent hem "
                  "samen met jou bouwt. Je krijgt de logica, de veiligheidscontroles en de lessen uit elke fout. Je "
-                 "krijgt géén belofte over wat hij oplevert.")
-        echt = (f"Dezelfde bot staat in het logboek: {n} weken, mediaan {med} gerealiseerd per week na kosten, met de "
-                f"open posities ernaast.")
+                 "krijgt géén belofte over wat hij oplevert. De naam beloofde 2% per week; het realistische doel bleek 0,5%, en "
+                 "ook dat is geen belofte.")
+        echt = (f"Dezelfde bot staat in het logboek: {n} weken, mediaan {med} gerealiseerd per week na kosten; de "
+                f"open posities staan ernaast. Afgelopen weken zeggen niets over komende weken; je kunt je hele inleg "
+                f"verliezen.")
         koppen = ("Zo werkt het, in vier stappen", "Wat je krijgt", "Wat het niet is", "Wat je nodig hebt",
-                  "Maak hem van jezelf", "Veelgestelde vragen")
+                  "Maak er je eigen bot van", "Veelgestelde vragen")
         links_tekst = ("Bekijk het logboek", "Zie het dashboard en de ontwerpkeuzes")
     else:
         intro = ("This is the step-by-step plan of the bitcoin bot in the logbook, written so an AI assistant builds it "
                  "with you. You get the logic, the safety checks and the lessons from every mistake. You don't get a "
-                 "promise about what it will make.")
-        echt = (f"The same bot is in the logbook: {n} weeks, a median of {med} realized per week after fees, with the "
-                f"open positions shown next to it.")
+                 "promise about what it will make. The name promised 2% a week; the realistic goal turned out to be 0.5%, and "
+                 "that isn't a promise either.")
+        echt = (f"The same bot is in the logbook: {n} weeks, a median of {med} realized per week after fees; its "
+                f"open positions are shown next to it. Past weeks say nothing about future weeks; you can lose your "
+                f"entire stake.")
         koppen = ("How it works, in four steps", "What you get", "What it isn't", "What you need",
                   "Make it yours", "Questions")
         links_tekst = ("See the logbook", "See the dashboard and design decisions")
@@ -267,13 +276,14 @@ def kit_pagina(S, c):
 <section id="yours"><div class="wrap">
 <div class="sec-head"><h2>{koppen[4]}</h2><p>{B.e(I.AANPASSEN[taal])}</p></div>
 <ul class="voorbeelden">{"".join(f"<li>{B.e(v)}</li>" for v in I.VOORBEELDEN[taal])}</ul>
-<p><a href="{S["paden"]["werking"]}#decisions">{"Elke ontwerpkeuze, met datum en waarom" if nl else "Every design decision, with its date and why"}</a></p>
+<p><a href="{S["paden"]["werking"]}#decisions">{"Elke ontwerpkeuze, met datum en reden" if nl else "Every design decision, with its date and why"}</a></p>
 </div></section>
 
 <section id="faq" style="border-bottom:0"><div class="wrap">
 <div class="sec-head"><h2>{koppen[5]}</h2></div>
 <div class="faqs">{faq_html}</div>
 <p class="terug"><a class="btn" href="#buy">{"Naar het bouwpakket" if nl else "Back to the build kit"} · {K.prijs_tekst(taal)}</a></p>
+{K.risico_html(taal)}
 </div></section>
 </main>
 {voet(S)}
@@ -306,12 +316,12 @@ def werking_pagina(S, c, m, vol):
         if nl:
             vol_html = (f'<p class="vol-getal">{jaar}</p><p class="vol-sub">gerealiseerde volatiliteit op jaarbasis, '
                         f'{vol["n"]} dagrendementen tot en met {D.d_lang(vol["tot"], taal)}</p>'
-                        f'<p>Een gewone dag beweegt bitcoin ongeveer {dag} (mediaan van de dagelijkse beweging in dat '
+                        f'<p>Op een gewone dag beweegt bitcoin ongeveer {dag} (mediaan van de dagelijkse beweging in dat '
                         f'venster). Een ladder die op kleine stappen koopt en een paar procent hoger verkoopt, heeft '
                         f'die beweging nodig: zonder schommelingen gebeurt er niets.</p>'
                         f'<p class="small muted">Methode: dagcandles BTC-EUR van de publieke Bitvavo-API, '
                         f'standaardafwijking van de dagelijkse log-rendementen van de slotkoers, maal √365 (bitcoin '
-                        f'handelt elke dag). Opnieuw berekend bij elke bouw van deze pagina.</p>')
+                        f'handelt elke dag). Wordt opnieuw berekend telkens als deze pagina wordt bijgewerkt.</p>')
         else:
             vol_html = (f'<p class="vol-getal">{jaar}</p><p class="vol-sub">realized volatility, annualised, '
                         f'{vol["n"]} daily returns up to {D.d_lang(vol["tot"], taal)}</p>'
@@ -322,7 +332,7 @@ def werking_pagina(S, c, m, vol):
                         f'deviation of the daily log returns of the close, times √365 (bitcoin trades every day). '
                         f'Recomputed every time this page is built.</p>')
     else:
-        vol_html = ("<p>De volatiliteit kon bij deze bouw niet berekend worden (de koersdata van Bitvavo was niet "
+        vol_html = ("<p>De volatiliteit kon deze keer niet berekend worden (de koersdata van Bitvavo was niet "
                     "bereikbaar).</p>" if nl else
                     "<p>Volatility could not be computed in this build (Bitvavo's price data was not reachable).</p>")
     if nl:
@@ -336,7 +346,7 @@ def werking_pagina(S, c, m, vol):
         d_intro = ("Dit is wat de bot zelf ziet, in procenten en BTC-koersen. Het is een momentopname van minstens 24 "
                    "uur geleden, zodat het nooit een signaal is om op te handelen.")
         k_intro = ("Elke regel in de bot heeft een geschiedenis. Hier staan de belangrijkste, met datum, wat er "
-                   "gemeten werd en hoe je hem met één zin aan je AI anders maakt.")
+                   "gemeten werd en hoe je hem met één zin aan je AI verandert.")
         cta = f'Bouw je eigen versie: het bouwpakket · {K.prijs_tekst("nl")}'
         h1 = "Zo werkt de bot: het dashboard en de keuzes erachter"
         lead = ("Een bitcoinbot die op Bitvavo met echt geld BTC-EUR handelt. Hieronder zie je zijn dashboard zoals "
@@ -397,6 +407,7 @@ def werking_pagina(S, c, m, vol):
 <div class="sec-head"><p class="folio"><b>05</b> {"Ontwerp" if nl else "Design"}</p><h2>{kop_k}</h2><p>{k_intro}</p></div>
 <ol class="keuzes">{keuzes}</ol>
 <p class="terug"><a class="btn" href="{S["paden"]["kit"]}#buy">{cta}</a></p>
+{K.risico_html(taal)}
 </div></section>
 </main>
 {voet(S)}

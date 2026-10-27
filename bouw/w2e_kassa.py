@@ -1,24 +1,27 @@
 """Kassa van het bouwpakket: aanbieder, prijzen en checkout-URL's per product en munt (Daan, 27 okt 2026).
 
-Daan wil Paddle. Zolang een checkout-URL leeg is, rendert er GEEN koopknop: dan staat het wachtlijstformulier er
-(zelfde Beehiiv-actie, verborgen velden en GA4-event als altijd). Er werkt dus nooit iets half.
+Daan wil Paddle. Zolang de client-side token of een prijs-id leeg is, rendert er GEEN koopknop: dan staat het
+wachtlijstformulier er (zelfde Beehiiv-actie, verborgen velden en GA4-event als altijd). Er werkt nooit iets half.
 
 Producten
   kit           het bouwplan, eenmalig ($14 op theweekly2pctedge.com, EUR 14 op mijnbitcoinstrategie.nl)
   kit_updates   het bouwplan + een jaar updates (bij elke wijziging aan de bot het nieuwe plan per mail;
                 daarna $5 / EUR 5 per jaar, jaarlijks opzegbaar)
 
-Paddle (Billing): maak in Paddle > Checkout > Hosted checkout een hosted checkout en zet hier de launch-URL met de
-price_id('s), bijvoorbeeld https://pay.paddle.io/checkout/hsc_...?price_id=pri_... (kit_updates: twee price_id's,
-komma als %2C: de eenmalige kit-prijs en de jaarprijs). Het adapter controleert alleen de vorm (https, host van
-Paddle) en zet de queryparameters om in verborgen velden, omdat de knop een GET-formulier is: een verplicht vinkje
-voor de EU-regels over digitale inhoud werkt zo zonder JavaScript, en een GET-formulier zou de query van de action
-anders weggooien.
+Paddle (Billing): de knop opent de overlay-checkout van Paddle.js (Paddle.Checkout.open) met de prijs-id('s) en
+custom_data {withdrawal_consent: <versie van de vinktekst>, consent_at: <tijdstip van klikken>}. Paddle zet die
+custom_data op de transactie (en kopieert hem naar het abonnement); levering/kern.py levert de kit alleen als hij er
+staat en legt versie en tijdstip vast (EU-herroepingsrecht, richtlijn 2011/83/EU art. 16(m)). Daarom geen hosted
+checkout meer: die neemt geen custom_data via de URL, en Paddle geeft hosted checkouts op live-accounts alleen aan
+goedgekeurde mobiele-app-bedrijven (developer.paddle.com/paddlejs/hosted-checkout-url-parameters). Paddle.js wordt pas
+geladen bij de eerste klik op een koopknop (geen extern script bij het openen van de pagina). Zonder JavaScript: een
+melding, geen checkout. Wie de vinktekst verandert, verhoogt TOESTEMMING_VERSIE.
 
 Een andere aanbieder (zie de PR voor alternatieven) = een adapter met dezelfde twee functies toevoegen aan ADAPTERS.
 """
+import json
+import re
 import sys
-import urllib.parse
 
 sys.dont_write_bytecode = True  # ook als dit bestand los gedraaid wordt: geen .pyc naast de webroot
 import build_logboek as B  # noqa: E402
@@ -27,8 +30,9 @@ AANBIEDER = "paddle"
 
 # ---- Daan vult alleen dit in (uit het Paddle-dashboard). Leeg = geen koopknop, de wachtlijst blijft staan.
 # Wat er in Paddle aangemaakt moet worden en hoe je test: python3 bouw/w2e_kassa.py (zie paddle_inrichting()).
+PADDLE_OMGEVING = "production"  # "sandbox" alleen lokaal tijdens het testen, nooit committen
 PADDLE_IDS = {
-    "hosted_checkout_url": "",  # Checkout > Hosted checkouts > launch-URL, bv. https://pay.paddle.io/checkout/hsc_01...
+    "client_token": "",         # Developer tools > Authentication > client-side token (live_... / test_...): publiek
     "kit_usd": "",              # pri_01... eenmalig 14.00 USD
     "updates_usd": "",          # pri_01... 5.00 USD per jaar
     "kit_eur": "",              # pri_01... eenmalig 14.00 EUR
@@ -36,21 +40,19 @@ PADDLE_IDS = {
 }
 
 
-def _checkout_url(*prijs_ids):
-    basis = PADDLE_IDS["hosted_checkout_url"].strip()
-    if not basis or not all(prijs_ids):
-        return ""
-    return f"{basis.split('?')[0]}?price_id={urllib.parse.quote(','.join(prijs_ids), safe='')}"
+def _prijzen(*prijs_ids):
+    """De prijs-id's van één koopknop, of [] als er een ontbreekt (dan geen knop)."""
+    return list(prijs_ids) if PADDLE_IDS["client_token"].strip() and all(prijs_ids) else []
 
 
 KASSA = {
     "en": {"munt": "USD", "teken": "$", "producten": {
-        "kit": {"prijs": "14", "url": _checkout_url(PADDLE_IDS["kit_usd"])},
-        "kit_updates": {"prijs": "14", "jaar": "5", "url": _checkout_url(PADDLE_IDS["kit_usd"], PADDLE_IDS["updates_usd"])},
+        "kit": {"prijs": "14", "prijzen": _prijzen(PADDLE_IDS["kit_usd"])},
+        "kit_updates": {"prijs": "14", "jaar": "5", "prijzen": _prijzen(PADDLE_IDS["kit_usd"], PADDLE_IDS["updates_usd"])},
     }},
     "nl": {"munt": "EUR", "teken": "€", "producten": {
-        "kit": {"prijs": "14", "url": _checkout_url(PADDLE_IDS["kit_eur"])},
-        "kit_updates": {"prijs": "14", "jaar": "5", "url": _checkout_url(PADDLE_IDS["kit_eur"], PADDLE_IDS["updates_eur"])},
+        "kit": {"prijs": "14", "prijzen": _prijzen(PADDLE_IDS["kit_eur"])},
+        "kit_updates": {"prijs": "14", "jaar": "5", "prijzen": _prijzen(PADDLE_IDS["kit_eur"], PADDLE_IDS["updates_eur"])},
     }},
 }
 
@@ -72,21 +74,25 @@ def paddle_inrichting():
       kit_eur      14.00 EUR  eenmalig
       updates_usd   5.00 USD  per jaar (billing cycle: 1 year)
       updates_eur   5.00 EUR  per jaar (billing cycle: 1 year)
-    Hosted checkout (Checkout > Hosted checkouts): één, met de standaard-checkout; de site plakt er ?price_id=... aan.
+    Client-side token (Developer tools > Authentication): in PADDLE_IDS["client_token"] (publiek, mag in git).
+    Default payment link (Checkout > Checkout settings): https://theweekly2pctedge.com/build-kit/ ; voeg beide domeinen
+    toe aan de goedgekeurde domeinen (Checkout > Website approval), anders opent de overlay niet.
     Notification destination (Developer tools > Notifications): URL https://theweekly2pctedge.com/webhook/paddle,
     events = WEBHOOK_EVENTS, het geheim gaat in /etc/levering.env (PADDLE_WEBHOOK_GEHEIM). API-sleutel met alleen
     "customers: read" in PADDLE_API_SLEUTEL.
 
     Sandbox-test (eerst, met sandbox-vendors.paddle.com en PADDLE_API_URL=https://sandbox-api.paddle.com):
       1. Maak bovenstaande producten, prijzen, hosted checkout en notification destination aan in de sandbox.
-      2. Vul PADDLE_IDS met de sandbox-ID's (lokaal, niet committen) en draai python3 bouw/w2e_kassa.py: open de
-         vier checkout-URL's die het print in een browser. De site hoeft daarvoor niet herbouwd te worden.
+      2. Vul PADDLE_IDS met de sandbox-ID's en zet PADDLE_OMGEVING = "sandbox" (lokaal, niet committen), bouw met
+         --forceer en open /build-kit/ via python3 -m http.server: vink aan, klik, de overlay opent.
       3. Betaal met Paddle's sandbox-testkaart (4242 4242 4242 4242, toekomstige datum, CVC 100). Controleer: mail
          met link komt binnen, de link werkt 5 keer, de 6e keer 410.
       4. Koop "kit + updates": `python3 -m levering abonnees` toont het adres.
       5. Stuur in Paddle een event opnieuw (Notifications > event > Replay): de dienst antwoordt "al verwerkt".
       6. Refund de transactie in de sandbox: de link geeft daarna 404 ("ingetrokken"), het adres staat niet meer bij
          `abonnees`.
+      6b. Koop zonder vinkje via de browserconsole (Paddle.Checkout.open zonder customData): geen mail;
+         `python3 -m levering aankopen` toont de transactie.
       7. Zet SMTP even fout in /etc/levering.env, koop opnieuw: geen mail, wel een rij in de wachtrij; zet SMTP terug
          en draai `python3 -m levering wachtrij`: de mail gaat alsnog.
       8. Daarna productie: dezelfde stappen 1 met de live-ID's, PADDLE_API_URL=https://api.paddle.com, nieuw geheim,
@@ -116,14 +122,17 @@ def paddle_inrichting():
     return {
         "producten": producten, "prijzen": prijzen, "webhook_events": WEBHOOK_EVENTS,
         "webhook_url": "https://theweekly2pctedge.com/webhook/paddle",
-        "checkout_urls": {f"{t}/{s}": KASSA[t]["producten"][s]["url"] for t in ("en", "nl") for s in ("kit", "kit_updates")},
+        "koopknoppen": {f"{t}/{s}": KASSA[t]["producten"][s]["prijzen"] for t in ("en", "nl") for s in ("kit", "kit_updates")},
+        "omgeving": PADDLE_OMGEVING,
         "env_levering_prijzen": f"LEVERING_PRIJZEN={levering_prijzen}",
         "ontbrekend": [k for k, v in PADDLE_IDS.items() if not v],
     }
 
 # EU-regels digitale inhoud (richtlijn 2011/83/EU art. 16(m)): uitdrukkelijke toestemming voor directe levering én
-# erkenning dat het herroepingsrecht van 14 dagen daarmee vervalt. Het vinkje is verplicht; Paddle toont daarnaast
-# zijn eigen voorwaarden in de checkout.
+# erkenning dat het herroepingsrecht van 14 dagen daarmee vervalt. Het vinkje is verplicht en gaat als
+# custom_data.withdrawal_consent (= de versie hieronder) mee naar Paddle; de dienst levert niet zonder. Paddle toont
+# daarnaast zijn eigen voorwaarden in de checkout. Tekst veranderd -> versie ophogen (datum).
+TOESTEMMING_VERSIE = {"en": "en-2026-10-27", "nl": "nl-2026-10-27"}
 TOESTEMMING = {
     "en": ("I want the download to start immediately, and I understand that I lose my 14-day right of withdrawal "
            "once delivery has started."),
@@ -136,32 +145,46 @@ RISICO = {
 }
 
 
-def _paddle_controle(url):
-    p = urllib.parse.urlsplit(url)
-    host = p.hostname or ""
-    if p.scheme != "https" or not (host == "paddle.io" or host.endswith(".paddle.io") or host == "paddle.com"
-                                   or host.endswith(".paddle.com")):
-        raise SystemExit(f"kassa: {url!r} is geen https-URL van Paddle (pay.paddle.io / buy.paddle.com)")
+def _paddle_controle(prijzen):
+    token = PADDLE_IDS["client_token"].strip()
+    if not re.fullmatch(r"(live|test)_[A-Za-z0-9]{10,64}", token):
+        raise SystemExit(f"kassa: client_token {token!r} is geen client-side token van Paddle (live_... of test_...)")
+    if PADDLE_OMGEVING not in ("production", "sandbox") or (PADDLE_OMGEVING == "sandbox") != token.startswith("test_"):
+        raise SystemExit("kassa: PADDLE_OMGEVING en client_token horen bij elkaar (sandbox = test_, production = live_)")
+    for pid in prijzen:
+        if not re.fullmatch(r"pri_[a-z0-9]{10,40}", pid):
+            raise SystemExit(f"kassa: {pid!r} is geen Paddle-prijs-id (pri_...)")
 
 
-def _paddle_formulier(url):
-    """(action, verborgen velden) voor een GET-formulier dat dezelfde URL opent."""
-    p = urllib.parse.urlsplit(url)
-    action = urllib.parse.urlunsplit((p.scheme, p.netloc, p.path, "", ""))
-    return action, urllib.parse.parse_qsl(p.query, keep_blank_values=True)
+# Eén script per pagina: laadt Paddle.js bij de eerste koop-klik en opent de overlay met de toestemming als custom_data.
+PADDLE_JS = "https://cdn.paddle.com/paddle/v2/paddle.js"
 
 
-ADAPTERS = {"paddle": (_paddle_controle, _paddle_formulier)}
+def _paddle_script(taal, ga_label):
+    instellingen = json.dumps({"token": PADDLE_IDS["client_token"].strip(), "sandbox": PADDLE_OMGEVING == "sandbox",
+                               "taal": taal, "js": PADDLE_JS, "ga": ga_label})
+    return """<script>(function(){var K=%s,klaar=null;
+function laad(){return klaar||(klaar=new Promise(function(ok,fout){var s=document.createElement('script');s.src=K.js;
+s.onload=function(){if(K.sandbox)Paddle.Environment.set('sandbox');Paddle.Initialize({token:K.token});ok();};
+s.onerror=fout;document.head.appendChild(s);}));}
+document.querySelectorAll('form.koop').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();
+if(!f.toestemming.checked)return;var p=f.dataset.prijzen.split(',');if(window.gtag)gtag('event',K.ga+'_checkout',{product:f.dataset.product});
+laad().then(function(){Paddle.Checkout.open({items:p.map(function(id){return{priceId:id,quantity:1};}),
+customData:{withdrawal_consent:f.dataset.toestemming,consent_at:new Date().toISOString()},settings:{locale:K.taal}});},
+function(){f.querySelector('.koop-fout').hidden=false;});});});})();</script>""" % instellingen
+
+
+ADAPTERS = {"paddle": (_paddle_controle, _paddle_script)}
 
 
 def producten(taal):
-    """De producten met een ingevulde, gecontroleerde URL, in vaste volgorde."""
+    """De producten met ingevulde, gecontroleerde prijs-id's, in vaste volgorde."""
     controle, _ = ADAPTERS[AANBIEDER]
     live = []
     for sleutel in ("kit", "kit_updates"):
         p = KASSA[taal]["producten"][sleutel]
-        if p.get("url"):
-            controle(p["url"])
+        if p.get("prijzen"):
+            controle(p["prijzen"])
             live.append((sleutel, p))
     return live
 
@@ -182,11 +205,19 @@ def jaar_tekst(taal):
     return f'{k["teken"]}{k["producten"]["kit_updates"]["jaar"]}'
 
 
+def risico_html(taal):
+    """De risicoregel die naast elke knop met een prijs staat."""
+    return f'<p class="risico">{B.e(RISICO[taal])}</p>'
+
+
 def koopblok(taal, wachtlijst_html, ga_label="bouwpakket"):
     """De koopknoppen (met verplicht toestemmingsvinkje en risicoregel), of de wachtlijst als niets live is."""
     if not live(taal):
-        return wachtlijst_html
-    _, formulier = ADAPTERS[AANBIEDER]
+        return f'{wachtlijst_html}\n<p class="risico">{B.e(RISICO[taal])}</p>'
+    _, script = ADAPTERS[AANBIEDER]
+    fout = {"en": "The checkout could not load. Check your connection or ad blocker and try again.",
+            "nl": "De kassa kon niet laden. Controleer je verbinding of adblocker en probeer het opnieuw."}[taal]
+    zonder_js = {"en": "The checkout (Paddle) needs JavaScript.", "nl": "De kassa (Paddle) heeft JavaScript nodig."}[taal]
     knoppen = []
     teksten = {
         "en": {"kit": ("The build kit", f"{prijs_tekst('en')} one-off", "Buy the build kit"),
@@ -198,15 +229,16 @@ def koopblok(taal, wachtlijst_html, ga_label="bouwpakket"):
     }[taal]
     for i, (sleutel, p) in enumerate(producten(taal)):
         naam, prijs, knop = teksten[sleutel]
-        action, velden = formulier(p["url"])
-        verborgen = "".join(f'<input type="hidden" name="{B.e(k)}" value="{B.e(v)}">' for k, v in velden)
-        knoppen.append(f"""<form class="koop" action="{B.e(action)}" method="get" onsubmit="if(window.gtag)gtag('event','{ga_label}_checkout',{{product:'{sleutel}'}})">
-{verborgen}<p class="koop-naam">{naam}</p><p class="koop-prijs">{prijs}</p>
-<label class="toestemming"><input type="checkbox" required> <span>{B.e(TOESTEMMING[taal])}</span></label>
+        knoppen.append(f"""<form class="koop" action="#" data-product="{sleutel}" data-prijzen="{B.e(','.join(p['prijzen']))}" data-toestemming="{TOESTEMMING_VERSIE[taal]}">
+<p class="koop-naam">{naam}</p><p class="koop-prijs">{prijs}</p>
+<label class="toestemming"><input type="checkbox" name="toestemming" required> <span>{B.e(TOESTEMMING[taal])}</span></label>
 <button type="submit">{knop}</button>
+<p class="koop-fout" role="alert" hidden>{fout}</p>
 </form>""")
     return f"""<div class="koopknoppen">{''.join(knoppen)}</div>
-<p class="risico">{B.e(RISICO[taal])}</p>"""
+<noscript><p class="risico">{zonder_js}</p></noscript>
+<p class="risico">{B.e(RISICO[taal])}</p>
+{script(taal, ga_label)}"""
 
 
 def aanbiedingen_ld(taal, url):

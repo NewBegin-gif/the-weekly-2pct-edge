@@ -187,7 +187,7 @@ class Levering:
 
     # ------------------------------------------------------------ mails
     def _link(self, email, taal, versie, uren):
-        link_id, token = links.maak(self.opslag, self.cfg.geheim, email, versie, uren, self.cfg.max_downloads)
+        link_id, token = links.maak(self.opslag, self.cfg.geheim, email, versie, uren, self.cfg.max_downloads, taal=taal)
         return link_id, f"{self.cfg.basis_url(taal)}/download/{token}"
 
     def wachtrij(self):
@@ -221,8 +221,9 @@ class Levering:
         v = self.opslag.versie(versie)
         if not v:
             raise SystemExit(f"versie {versie} is niet geregistreerd (python3 -m levering nieuwe-versie)")
-        if not pathlib.Path(v["bestand"]).is_file():
-            raise SystemExit(f"bestand van versie {versie} ontbreekt: {v['bestand']}")
+        for b in (v["bestand"], v["bestand_nl"]):
+            if b and not pathlib.Path(b).is_file():
+                raise SystemExit(f"bestand van versie {versie} ontbreekt: {b}")
         resultaat = []
         for a in self.opslag.actieve_abonnees():
             email = a["email"]
@@ -266,10 +267,11 @@ class Levering:
         if not rij:
             return None, reden
         v = self.opslag.versie(rij["versie"])
-        pad = pathlib.Path(v["bestand"]) if v else None
+        nl = bool(v and rij["taal"] == "nl" and v["bestand_nl"])  # zonder Nederlandse editie: de Engelse
+        pad = pathlib.Path(v["bestand_nl"] if nl else v["bestand"]) if v else None
         if not pad or not pad.is_file():
             return None, "bestand ontbreekt"
-        return pad, f"build-kit-v{rij['versie']}{pad.suffix}"
+        return pad, f"{'bouwpakket' if nl else 'build-kit'}-v{rij['versie']}{pad.suffix}"
 
 
 VERBODEN_EXPORT = ("/var/www", "/srv/www", "/usr/share/nginx")

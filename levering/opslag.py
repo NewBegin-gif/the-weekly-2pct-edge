@@ -8,8 +8,9 @@ Tabellen
                   (refund/chargeback); 'toestemming' + 'toestemming_moment' leggen die toestemming vast
   abonnees        één rij per Paddle-abonnement: status, 'actief_tot' (einde lopende periode) en 'event_moment'
                   (occurred_at van het laatst toegepaste event: een ouder event dat later binnenkomt wordt genegeerd)
-  versies         documentversies: versie, bestand (buiten de webroot), datum, bot-commit, changelog
-  links           downloadlinks: id, e-mail, versie, verloopt, max, aantal, ingetrokken
+  versies         documentversies: versie, bestand (Engelse editie, buiten de webroot), bestand_nl (Nederlandse
+                  editie; leeg = de Engelse voor iedereen), datum, bot-commit, changelog
+  links           downloadlinks: id, e-mail, versie, taal (welke editie), verloopt, max, aantal, ingetrokken
   verzendingen    wie welke updateversie kreeg (e-mail + versie uniek): maakt send-update idempotent
   uitgaand        wachtrij voor de leveringsmail: een mislukte SMTP-poging blijft staan en wordt later opnieuw
                   geprobeerd (oplopende wachttijd, max. 6 uur), zodat een betaalde levering nooit verloren gaat
@@ -40,7 +41,8 @@ CREATE TABLE IF NOT EXISTS uitgaand (id INTEGER PRIMARY KEY AUTOINCREMENT, sleut
 """
 NIEUWE_KOLOMMEN = [("aankopen", "status", "TEXT DEFAULT 'betaald'"), ("aankopen", "subscription_id", "TEXT"),
                    ("abonnees", "event_moment", "TEXT"), ("links", "ingetrokken", "INTEGER DEFAULT 0"),
-                   ("aankopen", "toestemming", "TEXT"), ("aankopen", "toestemming_moment", "TEXT")]
+                   ("aankopen", "toestemming", "TEXT"), ("aankopen", "toestemming_moment", "TEXT"),
+                   ("versies", "bestand_nl", "TEXT"), ("links", "taal", "TEXT")]
 MAX_WACHT = datetime.timedelta(hours=6)
 # Paddle wacht ~5 s op een antwoord; langer op een slot wachten heeft geen zin (Paddle probeert het later opnieuw).
 SLOT_WACHT_SEC = 4
@@ -219,12 +221,14 @@ class Opslag:
             return c.execute("SELECT * FROM abonnees ORDER BY bijgewerkt").fetchall()
 
     # --- versies
-    def versie_bewaar(self, versie, bestand, bot_commit, changelog):
+    def versie_bewaar(self, versie, bestand, bot_commit, changelog, bestand_nl=None):
         if not VERSIE.fullmatch(versie or ""):
             raise ValueError("versie: alleen letters, cijfers, punt en streepje (max. 20), bv. 1.1")
         with self.verbind() as c:
-            c.execute("INSERT INTO versies VALUES (?,?,?,?,?) ON CONFLICT(versie) DO UPDATE SET bestand=excluded.bestand, "
-                      "bot_commit=excluded.bot_commit, changelog=excluded.changelog", (versie, bestand, iso(nu()), bot_commit, changelog))
+            c.execute("INSERT INTO versies (versie, bestand, datum, bot_commit, changelog, bestand_nl) VALUES (?,?,?,?,?,?) "
+                      "ON CONFLICT(versie) DO UPDATE SET bestand=excluded.bestand, bot_commit=excluded.bot_commit, "
+                      "changelog=excluded.changelog, bestand_nl=excluded.bestand_nl",
+                      (versie, bestand, iso(nu()), bot_commit, changelog, bestand_nl))
 
     def versie(self, versie=None):
         with self.verbind() as c:
@@ -233,10 +237,10 @@ class Opslag:
             return c.execute("SELECT * FROM versies ORDER BY datum DESC, rowid DESC LIMIT 1").fetchone()
 
     # --- links
-    def link_bewaar(self, link_id, email, versie, verloopt, maximum):
+    def link_bewaar(self, link_id, email, versie, verloopt, maximum, taal=None):
         with self.verbind() as c:
-            c.execute("INSERT INTO links (id, email, versie, verloopt, max, aantal, gemaakt, ingetrokken) "
-                      "VALUES (?,?,?,?,?,0,?,0)", (link_id, email, versie, iso(verloopt), maximum, iso(nu())))
+            c.execute("INSERT INTO links (id, email, versie, verloopt, max, aantal, gemaakt, ingetrokken, taal) "
+                      "VALUES (?,?,?,?,?,0,?,0,?)", (link_id, email, versie, iso(verloopt), maximum, iso(nu()), taal))
 
     def links_intrekken(self, email):
         with self.verbind() as c:

@@ -16,13 +16,13 @@ def _sig(geheim, inhoud):
     return base64.urlsafe_b64encode(ruw).rstrip(b"=").decode()
 
 
-def maak(opslag, geheim, email, versie, uren, maximum, nu=None):
+def maak(opslag, geheim, email, versie, uren, maximum, nu=None, taal=None):
     if not geheim:
         raise RuntimeError("LEVERING_GEHEIM ontbreekt")
     nu = nu or datetime.datetime.now(datetime.timezone.utc)
     link_id = secrets.token_urlsafe(18)
     verloopt = (nu + datetime.timedelta(hours=uren)).replace(microsecond=0)
-    opslag.link_bewaar(link_id, email, versie, verloopt, maximum)
+    opslag.link_bewaar(link_id, email, versie, verloopt, maximum, taal)
     inhoud = f"{link_id}.{int(verloopt.timestamp())}"
     return link_id, f"{inhoud}.{_sig(geheim, inhoud)}"
 

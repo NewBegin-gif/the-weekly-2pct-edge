@@ -48,51 +48,9 @@
    "isPartOf": {
     "@id": "https://theweekly2pctedge.com/#website"
    },
-   "about": {
-    "@id": "https://theweekly2pctedge.com/build-kit/#product"
-   },
    "author": {
     "@id": "https://theweekly2pctedge.com/#daan"
    }
-  },
-  {
-   "@type": "Product",
-   "@id": "https://theweekly2pctedge.com/build-kit/#product",
-   "name": "Build kit: build your own bitcoin bot with AI",
-   "description": "A step-by-step plan your AI assistant executes to build your own version of a live BTC-EUR bot. $14 one-off, updates $5 a year. No signals, no promises.",
-   "image": "https://theweekly2pctedge.com/og-image.png",
-   "category": "Software documentation",
-   "brand": {
-    "@type": "Brand",
-    "name": "The Weekly 2% Edge"
-   },
-   "offers": [
-    {
-     "@type": "Offer",
-     "name": "Build kit",
-     "price": "14.00",
-     "priceCurrency": "USD",
-     "url": "https://theweekly2pctedge.com/build-kit/#buy",
-     "category": "one-off"
-    },
-    {
-     "@type": "Offer",
-     "name": "Update subscription",
-     "price": "5.00",
-     "priceCurrency": "USD",
-     "url": "https://theweekly2pctedge.com/build-kit/#buy",
-     "priceSpecification": {
-      "@type": "UnitPriceSpecification",
-      "price": "5.00",
-      "priceCurrency": "USD",
-      "referenceQuantity": {
-       "@type": "QuantitativeValue",
-       "value": 1,
-       "unitCode": "ANN"
-      }
-     }
-    }
-   ]
   },
   {
    "@type": "Person",
@@ -143,7 +101,7 @@
      "name": "Does it only work on Bitvavo?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The plan is written for Bitvavo's BTC-EUR market. You can ask your AI to adapt it to another exchange's API, but that is your own engineering and not something the plan covers."
+      "text": "The plan is written for Bitvavo's BTC-EUR market. It includes a prompt to port the exchange code to another exchange (for example Kraken or Coinbase), with the tests to re-run; checking that port is up to you."
      }
     },
     {
@@ -167,7 +125,7 @@
      "name": "What do the updates contain?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "When the bot changes in a way the plan should reflect, subscribers get the new version by email with a short changelog. The subscription renews yearly; you can cancel at any time."
+      "text": "When the bot or the plan changes, subscribers get the new version by email with a changelog that says what to hand back to their AI. The subscription renews yearly; you can cancel at any time."
      }
     },
     {
@@ -522,31 +480,32 @@ details.faq p{padding:.2rem 1rem .9rem;margin:0;color:var(--ink-2)}
 <nav class="crumbs" aria-label="Breadcrumb"><a href="/">The logbook</a> &rsaquo; Build kit</nav>
 <p class="kicker">Build kit · for your AI assistant</p>
 <h1>Build your own bitcoin trading bot, with your AI doing the building</h1>
-<p class="lead-groot">This is the step-by-step plan of the bitcoin bot in the logbook, written so an AI assistant builds it with you. You get the logic, the safety checks and the lessons from every mistake. You don't get a promise about what it will make.</p>
-<p class="echt">The same bot is in the logbook: 26 weeks, a median of +0.46% realized per week after fees, with the open positions shown next to it. <a href="/">See the logbook</a> · <a href="/how-it-works/">See the dashboard and design decisions</a></p>
+<p class="lead-groot">This is the step-by-step plan of the bitcoin bot in the logbook, written so an AI assistant builds it with you. You get the logic, the safety checks and the lessons from every mistake. You don't get a promise about what it will make. The name promised 2% a week; the realistic goal turned out to be 0.5%, and that isn't a promise either.</p>
+<p class="echt">The same bot is in the logbook: 26 weeks, a median of +0.46% realized per week after fees; its open positions are shown next to it. Past weeks say nothing about future weeks; you can lose your entire stake. <a href="/">See the logbook</a> · <a href="/how-it-works/">See the dashboard and design decisions</a></p>
 </div>
 <div class="koopkaart" id="buy">
 <h2 class="koop-kop">The build kit</h2>
 <p class="koop-groot"><span class="prijs">$14</span> <span class="muted">one-off</span></p>
-<p class="koop-sub">Updates every time the bot changes: <span class="prijs">$5</span> a year, cancel any time.</p>
+<p class="koop-sub">Updates whenever the bot or the plan changes: <span class="prijs">$5</span> a year, cancel any time.</p>
 <p>The build kit isn't on sale yet. Leave your email and you'll hear when it is.</p>
 <form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="theweekly2pctedge"><input type="hidden" name="utm_campaign" value="bouwnotities"><label class="sr" for="mail-notes">Email address</label><input id="mail-notes" type="email" name="email" placeholder="you@example.com" autocomplete="email" required><button type="submit">Tell me when it's out</button></form>
+<p class="risico">Past weeks say nothing about future weeks; you can lose your entire stake.</p>
 </div>
 </div></div>
 
 <section id="steps"><div class="wrap">
 <div class="sec-head"><h2>How it works, in four steps</h2></div>
-<ol class="stappen"><li><span class="stap-nr">1</span><h3>Download the plan</h3><p>One document that describes this bot step by step, written to be carried out by an AI assistant.</p></li><li><span class="stap-nr">2</span><h3>Hand it to your AI</h3><p>Upload it into Claude, ChatGPT or a similar assistant and let it walk you through every step: code, database, alerts, deployment.</p></li><li><span class="stap-nr">3</span><h3>Open an exchange account</h3><p>Create an account at a crypto exchange and an API key for the bot. The plan is written for Bitvavo&#x27;s BTC-EUR market.</p></li><li><span class="stap-nr">4</span><h3>Have fun</h3><p>Run it, watch it, change it. Start small: it trades with real money, and you can lose it.</p></li></ol>
+<ol class="stappen"><li><span class="stap-nr">1</span><h3>Download the plan</h3><p>One document that describes this bot&#x27;s design step by step, with a few deliberately safer defaults, written for an AI assistant to carry out.</p></li><li><span class="stap-nr">2</span><h3>Hand it to your AI</h3><p>Upload it into Claude, ChatGPT or a similar assistant and let it walk you through every step: code, database, alerts, deployment.</p></li><li><span class="stap-nr">3</span><h3>Open an exchange account</h3><p>Create an account at a crypto exchange and an API key for the bot (view and trade only, never withdrawal). The plan is written for Bitvavo&#x27;s BTC-EUR market; it also explains how to port it to another exchange.</p></li><li><span class="stap-nr">4</span><h3>Have fun</h3><p>Start in paper mode, then with the smallest amounts the exchange allows. Once live it trades with real money, and you can lose it.</p></li></ol>
 </div></section>
 
 <section id="get"><div class="wrap two-col">
-<div><h2>What you get</h2><ul class="kaartlijst"><li><h3>The build plan</h3><p>One document covering the whole bot: the buy ladder, the sell logic, the safety checks, the database, Telegram alerts, the dashboard and how to keep it running 24/7. Written as instructions an AI can execute, step by step.</p></li><li><h3>Delivered by email</h3><p>Right after payment you get a download link (valid for 72 hours, up to 5 downloads).</p></li><li><h3>Updates, if you want them</h3><p>With the update subscription, every time the bot changes in a way the plan should reflect, you get the new version by email with a short changelog. It renews yearly; cancel any time.</p></li></ul></div>
+<div><h2>What you get</h2><ul class="kaartlijst"><li><h3>The build plan</h3><p>One document in 14 build phases, each with acceptance tests: the exchange wrapper and a paper exchange, the buy ladder, the sells, risk limits, the database, Telegram or Discord alerts, a read-only dashboard, integrity checks, deployment and backups. Plus the dated design decisions, going live, and what to do when it breaks. Version 1.1 (27 Oct 2026); PDF, in English.</p></li><li><h3>Delivered by email</h3><p>Right after payment you get a download link (valid for 72 hours, up to 5 downloads).</p></li><li><h3>Updates, if you want them</h3><p>With the update subscription, whenever the bot or the plan changes, you get the new version by email with a short changelog. It renews yearly; cancel any time.</p></li></ul></div>
 <div><h2>What it isn't</h2><ul class="niet"><li>Not signals and not copy-trading: nothing here tells you when to buy or sell.</li><li>Not managed money: you run your own bot, on your own account.</li><li>Not a return promise: the logbook shows what this bot did, including the open positions that are down.</li></ul></div>
 </div></section>
 
 <section id="need"><div class="wrap">
 <div class="sec-head"><h2>What you need</h2></div>
-<ul class="kaartlijst"><li><h3>An AI assistant</h3><p>Claude, ChatGPT or similar, one that can read a long document.</p></li><li><h3>An exchange account with API keys</h3><p>The plan is written for Bitvavo (BTC-EUR). Another exchange means asking your AI to adapt the exchange calls: your own engineering.</p></li><li><h3>Telegram or Discord</h3><p>For alerts: fills, sales, warnings, the daily summary.</p></li><li><h3>A GitHub account</h3><p>To keep your code versioned, so every change can be rolled back.</p></li><li><h3>Somewhere to run it</h3><p>The bot runs around the clock. Replit or a small VPS both work; they have their own monthly costs.</p></li><li><h3>Money you can afford to lose</h3><p>The bot trades with real funds on your exchange account. Nothing here protects you from a falling bitcoin price.</p></li></ul>
+<ul class="kaartlijst"><li><h3>An AI assistant</h3><p>Claude, ChatGPT or similar, one that can handle a long document. Expect about a dozen evenings.</p></li><li><h3>An exchange account with API keys</h3><p>Keys with view and trade rights only, never withdrawal. The plan is written for Bitvavo (BTC-EUR) and includes a prompt to port it to another exchange; testing that port is up to you.</p></li><li><h3>Telegram or Discord</h3><p>For alerts: fills, sales, warnings, the daily summary.</p></li><li><h3>A GitHub account</h3><p>A private repository, to keep your code versioned so every change can be rolled back.</p></li><li><h3>A database and a password manager</h3><p>PostgreSQL 14 or newer (on your server or managed), and a password manager for your keys.</p></li><li><h3>Somewhere to run it</h3><p>The bot runs around the clock. Replit or a small VPS both work; they have their own monthly costs.</p></li><li><h3>Money you can afford to lose</h3><p>The bot trades with real funds on your exchange account. Nothing here protects you from a falling bitcoin price.</p></li></ul>
 </div></section>
 
 <section id="yours"><div class="wrap">
@@ -557,12 +516,13 @@ details.faq p{padding:.2rem 1rem .9rem;margin:0;color:var(--ink-2)}
 
 <section id="faq" style="border-bottom:0"><div class="wrap">
 <div class="sec-head"><h2>Questions</h2></div>
-<div class="faqs"><details class="faq"><summary>Do I need to be able to code?</summary><p>No. Your AI writes the code and walks you through the steps. You do need to be comfortable creating API keys, reading what the AI tells you, and checking the bot before it trades real money.</p></details><details class="faq"><summary>Does it only work on Bitvavo?</summary><p>The plan is written for Bitvavo&#x27;s BTC-EUR market. You can ask your AI to adapt it to another exchange&#x27;s API, but that is your own engineering and not something the plan covers.</p></details><details class="faq"><summary>Will it make money?</summary><p>Nobody can promise that, and this site doesn&#x27;t. The logbook shows what this bot did each week, and the open positions next to it. Past weeks say nothing about future weeks; you can lose your entire stake.</p></details><details class="faq"><summary>How much money do I need to start?</summary><p>The plan doesn&#x27;t prescribe an amount, and this site never publishes account sizes. The exchange has minimum order sizes. Only use money you can afford to lose entirely.</p></details><details class="faq"><summary>What do the updates contain?</summary><p>When the bot changes in a way the plan should reflect, subscribers get the new version by email with a short changelog. The subscription renews yearly; you can cancel at any time.</p></details><details class="faq"><summary>Can I get a refund?</summary><p>It is a digital download. At checkout you agree to immediate delivery and acknowledge that you lose the 14-day right of withdrawal once delivery has started, as EU rules for digital content allow.</p></details><details class="faq"><summary>Is this financial advice or a signal service?</summary><p>No. It is engineering documentation for building and running your own software. Nothing here tells you when to buy or sell.</p></details></div>
+<div class="faqs"><details class="faq"><summary>Do I need to be able to code?</summary><p>No. Your AI writes the code and walks you through the steps. You do need to be comfortable creating API keys, reading what the AI tells you, and checking the bot before it trades real money.</p></details><details class="faq"><summary>Does it only work on Bitvavo?</summary><p>The plan is written for Bitvavo&#x27;s BTC-EUR market. It includes a prompt to port the exchange code to another exchange (for example Kraken or Coinbase), with the tests to re-run; checking that port is up to you.</p></details><details class="faq"><summary>Will it make money?</summary><p>Nobody can promise that, and this site doesn&#x27;t. The logbook shows what this bot did each week, and the open positions next to it. Past weeks say nothing about future weeks; you can lose your entire stake.</p></details><details class="faq"><summary>How much money do I need to start?</summary><p>The plan doesn&#x27;t prescribe an amount, and this site never publishes account sizes. The exchange has minimum order sizes. Only use money you can afford to lose entirely.</p></details><details class="faq"><summary>What do the updates contain?</summary><p>When the bot or the plan changes, subscribers get the new version by email with a changelog that says what to hand back to their AI. The subscription renews yearly; you can cancel at any time.</p></details><details class="faq"><summary>Can I get a refund?</summary><p>It is a digital download. At checkout you agree to immediate delivery and acknowledge that you lose the 14-day right of withdrawal once delivery has started, as EU rules for digital content allow.</p></details><details class="faq"><summary>Is this financial advice or a signal service?</summary><p>No. It is engineering documentation for building and running your own software. Nothing here tells you when to buy or sell.</p></details></div>
 <p class="terug"><a class="btn" href="#buy">Back to the build kit · $14</a></p>
+<p class="risico">Past weeks say nothing about future weeks; you can lose your entire stake.</p>
 </div></section>
 </main>
 <footer class="foot"><div class="wrap">
-<p class="disclaimer">This is a personal logbook, not financial advice and not an offer of any service. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
+<p class="disclaimer">This is a personal logbook, not financial advice and not an investment service; the build kit is software documentation. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
 <ul class="foot-links">
 <li><a href="/">The logbook</a></li><li><a href="/build-kit/">Build kit</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="https://mijnbitcoinstrategie.nl/" hreflang="nl" lang="nl">Nederlands</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket on LinkedIn</a></li>
 </ul>

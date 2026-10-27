@@ -664,5 +664,23 @@ class AuditOpdrachtregel(unittest.TestCase):
         self.assertIn("kan", uit.stderr)
 
 
+class AuditTaalVanHetDocument(Basis):
+    """De NL-site belooft de Nederlandse editie, de EN-site de Engelse: de link levert de editie van de koper."""
+    def setUp(self):
+        super().setUp()
+        self.doc_nl = pathlib.Path(self.tmp.name) / "bouwpakket-v1.0.pdf"
+        self.doc_nl.write_bytes(b"%PDF-1.4 nl")
+        self.opslag.versie_bewaar("1.0", str(self.doc), "abc123", "Eerste versie", bestand_nl=str(self.doc_nl))
+        self.opslag.klant_bewaar("ctm_1", "koper@voorbeeld.test", None)
+
+    def test_nl_koper_krijgt_de_nederlandse_editie(self):
+        self.stuur(self.transactie(prijzen=("pri_kit_eur",)))
+        self.assertEqual(self.lev.download(self.token_uit(self.post[0])), (self.doc_nl, "bouwpakket-v1.0.pdf"))
+
+    def test_en_koper_krijgt_de_engelse_editie(self):
+        self.stuur(self.transactie(prijzen=("pri_kit_usd",)))
+        self.assertEqual(self.lev.download(self.token_uit(self.post[0])), (self.doc, "build-kit-v1.0.pdf"))
+
+
 if __name__ == "__main__":
     unittest.main()

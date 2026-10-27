@@ -159,8 +159,9 @@ class Rooktest:
             risico = "you can lose your entire stake" in tekst or "je hele inleg verliezen" in tekst
             if self.checkout_live:
                 if 'id="buy"' in tekst:
-                    self.check(knop and 'type="checkbox" required' in tekst and risico,
-                               f"{loc}: koopknop met verplicht vinkje en risicoregel")
+                    self.check(knop and 'type="checkbox" name="toestemming" required' in tekst and risico
+                               and "withdrawal_consent" in tekst,
+                               f"{loc}: koopknop met verplicht vinkje (gaat mee als custom_data) en risicoregel")
             else:
                 self.check(not knop, f"{loc}: geen koopknop")
                 if 'id="buy"' in tekst:

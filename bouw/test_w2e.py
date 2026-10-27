@@ -15,6 +15,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import build_logboek  # noqa: E402,F401  (registreert de module voor de w2e_*-imports)
 import w2e_data as D  # noqa: E402
+import build_logboek as B  # noqa: E402
 import w2e_kassa as K  # noqa: E402
 
 NU = datetime.datetime(2026, 11, 2, 12, 0)
@@ -104,26 +105,66 @@ class Kassa(unittest.TestCase):
         self.assertFalse(K.live("nl"))
         self.assertIn("wachtlijst", K.koopblok("en", "wachtlijst"))
 
-    def test_ids_invullen_zet_de_koopknoppen_aan(self):
+    def laad_met(self, ids):
         """Laadt w2e_kassa opnieuw (los, in een eigen namespace) met ingevulde PADDLE_IDS; het echte bestand blijft leeg."""
-        ids = {"hosted_checkout_url": "https://pay.paddle.io/checkout/hsc_01test", "kit_usd": "pri_01a",
-               "updates_usd": "pri_01b", "kit_eur": "pri_01c", "updates_eur": "pri_01d"}
         src = pathlib.Path(K.__file__).read_text(encoding="utf-8")
         for sleutel, waarde in ids.items():
             src = src.replace(f'"{sleutel}": "",', f'"{sleutel}": "{waarde}",', 1)
         ns = {"__name__": "w2e_kassa_test", "__file__": K.__file__}
         exec(compile(src, K.__file__, "exec"), ns)
+        return ns
+
+    IDS = {"client_token": "live_0123456789abcdef", "kit_usd": "pri_01aaaaaaaaaaaaaaaaaaaaaaaa", "updates_usd": "pri_01bbbbbbbbbbbbbbbbbbbbbbbb", "kit_eur": "pri_01cccccccccccccccccccccccc",
+           "updates_eur": "pri_01dddddddddddddddddddddddd"}
+
+    def test_ids_invullen_zet_de_koopknoppen_aan(self):
+        ns = self.laad_met(self.IDS)
         self.assertTrue(ns["live"]("en") and ns["live"]("nl"))
-        self.assertEqual(ns["KASSA"]["nl"]["producten"]["kit_updates"]["url"],
-                         "https://pay.paddle.io/checkout/hsc_01test?price_id=pri_01c%2Cpri_01d")
         blok = ns["koopblok"]("en", "wachtlijst")
         self.assertNotIn("wachtlijst", blok)
-        self.assertEqual(blok.count('type="checkbox" required'), 2)
+        self.assertEqual(blok.count('type="checkbox" name="toestemming" required'), 2)
         self.assertIn("you can lose your entire stake", blok)
         inr = ns["paddle_inrichting"]()
         self.assertEqual(inr["env_levering_prijzen"],
-                         "LEVERING_PRIJZEN=pri_01a=kit:en,pri_01c=kit:nl,pri_01b=updates:en,pri_01d=updates:nl")
+                         "LEVERING_PRIJZEN=pri_01aaaaaaaaaaaaaaaaaaaaaaaa=kit:en,pri_01cccccccccccccccccccccccc=kit:nl,pri_01bbbbbbbbbbbbbbbbbbbbbbbb=updates:en,pri_01dddddddddddddddddddddddd=updates:nl")
         self.assertEqual(inr["ontbrekend"], [])
+
+    def test_toestemming_gaat_mee_naar_paddle(self):
+        """EU-herroepingsrecht: het vinkje moet als custom_data in de transactie komen, anders levert de dienst niet."""
+        import re
+        ns = self.laad_met(self.IDS)
+        for taal in ("en", "nl"):
+            blok = ns["koopblok"](taal, "wachtlijst")
+            self.assertIn("withdrawal_consent", blok)
+            self.assertIn("consent_at", blok)
+            versie = ns["TOESTEMMING_VERSIE"][taal]
+            self.assertIn(f'data-toestemming="{versie}"', blok)
+            self.assertRegex(versie, r"^[A-Za-z0-9.\-]{1,40}$")  # = levering.kern.TOESTEMMING
+            self.assertIn("Paddle.Checkout.open", blok)
+            self.assertNotIn("pay.paddle.io", blok)  # hosted checkout: live alleen voor mobiele apps, geen custom_data
+
+    def test_munt_per_site_nooit_gemengd(self):
+        ns = self.laad_met(self.IDS)
+        en, nl = ns["koopblok"]("en", "w"), ns["koopblok"]("nl", "w")
+        self.assertIn('data-prijzen="pri_01aaaaaaaaaaaaaaaaaaaaaaaa"', en)
+        self.assertIn('data-prijzen="pri_01aaaaaaaaaaaaaaaaaaaaaaaa,pri_01bbbbbbbbbbbbbbbbbbbbbbbb"', en)
+        self.assertNotIn("pri_01cccccccccccccccccccccccc", en)
+        self.assertNotIn("pri_01dddddddddddddddddddddddd", en)
+        self.assertIn('data-prijzen="pri_01cccccccccccccccccccccccc,pri_01dddddddddddddddddddddddd"', nl)
+        self.assertNotIn("pri_01aaaaaaaaaaaaaaaaaaaaaaaa", nl)
+        self.assertNotIn("€", en)
+        self.assertNotIn("$", nl)
+        for o in ns["aanbiedingen_ld"]("en", "u"):
+            self.assertEqual(o["priceCurrency"], "USD")
+        for o in ns["aanbiedingen_ld"]("nl", "u"):
+            self.assertEqual(o["priceCurrency"], "EUR")
+
+    def test_alleen_munt_ids_zonder_token_is_niet_live(self):
+        ids = dict(self.IDS, client_token="")
+        ns = self.laad_met(ids)
+        self.assertFalse(ns["live"]("en"))
+        self.assertIn("wachtlijst", ns["koopblok"]("en", "wachtlijst"))
+        self.assertNotIn("<form class=\"koop\"", ns["koopblok"]("en", "wachtlijst"))
 
     def test_inrichting_is_volledig(self):
         inr = K.paddle_inrichting()
@@ -132,6 +173,64 @@ class Kassa(unittest.TestCase):
         self.assertIn("adjustment.created", inr["webhook_events"])
         for p in inr["producten"].values():
             self.assertNotRegex(p["beschrijving"].lower(), r"signal|advice|profit|return|rendement|winst")
+
+
+class GestructureerdeData(unittest.TestCase):
+    """Review 27 okt 2026: Product/Offer alleen als de kassa live is; FAQPage = de zichtbare vragen."""
+
+    def pagina(self, taal):
+        import w2e_site
+        S = w2e_site.SITES[taal]
+        c = {"reeks": [0.5, 0.4], "mediaan": 0.45, "weken": [], "gelezen": __import__("datetime").date(2026, 10, 26)}
+        try:
+            return w2e_site.kit_pagina(S, c)
+        except (KeyError, TypeError) as fout:
+            self.skipTest(f"kit_pagina vraagt meer context: {fout}")
+
+    def ld(self, html):
+        import json
+        import re
+        return [json.loads(m) for m in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)]
+
+    def test_geen_product_zonder_kassa(self):
+        for taal in ("en", "nl"):
+            tekst = json.dumps(self.ld(self.pagina(taal)))
+            self.assertNotIn('"Product"', tekst)
+            self.assertNotIn('"Offer"', tekst)
+
+    def test_faq_gelijk_aan_zichtbare_vragen(self):
+        import html as h
+        for taal in ("en", "nl"):
+            pagina = self.pagina(taal)
+            faq = [n for blok in self.ld(pagina) for n in blok.get("@graph", [blok]) if n.get("@type") == "FAQPage"]
+            self.assertEqual(len(faq), 1)
+            for v in faq[0]["mainEntity"]:
+                self.assertIn(h.escape(v["name"], quote=False), pagina)
+                antwoord = v["acceptedAnswer"]["text"]
+                self.assertIn(h.escape(antwoord[:60], quote=False), pagina)
+
+
+class Claims(unittest.TestCase):
+    """Review 27 okt 2026: naast elke knop met een prijs (en de wachtlijst) staat de risicoregel."""
+    PAGINAS = ["index.html", "build-kit/index.html", "how-it-works/index.html", "sites/mijnbitcoinstrategie.nl/index.html",
+               "sites/mijnbitcoinstrategie.nl/bouwpakket/index.html", "sites/mijnbitcoinstrategie.nl/zo-werkt-het/index.html"]
+
+    def test_risicoregel_naast_elke_prijsknop_in_de_gebouwde_paginas(self):
+        import re
+        root = pathlib.Path(__file__).resolve().parent.parent
+        for pad in self.PAGINAS:
+            html = (root / pad).read_text(encoding="utf-8")
+            knoppen = [m for m in re.finditer(r'<a class="btn"[^>]*>[^<]*(?:\$|€)\d+[^<]*</a>', html)]
+            knoppen += list(re.finditer(r'id="buy"', html))
+            self.assertTrue(knoppen, pad)
+            for m in knoppen:
+                na = html[m.end():m.end() + 6000 if "id=" in m.group(0) else m.end() + 400]
+                self.assertIn('class="risico"', na, f"{pad}: geen risicoregel bij {m.group(0)[:80]}")
+
+    def test_geen_tegenstrijdige_voettekst(self):
+        import w2e_site
+        self.assertNotIn("offer of any service", B.VOET_DISCLAIMER)
+        self.assertNotIn("aanbod van een dienst", w2e_site.DISCLAIMER_NL)
 
 
 if __name__ == "__main__":

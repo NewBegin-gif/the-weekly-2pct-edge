@@ -83,15 +83,15 @@ L = {
         exp_titel="Exposure over time", exp_desc="Line chart of exposure as % of capital, from the bot's hourly status messages.",
     ),
     "nl": dict(
-        geen="De dashboard-momentopname zit niet in deze bouw. Hij verschijnt zodra het read-only dashboard van de bot "
+        geen="De momentopname van het dashboard staat nog niet op deze pagina. Hij verschijnt zodra het read-only dashboard van de bot "
              "gegevens heeft die minstens 24 uur oud zijn.",
         T="Momentopname", oud="minstens 24 uur oud, nooit live",
         exposure="Exposure", exposure_sub="van het kapitaal in BTC (plafond {cap})", exposure_geen="niet gemeld vóór T",
         koers="BTC-koers op T", stap="Ladderstap", stap_sub="fijne treden, als % van de koers; grof {c}",
-        rsi="RSI (dag)", rsi_sub={"taper": "kleinere kopen boven {d}, stop boven {b}", "uit": "RSI-rem uit",
-                                  "blok": "kopen pauzeren boven {b}"},
+        rsi="RSI (dag)", rsi_sub={"taper": "kleinere aankopen boven {d}, stop boven {b}", "uit": "RSI-rem uit",
+                                  "blok": "aankopen gepauzeerd boven {b}"},
         open="Open posities", open_sub="t.o.v. de aankoopprijs, % van de rekening",
-        verkopen="Verkopen in venster", verkopen_sub="mediaan {m} per verkoop, vóór kosten",
+        verkopen="Verkopen in deze periode", verkopen_sub="mediaan {m} per verkoop, vóór kosten",
         prijs_titel="BTC-koers tot T, en de orders eromheen op T",
         prijs_desc=("Lijngrafiek van de BTC-EUR-koers van {van} tot {tot}, met de aankopen (blauwe stippen) en "
                     "verkopen (groene stippen) van de bot. Rechts, op T: open verkooporders boven de koers en de fijne "
@@ -275,7 +275,7 @@ def dashboard(m, taal="en"):
     regels = ([(t["kant_sell"], r) for r in reversed(m["volgende_verkopen"])]
               + [(t["kant_fine"], r) for r in m["fine"]] + [(t["kant_coarse"], r) for r in m["coarse"]])
     k = t["tbl_ladder_kop"]
-    ladder_tbl = (f'<details><summary>{t["tbl_ladder"]} ({len(regels)})</summary><div class="tbl"><table>'
+    ladder_tbl = (f'<details><summary>{t["tbl_ladder"]} ({len(regels)})</summary><div class="tbl" tabindex="0" role="region" aria-label="{t["tbl_ladder"]}"><table>'
                   f'<thead><tr><th scope="col">{k[0]}</th><th scope="col" class="r">{k[1]}</th><th scope="col" class="r">{k[2]}</th></tr></thead><tbody>'
                   + "".join(f'<tr><td>{a}</td><td class="r">{px(r["prijs"], taal)}</td><td class="r">{f_pct(r["afstand"], taal)}</td></tr>'
                             for a, r in regels) + "</tbody></table></div></details>")
@@ -287,7 +287,7 @@ def dashboard(m, taal="en"):
         momenten = (f'<h3 class="dash-h3">{t["mom_titel"]}</h3><figure class="chart" style="margin:0">'
                     f'{momentengrafiek(m, taal, 960, 240, "wide", f"mw-{taal}")}{momentengrafiek(m, taal, 360, 220, "narrow", f"mn-{taal}")}'
                     f'<figcaption class="chart-note">{t["mom_noot"].format(n=f_getal(len(rijen), taal), van=d_lang(rijen[0]["t"], taal), tot=d_tijd(rijen[-1]["t"], taal))}</figcaption></figure>'
-                    f'<details><summary>{t["mom_tbl"].format(n=n_tbl)}</summary><div class="tbl"><table>'
+                    f'<details><summary>{t["mom_tbl"].format(n=n_tbl)}</summary><div class="tbl" tabindex="0" role="region" aria-label="{t["mom_tbl"].format(n=n_tbl)}"><table>'
                     f'<thead><tr><th scope="col">{k[0]}</th><th scope="col">{k[1]}</th><th scope="col" class="r">{k[2]}</th></tr></thead><tbody>'
                     + "".join(f'<tr><td><time datetime="{r["t"]:%Y-%m-%dT%H:%MZ}">{d_tijd(r["t"], taal)}</time></td>'
                               f'<td><span class="code">{B.e(r["strategie"])}</span></td><td class="r">{f_pct(r["pct"], taal)}</td></tr>'

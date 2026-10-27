@@ -25,7 +25,7 @@ geopend, zie opdrachten.py)
   python3 -m levering vrijgeven --transactie txn_... --toestemming "per mail 2026-11-02"
   python3 -m levering wachtrij                               # wachtende leveringsmails nu versturen
   python3 -m levering export --uit /root/boekhouding/abonnees.csv   # nooit in een webroot
-  python3 -m levering nieuwe-versie --versie 1.0 --bestand /srv/bouwpakket/v1.0.pdf --commit <volledige sha in de bot-repo> --changelog wijzigingen.txt
+  python3 -m levering nieuwe-versie --versie 1.1 --bestand /srv/bouwpakket/BOUWPAKKET_EN-v1.1.pdf --bestand-nl /srv/bouwpakket/BOUWPAKKET_NL-v1.1.pdf --commit <volledige sha in de bot-repo> --changelog wijzigingen.txt
   python3 -m levering send-update --versie 1.1 --dry-run     # wie zou wat krijgen; verstuurt en schrijft niets
   python3 -m levering send-update --versie 1.1               # verstuurt; nogmaals draaien slaat wie al kreeg over
   python3 -m levering maandrapport --bot-repo ~/Bitcoin-Cycle-Bot   # commits sinds de laatste documentversie

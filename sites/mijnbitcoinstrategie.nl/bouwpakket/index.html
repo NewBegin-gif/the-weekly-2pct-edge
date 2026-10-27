@@ -48,51 +48,9 @@
    "isPartOf": {
     "@id": "https://mijnbitcoinstrategie.nl/#website"
    },
-   "about": {
-    "@id": "https://mijnbitcoinstrategie.nl/bouwpakket/#product"
-   },
    "author": {
     "@id": "https://theweekly2pctedge.com/#daan"
    }
-  },
-  {
-   "@type": "Product",
-   "@id": "https://mijnbitcoinstrategie.nl/bouwpakket/#product",
-   "name": "Bouwpakket: bouw je eigen bitcoinbot met AI",
-   "description": "Een stappenplan dat je AI-assistent uitvoert om je eigen versie van een live Bitvavo-bot te bouwen. €14 eenmalig, updates €5 per jaar. Geen signalen.",
-   "image": "https://mijnbitcoinstrategie.nl/og-image.png",
-   "category": "Software documentation",
-   "brand": {
-    "@type": "Brand",
-    "name": "Mijn Bitcoinstrategie"
-   },
-   "offers": [
-    {
-     "@type": "Offer",
-     "name": "Bouwpakket",
-     "price": "14.00",
-     "priceCurrency": "EUR",
-     "url": "https://mijnbitcoinstrategie.nl/bouwpakket/#buy",
-     "category": "one-off"
-    },
-    {
-     "@type": "Offer",
-     "name": "Update-abonnement",
-     "price": "5.00",
-     "priceCurrency": "EUR",
-     "url": "https://mijnbitcoinstrategie.nl/bouwpakket/#buy",
-     "priceSpecification": {
-      "@type": "UnitPriceSpecification",
-      "price": "5.00",
-      "priceCurrency": "EUR",
-      "referenceQuantity": {
-       "@type": "QuantitativeValue",
-       "value": 1,
-       "unitCode": "ANN"
-      }
-     }
-    }
-   ]
   },
   {
    "@type": "Person",
@@ -135,7 +93,7 @@
      "name": "Moet ik kunnen programmeren?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Je AI schrijft de code en leidt je door de stappen. Je moet wel API-sleutels kunnen aanmaken, kunnen lezen wat de AI je vertelt en de bot controleren voordat hij met echt geld handelt."
+      "text": "Nee. Je AI schrijft de code en leidt je door de stappen. Reken op een avond of twaalf. Je moet wel API-sleutels kunnen aanmaken, kunnen lezen wat de AI je vertelt en de bot controleren voordat hij met echt geld handelt."
      }
     },
     {
@@ -143,7 +101,7 @@
      "name": "Werkt het alleen op Bitvavo?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Het plan is geschreven voor de BTC-EUR-markt van Bitvavo. Je kunt je AI vragen het aan te passen aan de API van een andere beurs, maar dat is je eigen bouwwerk en valt buiten het plan."
+      "text": "Het plan is geschreven voor de BTC-EUR-markt van Bitvavo. Er staat een opdracht in om de beurskoppeling om te zetten naar een andere beurs (bijvoorbeeld Kraken of Coinbase), met de tests die je daarna opnieuw draait; die overstap controleer je zelf."
      }
     },
     {
@@ -167,7 +125,7 @@
      "name": "Wat zit er in de updates?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Als de bot verandert op een manier die in het plan hoort, krijgen abonnees de nieuwe versie per mail met een korte lijst van wijzigingen. Het abonnement verlengt jaarlijks; opzeggen kan altijd."
+      "text": "Als de bot of het plan verandert, krijgen abonnees de nieuwe versie per mail, met een lijst van wijzigingen en wat je daarvan aan je AI teruggeeft. Het abonnement wordt elk jaar verlengd; je kunt altijd opzeggen."
      }
     },
     {
@@ -183,7 +141,7 @@
      "name": "Is dit financieel advies of een signaaldienst?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Het is technische documentatie om je eigen software te bouwen en te draaien. Niets hier zegt je wanneer je moet kopen of verkopen."
+      "text": "Nee. Het is technische documentatie om je eigen software te bouwen en te draaien. Niets hier vertelt je wanneer je moet kopen of verkopen."
      }
     }
    ]
@@ -522,47 +480,49 @@ details.faq p{padding:.2rem 1rem .9rem;margin:0;color:var(--ink-2)}
 <nav class="crumbs" aria-label="Kruimelpad"><a href="/">Het logboek</a> &rsaquo; Bouwpakket</nav>
 <p class="kicker">Bouwpakket · voor je AI-assistent</p>
 <h1>Bouw je eigen bitcoin trading bot, met je AI als bouwer</h1>
-<p class="lead-groot">Dit is het stappenplan van de bitcoinbot uit het logboek, geschreven zodat een AI-assistent hem samen met jou bouwt. Je krijgt de logica, de veiligheidscontroles en de lessen uit elke fout. Je krijgt géén belofte over wat hij oplevert.</p>
-<p class="echt">Dezelfde bot staat in het logboek: 26 weken, mediaan +0,46% gerealiseerd per week na kosten, met de open posities ernaast. <a href="/">Bekijk het logboek</a> · <a href="/zo-werkt-het/">Zie het dashboard en de ontwerpkeuzes</a></p>
+<p class="lead-groot">Dit is het stappenplan van de bitcoinbot uit het logboek, geschreven zodat een AI-assistent hem samen met jou bouwt. Je krijgt de logica, de veiligheidscontroles en de lessen uit elke fout. Je krijgt géén belofte over wat hij oplevert. De naam beloofde 2% per week; het realistische doel bleek 0,5%, en ook dat is geen belofte.</p>
+<p class="echt">Dezelfde bot staat in het logboek: 26 weken, mediaan +0,46% gerealiseerd per week na kosten; de open posities staan ernaast. Afgelopen weken zeggen niets over komende weken; je kunt je hele inleg verliezen. <a href="/">Bekijk het logboek</a> · <a href="/zo-werkt-het/">Zie het dashboard en de ontwerpkeuzes</a></p>
 </div>
 <div class="koopkaart" id="buy">
 <h2 class="koop-kop">Het bouwpakket</h2>
 <p class="koop-groot"><span class="prijs">€14</span> <span class="muted">eenmalig</span></p>
-<p class="koop-sub">Updates bij elke wijziging aan de bot: <span class="prijs">€5</span> per jaar, opzegbaar.</p>
+<p class="koop-sub">Updates zodra de bot of het plan verandert: <span class="prijs">€5</span> per jaar, opzegbaar.</p>
 <p>Het bouwpakket is nog niet te koop. Laat je e-mailadres achter, dan hoor je het als het zover is.</p>
 <form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank" onsubmit="if(window.gtag)gtag('event','bouwnotities_aanmelding')"><input type="hidden" name="utm_source" value="mijnbitcoinstrategie"><input type="hidden" name="utm_campaign" value="bouwnotities"><label class="sr" for="mail-notes">E-mailadres</label><input id="mail-notes" type="email" name="email" placeholder="jij@voorbeeld.nl" autocomplete="email" required><button type="submit">Laat het me weten</button></form>
+<p class="risico">Afgelopen weken zeggen niets over komende weken; je kunt je hele inleg verliezen.</p>
 </div>
 </div></div>
 
 <section id="steps"><div class="wrap">
 <div class="sec-head"><h2>Zo werkt het, in vier stappen</h2></div>
-<ol class="stappen"><li><span class="stap-nr">1</span><h3>Download het plan</h3><p>Eén document dat deze bot stap voor stap beschrijft, geschreven om door een AI-assistent uitgevoerd te worden.</p></li><li><span class="stap-nr">2</span><h3>Geef het aan je AI</h3><p>Upload het in Claude, ChatGPT of een vergelijkbare assistent en laat die je door elke stap leiden: code, database, meldingen, livegang.</p></li><li><span class="stap-nr">3</span><h3>Open een account bij een beurs</h3><p>Maak een account aan bij een cryptobeurs en een API-sleutel voor de bot. Het plan is geschreven voor de BTC-EUR-markt van Bitvavo.</p></li><li><span class="stap-nr">4</span><h3>Veel plezier</h3><p>Laat hem draaien, kijk mee, pas hem aan. Begin klein: hij handelt met echt geld, en dat kun je kwijtraken.</p></li></ol>
+<ol class="stappen"><li><span class="stap-nr">1</span><h3>Download het plan</h3><p>Eén document dat het ontwerp van deze bot stap voor stap beschrijft, met een paar bewust veiligere standaardinstellingen, zo geschreven dat een AI-assistent het kan uitvoeren.</p></li><li><span class="stap-nr">2</span><h3>Geef het aan je AI</h3><p>Zet het in Claude, ChatGPT of een vergelijkbare assistent en laat die je door elke stap leiden: code, database, meldingen, livegang.</p></li><li><span class="stap-nr">3</span><h3>Open een account bij een beurs</h3><p>Maak een account aan bij een cryptobeurs en maak daar een API-sleutel voor de bot (alleen bekijken en handelen, nooit opnemen). Het plan is geschreven voor de BTC-EUR-markt van Bitvavo en legt ook uit hoe je overstapt naar een andere beurs.</p></li><li><span class="stap-nr">4</span><h3>Veel plezier</h3><p>Begin op papier, daarna met de kleinste bedragen die de beurs toestaat. Eenmaal live handelt hij met echt geld, en dat kun je kwijtraken.</p></li></ol>
 </div></section>
 
 <section id="get"><div class="wrap two-col">
-<div><h2>Wat je krijgt</h2><ul class="kaartlijst"><li><h3>Het bouwplan</h3><p>Eén document over de hele bot: de koopladder, de verkooplogica, de veiligheidscontroles, de database, Telegram-meldingen, het dashboard en hoe je hem dag en nacht laat draaien. Geschreven als instructies die een AI stap voor stap kan uitvoeren.</p></li><li><h3>Per e-mail</h3><p>Direct na betaling krijg je een downloadlink (72 uur geldig, maximaal 5 downloads).</p></li><li><h3>Updates, als je wilt</h3><p>Met het update-abonnement krijg je bij elke wijziging aan de bot die in het plan hoort, de nieuwe versie per mail met een korte lijst van wat er veranderde. Het verlengt jaarlijks; opzeggen kan altijd.</p></li></ul></div>
-<div><h2>Wat het niet is</h2><ul class="niet"><li>Geen signalen en geen copy-trading: niets hier zegt je wanneer je moet kopen of verkopen.</li><li>Geen vermogensbeheer: je draait je eigen bot, op je eigen account.</li><li>Geen rendementsbelofte: het logboek laat zien wat deze bot deed, ook de open posities die in de min staan.</li></ul></div>
+<div><h2>Wat je krijgt</h2><ul class="kaartlijst"><li><h3>Het bouwplan</h3><p>Eén document in 14 bouwfasen, elk met acceptatietests: de beurskoppeling en een papieren beurs, de koopladder, de verkopen, de risicolimieten, de database, meldingen via Telegram of Discord, een dashboard om mee te kijken, integriteitscontroles, livegang en back-ups. Plus de ontwerpkeuzes met datum, live gaan, en wat je doet als er iets stukgaat. Versie 1.1 (27 okt 2026); pdf, in het Nederlands.</p></li><li><h3>Per e-mail</h3><p>Direct na betaling krijg je een downloadlink (72 uur geldig, maximaal 5 downloads).</p></li><li><h3>Updates, als je wilt</h3><p>Met het update-abonnement krijg je de nieuwe versie per mail zodra de bot of het plan verandert, met een korte lijst van wat er veranderd is. Het wordt elk jaar verlengd; je kunt altijd opzeggen.</p></li></ul></div>
+<div><h2>Wat het niet is</h2><ul class="niet"><li>Geen signalen en geen copy-trading: niets hier vertelt je wanneer je moet kopen of verkopen.</li><li>Geen vermogensbeheer: je draait je eigen bot, op je eigen account.</li><li>Geen rendementsbelofte: het logboek laat zien wat deze bot deed, ook de open posities die in de min staan.</li></ul></div>
 </div></section>
 
 <section id="need"><div class="wrap">
 <div class="sec-head"><h2>Wat je nodig hebt</h2></div>
-<ul class="kaartlijst"><li><h3>Een AI-assistent</h3><p>Claude, ChatGPT of vergelijkbaar, een die een lang document kan lezen.</p></li><li><h3>Een beursaccount met API-sleutels</h3><p>Het plan is geschreven voor Bitvavo (BTC-EUR). Een andere beurs betekent je AI de beurskoppeling laten aanpassen: dat is je eigen bouwwerk.</p></li><li><h3>Telegram of Discord</h3><p>Voor meldingen: aankopen, verkopen, waarschuwingen, het dagoverzicht.</p></li><li><h3>Een GitHub-account</h3><p>Om je code te bewaren met versies, zodat je elke wijziging kunt terugdraaien.</p></li><li><h3>Een plek om hem te draaien</h3><p>De bot draait dag en nacht. Replit of een kleine VPS werken allebei; die hebben hun eigen maandkosten.</p></li><li><h3>Geld dat je kunt missen</h3><p>De bot handelt met echt geld op je beursaccount. Niets hier beschermt je tegen een dalende bitcoinkoers.</p></li></ul>
+<ul class="kaartlijst"><li><h3>Een AI-assistent</h3><p>Claude, ChatGPT of een vergelijkbare assistent die een lang document aankan. Reken op een avond of twaalf.</p></li><li><h3>Een beursaccount met API-sleutels</h3><p>Sleutels die alleen mogen bekijken en handelen, nooit opnemen. Het plan is geschreven voor Bitvavo (BTC-EUR) en bevat een opdracht om over te stappen naar een andere beurs; die overstap test je zelf.</p></li><li><h3>Telegram of Discord</h3><p>Voor meldingen: aankopen, verkopen, waarschuwingen, het dagoverzicht.</p></li><li><h3>Een GitHub-account</h3><p>Een privé-repository, om je code met versiebeheer te bewaren zodat je elke wijziging kunt terugdraaien.</p></li><li><h3>Een database en een wachtwoordmanager</h3><p>PostgreSQL 14 of nieuwer (op je eigen server of als dienst), en een wachtwoordmanager voor je sleutels.</p></li><li><h3>Een plek om hem te draaien</h3><p>De bot draait dag en nacht. Replit of een kleine VPS werken allebei; die hebben hun eigen maandkosten.</p></li><li><h3>Geld dat je kunt missen</h3><p>De bot handelt met echt geld op je beursaccount. Niets hier beschermt je tegen een dalende bitcoinkoers.</p></li></ul>
 </div></section>
 
 <section id="yours"><div class="wrap">
-<div class="sec-head"><h2>Maak hem van jezelf</h2><p>Maak hem van jezelf, vóór of na het bouwen. Elke regel in het plan is een zin die je AI kan veranderen: zeg wat je anders wilt en hij herschrijft de code. Een paar voorbeelden:</p></div>
-<ul class="voorbeelden"><li>“Gebruik 15 treden op de fijne ladder in plaats van 20.”</li><li>“Stuur mijn meldingen naar Discord in plaats van Telegram.”</li><li>“Koop helemaal niet zolang de dag-RSI boven 75 staat.”</li><li>“Voeg een stop-loss toe op −15%.” (Deze bot heeft er bewust geen; zie de ontwerpkeuzes.)</li></ul>
-<p><a href="/zo-werkt-het/#decisions">Elke ontwerpkeuze, met datum en waarom</a></p>
+<div class="sec-head"><h2>Maak er je eigen bot van</h2><p>Maak er je eigen bot van, vóór of na het bouwen. Elke regel in het plan is een zin die je AI kan veranderen: zeg wat je anders wilt en hij herschrijft de code. Een paar voorbeelden:</p></div>
+<ul class="voorbeelden"><li>“Gebruik 15 treden op de fijne ladder in plaats van 20.”</li><li>“Stuur mijn meldingen naar Discord in plaats van Telegram.”</li><li>“Koop helemaal niet zolang de dag-RSI boven 75 staat.”</li><li>“Voeg een stop-loss toe bij −15%.” (Deze bot heeft er bewust geen; zie de ontwerpkeuzes.)</li></ul>
+<p><a href="/zo-werkt-het/#decisions">Elke ontwerpkeuze, met datum en reden</a></p>
 </div></section>
 
 <section id="faq" style="border-bottom:0"><div class="wrap">
 <div class="sec-head"><h2>Veelgestelde vragen</h2></div>
-<div class="faqs"><details class="faq"><summary>Moet ik kunnen programmeren?</summary><p>Nee. Je AI schrijft de code en leidt je door de stappen. Je moet wel API-sleutels kunnen aanmaken, kunnen lezen wat de AI je vertelt en de bot controleren voordat hij met echt geld handelt.</p></details><details class="faq"><summary>Werkt het alleen op Bitvavo?</summary><p>Het plan is geschreven voor de BTC-EUR-markt van Bitvavo. Je kunt je AI vragen het aan te passen aan de API van een andere beurs, maar dat is je eigen bouwwerk en valt buiten het plan.</p></details><details class="faq"><summary>Verdien ik er geld mee?</summary><p>Dat kan niemand beloven, en deze site doet dat ook niet. Het logboek laat zien wat deze bot elke week deed, met de open posities ernaast. Afgelopen weken zeggen niets over komende weken; je kunt je hele inleg verliezen.</p></details><details class="faq"><summary>Met hoeveel geld moet ik beginnen?</summary><p>Het plan schrijft geen bedrag voor, en deze site publiceert nooit rekeninggroottes. De beurs heeft minimale ordergroottes. Gebruik alleen geld dat je helemaal kunt missen.</p></details><details class="faq"><summary>Wat zit er in de updates?</summary><p>Als de bot verandert op een manier die in het plan hoort, krijgen abonnees de nieuwe versie per mail met een korte lijst van wijzigingen. Het abonnement verlengt jaarlijks; opzeggen kan altijd.</p></details><details class="faq"><summary>Kan ik mijn geld terugkrijgen?</summary><p>Het is een digitale download. Bij het afrekenen ga je akkoord met directe levering en erken je dat je herroepingsrecht van 14 dagen vervalt zodra de levering begint, zoals de EU-regels voor digitale inhoud toestaan.</p></details><details class="faq"><summary>Is dit financieel advies of een signaaldienst?</summary><p>Nee. Het is technische documentatie om je eigen software te bouwen en te draaien. Niets hier zegt je wanneer je moet kopen of verkopen.</p></details></div>
+<div class="faqs"><details class="faq"><summary>Moet ik kunnen programmeren?</summary><p>Nee. Je AI schrijft de code en leidt je door de stappen. Reken op een avond of twaalf. Je moet wel API-sleutels kunnen aanmaken, kunnen lezen wat de AI je vertelt en de bot controleren voordat hij met echt geld handelt.</p></details><details class="faq"><summary>Werkt het alleen op Bitvavo?</summary><p>Het plan is geschreven voor de BTC-EUR-markt van Bitvavo. Er staat een opdracht in om de beurskoppeling om te zetten naar een andere beurs (bijvoorbeeld Kraken of Coinbase), met de tests die je daarna opnieuw draait; die overstap controleer je zelf.</p></details><details class="faq"><summary>Verdien ik er geld mee?</summary><p>Dat kan niemand beloven, en deze site doet dat ook niet. Het logboek laat zien wat deze bot elke week deed, met de open posities ernaast. Afgelopen weken zeggen niets over komende weken; je kunt je hele inleg verliezen.</p></details><details class="faq"><summary>Met hoeveel geld moet ik beginnen?</summary><p>Het plan schrijft geen bedrag voor, en deze site publiceert nooit rekeninggroottes. De beurs heeft minimale ordergroottes. Gebruik alleen geld dat je helemaal kunt missen.</p></details><details class="faq"><summary>Wat zit er in de updates?</summary><p>Als de bot of het plan verandert, krijgen abonnees de nieuwe versie per mail, met een lijst van wijzigingen en wat je daarvan aan je AI teruggeeft. Het abonnement wordt elk jaar verlengd; je kunt altijd opzeggen.</p></details><details class="faq"><summary>Kan ik mijn geld terugkrijgen?</summary><p>Het is een digitale download. Bij het afrekenen ga je akkoord met directe levering en erken je dat je herroepingsrecht van 14 dagen vervalt zodra de levering begint, zoals de EU-regels voor digitale inhoud toestaan.</p></details><details class="faq"><summary>Is dit financieel advies of een signaaldienst?</summary><p>Nee. Het is technische documentatie om je eigen software te bouwen en te draaien. Niets hier vertelt je wanneer je moet kopen of verkopen.</p></details></div>
 <p class="terug"><a class="btn" href="#buy">Naar het bouwpakket · €14</a></p>
+<p class="risico">Afgelopen weken zeggen niets over komende weken; je kunt je hele inleg verliezen.</p>
 </div></section>
 </main>
 <footer class="foot"><div class="wrap">
-<p class="disclaimer">Dit is een persoonlijk logboek, geen financieel advies en geen aanbod van een dienst. Crypto is volatiel en je kunt je hele inleg verliezen. Afgelopen weken zeggen niets over komende weken. Ik beheer geen geld voor anderen en verkoop geen signalen. &mdash; Daan, Rotterdam</p>
+<p class="disclaimer">Dit is een persoonlijk logboek, geen financieel advies en geen beleggingsdienst; het bouwpakket is software-documentatie. Crypto is volatiel en je kunt je hele inleg verliezen. Afgelopen weken zeggen niets over komende weken. Ik beheer geen geld voor anderen en verkoop geen signalen. &mdash; Daan, Rotterdam</p>
 <ul class="foot-links">
 <li><a href="/">Het logboek</a></li><li><a href="/bouwpakket/">Bouwpakket</a></li><li><a href="/zo-werkt-het/">Zo werkt het</a></li><li><a href="https://theweekly2pctedge.com/" hreflang="en" lang="en">English</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket op LinkedIn</a></li>
 </ul>

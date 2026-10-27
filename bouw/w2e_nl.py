@@ -86,7 +86,7 @@ def home(c):
 </aside>
 <div class="hero-lead">
 <p>Sinds april 2026 handelt een bitcoinbot die ik bouwde dag en nacht BTC-EUR op Bitvavo, met echt geld. Hier staat elke week die hij draaide, alleen in procenten, en waar de winst weglekte.</p>
-<p>Wil je zelf een bitcoin trading bot maken? Kijk dan eerst hier. Ik verkoop geen signalen, geen copy-trading en geen advies: dit is het meetlint, geen rendementsbelofte.</p>
+<p>Wil je zelf een bitcoin trading bot maken? Kijk dan eerst hier. Ik verkoop geen signalen, geen copy-trading en geen advies: dit is de meetlat, geen rendementsbelofte.</p>
 </div>
 </div></div>
 <div class="edition-bar"><div class="wrap edition">
@@ -115,7 +115,7 @@ def home(c):
 </figure>
 <details>
 <summary>Alle {n} weken als tabel</summary>
-<div class="tbl"><table>
+<div class="tbl" tabindex="0" role="region" aria-label="Weekresultaten"><table>
 <caption class="sr">Gerealiseerde winst per week, nieuwste eerst</caption>
 <thead><tr><th scope="col">Week</th><th scope="col">Begint</th><th scope="col" class="r">Gerealiseerd</th><th scope="col" class="r"><span class="sr">Status</span></th></tr></thead>
 <tbody>{tabel}</tbody>
@@ -134,7 +134,7 @@ def home(c):
 <span class="tag in">In het weekcijfer</span>
 <h3>Gerealiseerd</h3>
 <p>Een positie telt mee op het moment dat hij verkocht wordt, in de week van de verkoop.</p>
-<ul><li>Kosten op aankoop en verkoop zijn er al af.</li><li>De zeldzame gedwongen verkopen met verlies tellen mee.</li><li>Eenmaal erin, verandert het niet meer.</li></ul>
+<ul><li>Kosten op aankoop en verkoop zijn er al af.</li><li>De zeldzame gedwongen verkopen met verlies tellen mee.</li><li>Staat het er eenmaal in, dan verandert het niet meer.</li></ul>
 </div>
 <div class="card">
 <span class="tag out">Niet in het weekcijfer</span>
@@ -157,7 +157,7 @@ def home(c):
 <div class="sec-head">
 <p class="folio"><b>03</b> Gemeten lekken</p>
 <h2>Waar de winst weglekt</h2>
-<p>Een bot die alleen met winst verkoopt, verliest nog steeds geld op stillere manieren. Dit zijn de lekken die ik op deze bot gemeten heb, elk met de datum van meting of reparatie.</p>
+<p>Een bot die alleen met winst verkoopt, verliest toch geld, alleen minder zichtbaar. Dit zijn de lekken die ik op deze bot gemeten heb, elk met de datum van meting of reparatie.</p>
 </div>
 <div class="leaks">{lekken}</div>
 </div></section>
@@ -167,10 +167,10 @@ def home(c):
 <section id="strategieen"><div class="wrap">
 <div class="sec-head">
 <p class="folio"><b>04</b> Strategieën</p>
-<h2>Welke strategie wat oplevert, laatste 90 dagen</h2>
+<h2>Wat elke strategie deed, laatste 90 dagen</h2>
 <p>De bot draait meerdere strategieën naast elkaar. Namen zoals de bot ze logt; de 90 dagen lopen tot {D.d_lang(c["gelezen"], "nl")}.</p>
 </div>
-<div class="tbl plain-tbl"><table>
+<div class="tbl plain-tbl" tabindex="0" role="region" aria-label="Strategieën"><table>
 <thead><tr><th scope="col">Strategie</th><th scope="col" class="r">Afgesloten trades</th><th scope="col" class="r">Rendement per trade</th><th scope="col" class="r">Mediane duur</th></tr></thead>
 <tbody>{strat_rijen}</tbody>
 </table></div>
@@ -182,7 +182,7 @@ def home(c):
 <div class="prose">
 <h2>Wie dit logboek bijhoudt</h2>
 <p>Ik ben Daan (Daniel Haket), oud-bankier: 23 jaar in de internationale financiële wereld. Ik woon in Rotterdam. Ik bouwde deze bot met de AI-agent van Replit, en sinds april 2026 handelt hij met echt geld BTC-EUR op Bitvavo.</p>
-<p>De naam beloofde 2% per week. Dit logboek is het meetlint: wat de bot echt doet, week na week, ook wat er misging. <a href="{B.LINKEDIN}" rel="me noopener">LinkedIn</a></p>
+<p>De naam beloofde 2% per week. Dit logboek is de meetlat: wat de bot echt doet, week na week, ook wat er misging. <a href="{B.LINKEDIN}" rel="me noopener">LinkedIn</a></p>
 </div>
 </div></section>
 
@@ -191,7 +191,7 @@ def home(c):
 <div class="signup">
 <div class="box">
 <h3>Eén eerlijke mail per week (in het Engels)</h3>
-<p>Wat er aan de bot veranderde, wat er brak en wat ik mat. Geen tips.</p>
+<p>Wat er aan de bot veranderde, wat er brak en wat ik heb gemeten. Geen tips.</p>
 <form action="https://aibuildermarketplace.beehiiv.com/subscribe" method="get" target="_blank"><input type="hidden" name="utm_source" value="{S["bron"]}"><input type="hidden" name="utm_campaign" value="weekmail"><label class="sr" for="mail-week">E-mailadres</label><input id="mail-week" type="email" name="email" placeholder="jij@voorbeeld.nl" autocomplete="email" required><button type="submit">Aanmelden</button></form>
 </div>
 <div class="box">
@@ -263,7 +263,7 @@ De site is van Daan (Daniel Haket), oud-bankier (23 jaar in de internationale fi
 
 ## Actualiteit
 - Laatste week: {laatste[1]} {laatste[0].isocalendar()[0]} (begint {laatste[0].isoformat()})
-- Wordt dagelijks gecontroleerd en alleen herbouwd als er een nieuwe week bij komt; dit bestand in dezelfde run
+- Wordt dagelijks gecontroleerd en alleen herbouwd als er een nieuwe week bij komt; dit bestand wordt in dezelfde ronde bijgewerkt
 
 ## Contact
 - [Daniel Haket op LinkedIn]({B.LINKEDIN})

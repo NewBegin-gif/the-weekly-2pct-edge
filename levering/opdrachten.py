@@ -3,8 +3,9 @@
   serve                                         HTTP-dienst op 127.0.0.1 (+ wachtrij-draad). Zonder
                                                 PADDLE_WEBHOOK_GEHEIM draait hij in stand-by: /healthz werkt, elke
                                                 webhook krijgt 401 (zo kan alles live vóór de goedkeuring van Paddle).
-  nieuwe-versie --versie V --bestand PAD [--commit SHA] [--changelog BESTAND]
-                                                een documentversie registreren (het bestand blijft buiten de webroot)
+  nieuwe-versie --versie V --bestand PAD [--bestand-nl PAD] [--commit SHA] [--changelog BESTAND]
+                                                een documentversie registreren: --bestand is de Engelse editie,
+                                                --bestand-nl de Nederlandse (NL-kopers krijgen die); buiten de webroot
   send-update --versie V [--dry-run]            actieve abonnees mailen; --dry-run verstuurt en schrijft niets
   wachtrij                                      wachtende leveringsmails nu versturen (anders doet serve het zelf)
   export --uit PAD.csv                          alle abonnees naar CSV voor de boekhouding (rechten 600; weigert een
@@ -80,7 +81,8 @@ def main(argv=None):
     sub.add_parser("serve")
     nv = sub.add_parser("nieuwe-versie")
     nv.add_argument("--versie", required=True)
-    nv.add_argument("--bestand", required=True)
+    nv.add_argument("--bestand", required=True, help="Engelse editie (pdf)")
+    nv.add_argument("--bestand-nl", help="Nederlandse editie (pdf); NL-kopers krijgen deze")
     nv.add_argument("--commit", default="")
     nv.add_argument("--changelog", help="tekstbestand met de wijzigingen (komt in de updatemail)")
     su = sub.add_parser("send-update")
@@ -113,22 +115,28 @@ def main(argv=None):
         pathlib.Path(cfg.db).parent.mkdir(parents=True, exist_ok=True)
         serve(Levering(cfg))
     elif a.opdracht == "nieuwe-versie":
-        bestand = pathlib.Path(a.bestand).resolve()
-        if not bestand.is_file():
-            raise SystemExit(f"{bestand} bestaat niet")
-        if str(bestand).startswith("/var/www"):
-            raise SystemExit(f"weigert {bestand}: het betaalde document hoort buiten de webroot")
-        try:
-            bestand.open("rb").close()  # met de rechten van de dienst: anders zou elke download 'bestand ontbreekt' geven
-        except PermissionError:
-            raise SystemExit(f"de dienst kan {bestand} niet lezen: chgrp levering + chmod 640 (map: 750)")
+        bestanden = []
+        for ruw in (a.bestand, a.bestand_nl):
+            if not ruw:
+                bestanden.append(None)
+                continue
+            bestand = pathlib.Path(ruw).resolve()
+            if not bestand.is_file():
+                raise SystemExit(f"{bestand} bestaat niet")
+            if str(bestand).startswith("/var/www"):
+                raise SystemExit(f"weigert {bestand}: het betaalde document hoort buiten de webroot")
+            try:
+                bestand.open("rb").close()  # met de rechten van de dienst: anders zou elke download 'bestand ontbreekt' geven
+            except PermissionError:
+                raise SystemExit(f"de dienst kan {bestand} niet lezen: chgrp levering + chmod 640 (map: 750)")
+            bestanden.append(str(bestand))
         with als_root():
             changelog = pathlib.Path(a.changelog).read_text(encoding="utf-8").strip() if a.changelog else ""
         try:
-            Opslag(cfg.db).versie_bewaar(a.versie, str(bestand), a.commit, changelog)
+            Opslag(cfg.db).versie_bewaar(a.versie, bestanden[0], a.commit, changelog, bestand_nl=bestanden[1])
         except ValueError as fout:
             raise SystemExit(str(fout))
-        print(f"versie {a.versie} geregistreerd: {bestand}")
+        print(f"versie {a.versie} geregistreerd: {' + '.join(b for b in bestanden if b)}")
     elif a.opdracht == "send-update":
         if not a.dry_run:
             mist = cfg.ontbrekend("send-update")

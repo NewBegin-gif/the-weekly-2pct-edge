@@ -85,9 +85,9 @@ LEKKEN = [
     dict(kop="A safety filter froze the buy ladder",
          uitleg="A hard block on buying when RSI was above 70 also stopped the ladder from following the price, so "
                 "a later shallow dip caught nothing. It became a taper: smaller orders between RSI 70 and 80, a hard "
-                "block only above 80.",
+                "block only above 80. Since 2 Oct 2026 the brake is off for the ladder entirely.",
          datum="changed 9 Aug 2026", iso="2026-08-09",
-         cijfer="RSI 70", cijfer_uitleg="hard block that froze the ladder", nu="Now a taper; hard block only above 80"),
+         cijfer="RSI 70", cijfer_uitleg="hard block that froze the ladder", nu="Taper from Aug; off for the ladder since 2 Oct"),
     dict(kop="One weekly report missed about half of that week's profit",
          uitleg="In one week of the bot's Telegram weekly report, about half of the realized profit was missing. The "
                 "report filtered on when a position started instead of when it was sold, so positions spanning two "
@@ -521,7 +521,8 @@ def bovenbalk(actief):
     return w2e_site.kopbalk(w2e_site.SITES["en"], {"method": "methode"}.get(actief, actief))
 
 
-VOET_DISCLAIMER = ("This is a personal logbook, not financial advice and not an offer of any service. Crypto is "
+VOET_DISCLAIMER = ("This is a personal logbook, not financial advice and not an investment service; the build kit is "
+                   "software documentation. Crypto is "
                    "volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't "
                    "run money for others and don't sell signals. &mdash; Daan, Rotterdam")
 
@@ -856,7 +857,7 @@ def homepage(c):
 </figure>
 <details>
 <summary>All {n} weeks as a table</summary>
-<div class="tbl"><table>
+<div class="tbl" tabindex="0" role="region" aria-label="Weekly results"><table>
 <caption class="sr">Realized profit per week, newest first</caption>
 <thead><tr><th scope="col">Week</th><th scope="col">Starts</th><th scope="col" class="r">Realized</th><th scope="col" class="r"><span class="sr">Status</span></th></tr></thead>
 <tbody>{tabel}</tbody>
@@ -909,10 +910,10 @@ def homepage(c):
 <section id="strategies"><div class="wrap">
 <div class="sec-head">
 <p class="folio"><b>04</b> Strategy ledger</p>
-<h2>Which strategy earns what, last 90 days</h2>
+<h2>What each strategy did, last 90 days</h2>
 <p>The bot runs several strategies side by side. Names as the bot logs them; the 90 days run up to {lang(c["gelezen"])}.</p>
 </div>
-<div class="tbl plain-tbl"><table>
+<div class="tbl plain-tbl" tabindex="0" role="region" aria-label="Strategy ledger"><table>
 <thead><tr><th scope="col">Strategy</th><th scope="col" class="r">Closed trades</th><th scope="col" class="r">Return per trade</th><th scope="col" class="r">Median hold</th></tr></thead>
 <tbody>{strat_rijen}</tbody>
 </table></div>
@@ -1101,7 +1102,7 @@ The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 ye
 ## Rules
 - Percentages only: never euro amounts, account size or order details
 - Weekly results one week delayed: a week appears seven days after it ends
-- No signals, no advice, no copy-trading; not an offer of any service
+- No signals, no advice, no copy-trading, no investment service; the build kit is software documentation
 - The build kit is documentation for building and running your own software; dashboard data is at least 24 hours old
 - Past weeks say nothing about future weeks; crypto is volatile and you can lose your entire stake
 
