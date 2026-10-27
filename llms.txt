@@ -8,6 +8,9 @@ The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 ye
 - [The logbook](https://theweekly2pctedge.com/): every week since W17 2026 in a chart and table, realized vs. open positions, the 4 measured leaks, and returns per strategy over the last 90 days
 - [Method](https://theweekly2pctedge.com/method/): how every number is computed, what is included and what is never shown
 - [Weekly series (CSV)](https://theweekly2pctedge.com/weekly-series.csv): week, Monday it starts, realized % of capital in play
+- [Build kit](https://theweekly2pctedge.com/build-kit/): a step-by-step plan an AI assistant executes to build your own version of this bot; $14 one-off, updates $5 a year; engineering documentation, not signals or a return promise
+- [How it works](https://theweekly2pctedge.com/how-it-works/): the bot's dashboard as a snapshot at least 24 hours old (exposure, buy ladder, open sell orders, every sale), how a trade runs, why bitcoin, and each design decision with its date
+- Dutch version: https://mijnbitcoinstrategie.nl/
 
 ## Current figures (W17 to W42 2026, 26 weeks)
 - Median week: +0.46% realized; average week +0.48%
@@ -24,7 +27,8 @@ The site is written and run by Daan (Daniel Haket), a Dutch former banker (23 ye
 ## Rules
 - Percentages only: never euro amounts, account size or order details
 - Weekly results one week delayed: a week appears seven days after it ends
-- No signals, no advice, no copy-trading; not an offer of any service
+- No signals, no advice, no copy-trading, no investment service; the build kit is software documentation
+- The build kit is documentation for building and running your own software; dashboard data is at least 24 hours old
 - Past weeks say nothing about future weeks; crypto is volatile and you can lose your entire stake
 
 ## Data freshness

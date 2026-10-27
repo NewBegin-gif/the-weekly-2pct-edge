@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How a Live Bitcoin Grid Bot Works: Dashboard and Decisions</title>
+<meta name="description" content="A live BTC-EUR bot&#x27;s dashboard, at least 24 hours old: exposure, buy ladder, sell orders, every sale, the weekly result, and why each rule exists.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="Daniel Haket">
+<meta name="theme-color" content="#f6f3ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1318" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://theweekly2pctedge.com/how-it-works/">
+<link rel="alternate" hreflang="en" href="https://theweekly2pctedge.com/how-it-works/">
+<link rel="alternate" hreflang="nl-NL" href="https://mijnbitcoinstrategie.nl/zo-werkt-het/">
+<link rel="alternate" hreflang="nl-BE" href="https://mijnbitcoinstrategie.nl/zo-werkt-het/">
+<link rel="alternate" hreflang="x-default" href="https://theweekly2pctedge.com/how-it-works/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Weekly 2% Edge">
+<meta property="og:title" content="How a Live Bitcoin Grid Bot Works: Dashboard and Decisions">
+<meta property="og:description" content="A live BTC-EUR bot&#x27;s dashboard, at least 24 hours old: exposure, buy ladder, sell orders, every sale, the weekly result, and why each rule exists.">
+<meta property="og:url" content="https://theweekly2pctedge.com/how-it-works/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://theweekly2pctedge.com/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, drawn against the 0.5% goal and the 2% in the name.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How a Live Bitcoin Grid Bot Works: Dashboard and Decisions">
+<meta name="twitter:description" content="A live BTC-EUR bot&#x27;s dashboard, at least 24 hours old: exposure, buy ladder, sell orders, every sale, the weekly result, and why each rule exists.">
+<meta name="twitter:image" content="https://theweekly2pctedge.com/og-image.png">
+<meta name="twitter:image:alt" content="The Weekly 2% Edge: realized weekly profit of a live bitcoin bot in percentages, drawn against the 0.5% goal and the 2% in the name.">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "@id": "https://theweekly2pctedge.com/how-it-works/#article",
+   "headline": "How a Live Bitcoin Grid Bot Works: Dashboard and Decisions",
+   "description": "A live BTC-EUR bot's dashboard, at least 24 hours old: exposure, buy ladder, sell orders, every sale, the weekly result, and why each rule exists.",
+   "url": "https://theweekly2pctedge.com/how-it-works/",
+   "mainEntityOfPage": "https://theweekly2pctedge.com/how-it-works/",
+   "inLanguage": "en",
+   "author": {
+    "@id": "https://theweekly2pctedge.com/#daan"
+   },
+   "image": "https://theweekly2pctedge.com/og-image.png",
+   "dateModified": "2026-10-26"
+  },
+  {
+   "@type": "Person",
+   "@id": "https://theweekly2pctedge.com/#daan",
+   "name": "Daniel Haket",
+   "alternateName": "Daan",
+   "description": "Former banker (23 years in international finance) in Rotterdam who built and runs the bot.",
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Rotterdam",
+    "addressCountry": "NL"
+   },
+   "sameAs": [
+    "https://www.linkedin.com/in/daniel-haket-8305a33"
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "The logbook",
+     "item": "https://theweekly2pctedge.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "How it works",
+     "item": "https://theweekly2pctedge.com/how-it-works/"
+    }
+   ]
+  }
+ ]
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CW1KZ258ZV"></script>
+<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-CW1KZ258ZV');</script>
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f6f3ec; --surface:#fffdf8; --sunk:#efeadf; --ink:#1b1f24; --ink-2:#434a54; --muted:#5f646c;
+  --rule:#e2dccd; --rule-2:#cfc7b4; --brass:#7d5e22; --hit:#1f7a52; --below:#3f73b8; --neg:#c2412d;
+  --btn:#1b1f24; --btn-ink:#fffdf8; --focus:#3f73b8;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Charter,"Bitstream Charter",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1318; --surface:#161b22; --sunk:#1c222b; --ink:#ece8df; --ink-2:#c3c6cb; --muted:#9aa1aa;
+  --rule:#262d36; --rule-2:#36404b; --brass:#d4ac5e; --hit:#2f9e68; --below:#5b8fd6; --neg:#e0604a;
+  --btn:#ece8df; --btn-ink:#0f1318; --focus:#5b8fd6;
+}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.65 var(--sans);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.18em;text-decoration-color:var(--rule-2)}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:3px}
+.skip{position:absolute;left:-999px;top:0;background:var(--surface);padding:.6rem 1rem;z-index:9}
+.skip:focus{left:1rem;top:1rem}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1rem}
+@media (min-width:700px){.wrap{padding:0 2rem}}
+.prose{max-width:42rem}
+h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--ink);letter-spacing:-.01em;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,6.2vw,3.4rem);letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem);margin-bottom:.75rem}
+h3{font-size:1.2rem;margin-bottom:.4rem}
+p{margin:0 0 1rem}
+strong{font-weight:650}
+.kicker{font:600 .75rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin:0 0 .9rem}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.num{font-variant-numeric:tabular-nums}
+
+/* kop */
+.top{border-bottom:1px solid var(--rule);background:var(--bg)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:3.75rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font:650 1.02rem/1 var(--serif);letter-spacing:-.01em}
+.brand svg{flex:none}
+.nav{display:flex;gap:1.1rem;font-size:.9rem}
+.nav a{text-decoration:none;color:var(--ink-2)}
+.nav a:hover,.nav a[aria-current]{color:var(--ink);text-decoration:underline}
+@media (max-width:520px){.nav .opt{display:none}}
+
+/* hero */
+.hero{padding:2.4rem 0 2.6rem;border-bottom:1px solid var(--rule)}
+.hero-grid{display:grid;gap:1.6rem;grid-template-areas:"head" "answer" "lead"}
+@media (min-width:900px){.hero{padding:4rem 0 4rem}.hero-grid{grid-template-columns:1.15fr 1fr;column-gap:3.5rem;row-gap:1.4rem;grid-template-areas:"head answer" "lead answer";align-items:start}}
+.hero-head{grid-area:head}.hero-lead{grid-area:lead}.answer{grid-area:answer}
+.hero-lead p{font-size:1.1rem;color:var(--ink-2);max-width:36rem}
+.answer{position:relative;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem 1.9rem;
+  box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(27,31,36,.35)}
+.answer::before{content:"";position:absolute;top:0;bottom:0;left:.85rem;border-left:3px double var(--neg);opacity:.55}
+.answer-label{font:600 .75rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 .35rem}
+.hero-num{font:700 clamp(3.6rem,15vw,5.4rem)/1 var(--sans);letter-spacing:-.04em;margin:0 0 .4rem;color:var(--ink)}
+.answer-sub{color:var(--ink-2);margin:0 0 1.1rem}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0 0 1rem;border-top:1px solid var(--rule)}
+.facts div{padding:.7rem .2rem .65rem 0;border-bottom:1px solid var(--rule)}
+.facts div:nth-child(odd){padding-right:.8rem;border-right:1px solid var(--rule)}
+.facts div:nth-child(even){padding-left:.8rem}
+.facts dt{font-size:.8rem;color:var(--muted);line-height:1.3}
+.facts dd{margin:.15rem 0 0;font-weight:650;font-size:1.1rem;line-height:1.25}
+.facts dd span{font-weight:400;font-size:.85rem;color:var(--muted)}
+.answer-note{font-size:.9rem;color:var(--ink-2);margin:0;padding:.75rem .85rem;background:var(--sunk);border-radius:3px}
+
+/* secties */
+section{padding:3.2rem 0;border-bottom:1px solid var(--rule)}
+@media (min-width:900px){section{padding:4.4rem 0}}
+.sec-head{max-width:42rem;margin-bottom:1.6rem}
+.sec-head p{color:var(--ink-2)}
+
+/* grafiek */
+.chart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1rem .6rem .5rem}
+@media (min-width:700px){.chart{padding:1.4rem 1.4rem .8rem}}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .narrow{display:none}
+@media (max-width:640px){.chart .wide{display:none}.chart .narrow{display:block}}
+.ax{font:11px var(--sans);fill:var(--muted);font-variant-numeric:tabular-nums}
+.ax-line{stroke:var(--rule);stroke-width:1}
+.zero{stroke:var(--ink-2);stroke-width:1}
+.ref{stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.ref-goal{stroke:var(--ink-2)}.ref-name{stroke:var(--brass)}
+.ref-lbl{font:600 11px var(--sans);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.ref-lbl.goal{fill:var(--ink-2)}.ref-lbl.name{fill:var(--brass)}
+.val{font:600 11px var(--sans);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;font-variant-numeric:tabular-nums}
+.b-hit{fill:var(--hit)}.b-below{fill:var(--below)}.b-neg{fill:var(--neg)}
+.wk .hit-area{fill:transparent}
+.wk:hover path{opacity:.75}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;list-style:none;margin:.9rem 0 0;padding:0 .2rem;font-size:.85rem;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:.45rem}
+.sw{width:.8rem;height:.8rem;border-radius:2px;display:inline-block;flex:none}
+.sw.hit{background:var(--hit)}.sw.below{background:var(--below)}.sw.neg{background:var(--neg)}
+.sw.line{height:0;border-top:2px dashed var(--ink-2);border-radius:0;width:1.1rem}
+.sw.line.name{border-color:var(--brass)}
+.chart-note{margin:1rem 0 0;font-size:.9rem;color:var(--muted);max-width:44rem}
+
+/* tabellen */
+details{margin-top:1.2rem;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+summary{cursor:pointer;padding:.85rem 1rem;font-weight:600;font-size:.95rem}
+details[open] summary{border-bottom:1px solid var(--rule)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem;font-variant-numeric:tabular-nums}
+caption{text-align:left;padding:0 0 .6rem;font-size:.85rem;color:var(--muted)}
+th,td{padding:.55rem .75rem;text-align:left;border-bottom:1px solid var(--rule);vertical-align:baseline}
+thead th{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule-2)}
+tbody tr:last-child td{border-bottom:0}
+.r{text-align:right;white-space:nowrap}
+td.lbl{white-space:nowrap}
+code,.code{font-family:var(--mono);font-size:.88em}
+.goal-met{font-size:.8rem;color:var(--hit);font-weight:600}
+.plain-tbl{background:var(--surface);border:1px solid var(--rule);border-radius:4px}
+
+/* gerealiseerd vs open */
+.two{display:grid;gap:1rem}
+@media (min-width:760px){.two{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.3rem 1.1rem}
+.card p:last-child{margin-bottom:0}
+.tag{display:inline-block;font:600 .7rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:.35rem .5rem;border-radius:2px;margin-bottom:.8rem}
+.tag.in{background:color-mix(in srgb,var(--hit) 16%,transparent);color:var(--ink)}
+.tag.out{background:color-mix(in srgb,var(--neg) 14%,transparent);color:var(--ink)}
+.card ul{margin:.4rem 0 0;padding-left:1.1rem;color:var(--ink-2)}
+.card li{margin-bottom:.3rem}
+.range{margin:1.25rem 0 0;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.3rem 1.1rem}
+.range h3{font-size:1.1rem}
+.track{position:relative;height:1.6rem;margin:1.2rem .4rem .3rem}
+.track .base{position:absolute;left:0;right:0;top:.6rem;height:.4rem;border-radius:.2rem;background:var(--sunk);border:1px solid var(--rule)}
+.track .band{position:absolute;top:.6rem;height:.4rem;border-radius:.2rem;background:var(--neg);opacity:.85}
+.track .zero-tick{position:absolute;top:0;height:1.6rem;width:0;border-left:2px solid var(--ink)}
+.track .dot{position:absolute;top:.4rem;width:.8rem;height:.8rem;margin-left:-.4rem;border-radius:50%;background:var(--neg);box-shadow:0 0 0 2px var(--surface)}
+.range-vals{display:flex;gap:2rem;margin:1rem 0 0;padding-top:.8rem;border-top:1px solid var(--rule)}
+.range-vals dt{font-size:.8rem;color:var(--muted)}
+.range-vals dd{margin:0;font-weight:650;font-size:1.25rem}
+.ticks{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin:0 .3rem;font-variant-numeric:tabular-nums}
+.callout{margin-top:1.25rem;border-left:3px solid var(--brass);padding:.2rem 0 .2rem 1rem;max-width:44rem}
+.callout p{color:var(--ink-2)}
+
+/* lekken */
+.leaks{display:grid;gap:1rem;counter-reset:lek}
+@media (min-width:760px){.leaks{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.leak{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.2rem 1.3rem 1.1rem;display:flex;flex-direction:column}
+.leak-top{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem}
+.leak-top time{letter-spacing:.02em;text-transform:none;text-align:right}
+.leak-fig{font:700 2rem/1 var(--sans);letter-spacing:-.02em;color:var(--neg);margin:0 0 .2rem}
+.leak-fig-sub{font-size:.85rem;color:var(--muted);margin:0 0 .9rem}
+.leak p.txt{color:var(--ink-2);font-size:.97rem}
+.leak .now{margin:auto 0 0;padding-top:.75rem;border-top:1px solid var(--rule);font-size:.88rem;font-weight:600}
+.leak .now::before{content:"Now: ";font-weight:400;color:var(--muted)}
+:lang(nl) .leak .now::before{content:"Nu: "}
+
+/* regels */
+.rules{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+@media (min-width:760px){.rules{grid-template-columns:1fr 1fr;gap:1rem 2rem}}
+.rules li{padding-left:1.6rem;position:relative;color:var(--ink-2)}
+.rules li::before{content:"";position:absolute;left:0;top:.62em;width:.75rem;border-top:2px solid var(--brass)}
+.rules strong{color:var(--ink)}
+
+/* auteur + aanmelden */
+.author{display:grid;gap:1.25rem}
+@media (min-width:760px){.author{grid-template-columns:auto 1fr;gap:2rem;align-items:start}}
+.mono-badge{width:4.5rem;height:4.5rem;border-radius:50%;display:grid;place-items:center;background:var(--sunk);border:1px solid var(--rule);font:600 1.5rem/1 var(--serif);color:var(--brass)}
+.signup{display:grid;gap:1rem}
+@media (min-width:760px){.signup{grid-template-columns:1fr 1fr;gap:1.25rem}}
+.box{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.box p{color:var(--ink-2)}
+form{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem}
+input[type=email]{flex:1 1 12rem;min-width:0;font:inherit;font-size:1rem;padding:.7rem .85rem;border-radius:3px;border:1px solid var(--rule-2);background:var(--bg);color:var(--ink)}
+button,.btn{font:600 .95rem/1.2 var(--sans);padding:.75rem 1.1rem;border-radius:3px;border:0;background:var(--btn);color:var(--btn-ink);cursor:pointer}
+button:hover,.btn:hover{opacity:.9}
+.btn{display:inline-block;text-decoration:none;margin:.2rem 0 .8rem}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* voet */
+.foot{padding:2.4rem 0 3rem;font-size:.88rem;color:var(--muted)}
+.foot .disclaimer{max-width:44rem;color:var(--ink-2)}
+.foot-links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin:1rem 0 0;padding:0;list-style:none}
+
+/* methode */
+.doc{padding:2.6rem 0 3.4rem}
+.doc h1{font-size:clamp(2rem,5.5vw,3rem);margin-bottom:1rem}
+.doc h2{font-size:1.5rem;margin:2.6rem 0 .7rem}
+.doc .lead{font-size:1.15rem;color:var(--ink-2)}
+.doc p,.doc li{color:var(--ink-2)}
+.doc ul{padding-left:1.2rem}
+.doc li{margin-bottom:.4rem}
+.formula span{display:block}.formula .in{padding-left:1.5rem}
+.formula{font-family:var(--mono);font-size:.92rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--brass);border-radius:3px;padding:.9rem 1rem;color:var(--ink);overflow-x:auto}
+.crumbs{font-size:.85rem;color:var(--muted);margin-bottom:1.2rem}
+
+/* grootboek: folio per sectie, editiestrook */
+.folio{font:600 .72rem/1.4 var(--mono);letter-spacing:.12em;color:var(--brass);text-transform:uppercase;display:flex;align-items:center;gap:.7rem;margin:0 0 .9rem}
+.folio::after{content:"";flex:1;border-top:1px solid var(--rule-2);max-width:9rem}
+.folio b{font-weight:700;color:var(--ink)}
+.edition-bar{border-bottom:1px solid var(--rule);background:var(--sunk)}
+.edition{display:flex;flex-wrap:wrap;gap:.35rem 1.6rem;padding-top:.8rem;padding-bottom:.8rem;font:.75rem/1.5 var(--mono);color:var(--muted);letter-spacing:.02em}
+.edition strong{color:var(--ink);font-weight:600}
+.edition a{color:var(--ink-2)}
+.hero-num{font-variant-numeric:tabular-nums}
+.answer::before{border-left-color:var(--brass)}
+.leak-top a{text-decoration:none;color:inherit}
+.leak-top a:hover{color:var(--ink)}
+.leak .now{border-top-style:dashed;color:var(--ink)}
+.leak-fig{font-family:var(--mono);letter-spacing:-.06em}
+.chart .narrow .ax,.chart .narrow .ref-lbl{font-size:13px}
+.chart .narrow .val{font-size:12px}
+@media (max-width:520px){
+  .hero{padding:1.6rem 0 2rem}.hero-grid{gap:1.2rem}
+  .hero h1{font-size:clamp(1.85rem,8vw,2.15rem)}
+  .answer{padding:1.15rem 1rem 1rem 1.6rem}.answer::before{left:.7rem}
+  .hero-num{font-size:3.8rem}.answer-sub{margin-bottom:.75rem}
+  #strategies table{table-layout:fixed;font-size:.78rem}
+  #strategies th,#strategies td{padding:.6rem .35rem;white-space:normal;overflow-wrap:anywhere}
+  #strategies th:first-child{width:28%}
+  #strategies .code{font-size:1em}
+}
+
+/* koopweg: knop in de kopbalk */
+.nav{align-items:center}
+.nav .cta{background:var(--btn);color:var(--btn-ink);padding:.45rem .8rem;border-radius:3px;text-decoration:none;font-weight:600}
+.nav .cta:hover,.nav .cta[aria-current]{color:var(--btn-ink);text-decoration:none;opacity:.9}
+@media (max-width:520px){.nav{gap:.8rem;font-size:.85rem}.brand span{font-size:.92rem}}
+
+/* bouwpakket */
+.kit-grid{display:grid;gap:1.8rem;align-items:start}
+@media (min-width:900px){.kit-grid{grid-template-columns:1.2fr .9fr;gap:3.5rem}}
+.lead-groot{font-size:1.15rem;color:var(--ink-2);max-width:40rem}
+.kit-hero h1,.hero h1+.lead-groot{margin-top:0}.kit-hero h1,.hero .wrap>h1{margin-bottom:1rem}
+.echt{font-size:.95rem;color:var(--ink-2);border-left:3px solid var(--brass);padding-left:.9rem;max-width:40rem}
+.koopkaart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem;box-shadow:0 18px 40px -30px rgba(27,31,36,.35)}
+.box .koopkaart{border:0;padding:0;box-shadow:none;background:none}
+.koop-kop{font-size:1.35rem;margin-bottom:.5rem}
+.koop-groot{font:700 2.6rem/1 var(--sans);letter-spacing:-.03em;margin:.2rem 0 .5rem}
+.koop-groot .muted{font:500 1rem var(--sans);letter-spacing:0}
+.koop-sub{color:var(--ink-2);font-size:.95rem}
+.koopknoppen{display:grid;gap:.9rem;margin-top:.8rem}
+.koop{display:block;border-top:1px solid var(--rule);padding-top:.9rem;margin:0}
+.koop-naam{font-weight:650;margin:0}.koop-prijs{color:var(--ink-2);margin:0 0 .5rem;font-size:.92rem}
+.toestemming{display:flex;gap:.55rem;align-items:flex-start;font-size:.82rem;color:var(--ink-2);margin:.2rem 0 .7rem;line-height:1.45}
+.toestemming input{margin-top:.2rem;flex:none;width:1rem;height:1rem}
+.koop button{width:100%}
+.risico{font-size:.85rem;font-weight:600;color:var(--ink);margin:.9rem 0 0;padding:.6rem .75rem;background:var(--sunk);border-radius:3px}
+.stappen{list-style:none;margin:0;padding:0;display:grid;gap:1rem;counter-reset:stap}
+@media (min-width:760px){.stappen{grid-template-columns:repeat(4,1fr)}}
+.stappen li{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.1rem 1.1rem 1rem;position:relative}
+.stap-nr{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:50%;border:1.5px solid var(--brass);color:var(--brass);font:700 .95rem var(--mono);margin-bottom:.7rem}
+.stappen p{color:var(--ink-2);font-size:.95rem;margin:0}
+.teaser-knoppen{margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:center}
+.teaser-knoppen .btn{margin:0}
+.two-col{display:grid;gap:2rem}
+@media (min-width:860px){.two-col{grid-template-columns:1fr 1fr;gap:3rem}}
+.kaartlijst{list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
+@media (min-width:860px){#need .kaartlijst{grid-template-columns:repeat(3,1fr)}}
+.kaartlijst li{border-top:2px solid var(--ink);padding-top:.7rem}
+.kaartlijst h3{font-size:1.08rem}.kaartlijst p{color:var(--ink-2);font-size:.95rem;margin:0}
+.niet{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+.niet li{padding-left:1.7rem;position:relative;color:var(--ink-2)}
+.niet li::before{content:"✕";position:absolute;left:0;color:var(--neg);font-weight:700}
+.voorbeelden{list-style:none;padding:0;margin:0 0 1rem;display:grid;gap:.6rem}
+@media (min-width:760px){.voorbeelden{grid-template-columns:1fr 1fr}}
+.voorbeelden li{font-family:var(--mono);font-size:.88rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--below);border-radius:3px;padding:.75rem .9rem}
+.faqs{display:grid;gap:.6rem;max-width:46rem}
+details.faq{margin:0}
+details.faq p{padding:.2rem 1rem .9rem;margin:0;color:var(--ink-2)}
+.terug{margin-top:1.6rem}
+.kit-teaser{background:linear-gradient(var(--sunk),var(--sunk))}
+
+/* dashboard */
+.dash-stempel{font:.8rem/1.5 var(--mono);color:var(--muted);margin:0 0 1rem}
+.dash-stempel strong{color:var(--ink)}
+.dash-leeg{padding:1.2rem;background:var(--surface);border:1px dashed var(--rule-2);border-radius:4px;color:var(--ink-2)}
+.tegels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:0 0 1.2rem}
+@media (min-width:760px){.tegels{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1000px){.tegels{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.tegel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:.8rem .85rem .7rem;min-width:0}
+.tegel dt{font:600 .68rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tegel dd{margin:.3rem 0 .15rem;font:700 1.45rem/1.1 var(--sans);letter-spacing:-.02em}
+.tegel p{font-size:.76rem;color:var(--muted);margin:0;line-height:1.35}
+.spark{display:block;width:100%;height:28px;margin-top:.35rem}
+.spark path{fill:none;stroke:var(--brass);stroke-width:1.6}
+.dash-chart{margin-bottom:.4rem}
+.koerslijn{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.pt-koop{fill:var(--below);stroke:var(--surface);stroke-width:1.5}
+.pt-verkoop{fill:var(--hit);stroke:var(--surface);stroke-width:1.5}
+.pt-T{fill:var(--brass);stroke:var(--surface);stroke-width:2}
+.prijs-T{stroke:var(--brass);stroke-width:1;stroke-dasharray:4 4}
+.paneel{fill:var(--sunk);stroke:var(--rule)}
+.o-fine{fill:var(--below)}.o-coarse{fill:var(--below);opacity:.55}.o-verkoop{fill:var(--hit)}
+.kolkop{font-weight:600;fill:var(--ink-2)}
+.sw.dot{border-radius:50%}.sw.koop{background:var(--below)}.sw.verkoop{background:var(--hit)}
+.sw.o-fine{background:var(--below);height:.25rem;border-radius:2px}.sw.o-verkoop{background:var(--hit);height:.25rem;border-radius:2px}
+.dash-h3{margin:2rem 0 .8rem;font-size:1.25rem}
+.chart .narrow .px,.chart .narrow .kolkop{font-size:12px}
+
+/* werking */
+.stroom{list-style:none;margin:0;padding:0;display:grid;gap:.8rem;counter-reset:s}
+@media (min-width:860px){.stroom{grid-template-columns:repeat(5,1fr);gap:0}}
+.stroom li{counter-increment:s;background:var(--surface);border:1px solid var(--rule);padding:1rem 1rem .9rem;position:relative}
+@media (min-width:860px){.stroom li+li{border-left:0}.stroom li:not(:last-child)::after{content:"→";position:absolute;right:-.55rem;top:1rem;background:var(--bg);color:var(--brass);font-weight:700;z-index:1}}
+.stroom li::before{content:counter(s,decimal-leading-zero);font:700 .75rem var(--mono);color:var(--brass);display:block;margin-bottom:.4rem}
+.stroom p{font-size:.92rem;color:var(--ink-2);margin:0}
+.vol{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.vol-getal{font:700 3.4rem/1 var(--sans);letter-spacing:-.04em;margin:0 0 .3rem}
+.vol-sub{font-size:.85rem;color:var(--muted)}
+.keuzes{list-style:none;margin:0;padding:0;border-left:2px solid var(--rule-2);margin-left:.4rem}
+.keuze{position:relative;padding:0 0 1.6rem 1.5rem;max-width:46rem}
+.keuze::before{content:"";position:absolute;left:-.45rem;top:.3rem;width:.75rem;height:.75rem;border-radius:50%;background:var(--bg);border:2px solid var(--brass)}
+.keuze-wanneer{font:600 .72rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brass);margin:0 0 .35rem}
+.keuze p{color:var(--ink-2)}
+.keuze-ai{font-family:var(--mono);font-size:.86rem;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:.55rem .75rem;margin:0}
+.keuze-ai span{font-family:var(--sans);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:.15rem}
+.demo-balk{background:#c2412d;color:#fff;text-align:center;font:700 .8rem/1.4 var(--mono);padding:.4rem;letter-spacing:.06em}
+
+@media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap">
+<a class="brand" href="/"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#1b1f24"/><path d="M7 23h18" stroke="#d4ac5e" stroke-width="1.6"/><rect x="9" y="15" width="3.2" height="8" rx="1" fill="#2f9e68"/><rect x="14.4" y="11" width="3.2" height="12" rx="1" fill="#2f9e68"/><rect x="19.8" y="17" width="3.2" height="6" rx="1" fill="#5b8fd6"/><path d="M6 8.5h20" stroke="#d4ac5e" stroke-width="1.3" stroke-dasharray="2.5 2"/></svg><span>The Weekly 2% Edge</span></a>
+<nav class="nav" aria-label="Main"><a href="/how-it-works/" aria-current="page">How it works</a><a href="/method/">Method</a><a class="cta" href="/build-kit/#buy">Build kit</a></nav>
+</div></header>
+<main id="main">
+<div class="hero"><div class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">The logbook</a> &rsaquo; How it works</nav>
+<p class="kicker">Live bot · BTC-EUR · Bitvavo</p>
+<h1>How the bot works: its dashboard and the decisions behind it</h1>
+<p class="lead-groot">A bitcoin bot that trades BTC-EUR on Bitvavo with real money. Below: its dashboard as it was a day ago, how one trade runs, why it is bitcoin, and every design decision with the reason behind it.</p>
+</div></div>
+
+<section id="dashboard" class="dash"><div class="wrap">
+<div class="sec-head"><p class="folio"><b>01</b> Dashboard</p><h2>The dashboard, at least 24 hours old</h2><p>This is what the bot itself sees, in percentages and BTC prices. It is a snapshot from at least 24 hours ago, so it is never a signal to trade on.</p></div>
+<p class="dash-leeg">The dashboard snapshot is not available in this build. It appears once the bot's read-only dashboard has data that is at least 24 hours old.</p>
+</div></section>
+
+<section id="flow"><div class="wrap">
+<div class="sec-head"><p class="folio"><b>02</b> Mechanics</p><h2>How one trade runs</h2></div>
+<ol class="stroom"><li><h3>The ladder waits</h3><p>Limit buy orders sit below the price at fixed distances: a fine and a coarse ladder.</p></li><li><h3>A dip fills a rung</h3><p>When the price falls, an order fills. It becomes a position with its own buy price.</p></li><li><h3>Each position gets its own sale</h3><p>Straight after, a limit sell order waits a few percent above that buy price.</p></li><li><h3>Only sold at a profit</h3><p>A position is never sold below its buy price. What is down, waits.</p></li><li><h3>The weekly figure</h3><p>Only what is sold counts in the weekly result, after fees on both sides.</p></li></ol>
+</div></section>
+
+<section id="why-bitcoin"><div class="wrap two-col">
+<div><p class="folio"><b>03</b> Underlying</p><h2>Why bitcoin</h2></div>
+<div class="vol"><p>Volatility could not be computed in this build (Bitvavo's price data was not reachable).</p></div>
+</div></section>
+
+<section id="weekly"><div class="wrap">
+<div class="sec-head"><p class="folio"><b>04</b> Result</p><h2>The weekly result</h2>
+<p>Realized profit per week as % of the capital in play, after fees, one week delayed. <a href="/">The full logbook</a></p></div>
+<figure class="chart" style="margin:0"><svg class="wide" viewBox="0 0 960 300" role="img" aria-labelledby="ww-en-t ww-en-d"><title id="ww-en-t">Realized profit per week, % of capital in play</title><desc id="ww-en-d">Bar chart of realized profit per week, W17 to W42, as a percentage of the capital in play. Median +0.46%, best +1.32%, worst −0.09%. 11 of 26 weeks reached the 0.5% goal; no week came near the 2% in the name.</desc><line class="ax-line" x1="46" x2="890" y1="239.1" y2="239.1"/><text class="ax" x="38" y="243.1" text-anchor="end">0.0%</text><line class="ax-line" x1="46" x2="890" y1="187.9" y2="187.9"/><text class="ax" x="38" y="191.9" text-anchor="end">0.5%</text><line class="ax-line" x1="46" x2="890" y1="136.7" y2="136.7"/><text class="ax" x="38" y="140.7" text-anchor="end">1.0%</text><line class="ax-line" x1="46" x2="890" y1="85.5" y2="85.5"/><text class="ax" x="38" y="89.5" text-anchor="end">1.5%</text><line class="ax-line" x1="46" x2="890" y1="34.3" y2="34.3"/><text class="ax" x="38" y="38.3" text-anchor="end">2.0%</text><g class="wk"><title>W17 2026 (week of 20 Apr 2026): +0.52% realized · goal met</title><rect class="hit-area" x="46.0" y="22" width="32.5" height="244"/><path class="b-hit" d="M51.2,239.1V189.8Q51.2,185.8 55.2,185.8H69.3Q73.3,185.8 73.3,189.8V239.1Z"/></g><g class="wk"><title>W18 2026 (week of 27 Apr 2026): +0.61% realized · goal met</title><rect class="hit-area" x="78.5" y="22" width="32.5" height="244"/><path class="b-hit" d="M83.7,239.1V180.6Q83.7,176.6 87.7,176.6H101.7Q105.7,176.6 105.7,180.6V239.1Z"/></g><text class="ax" x="94.7" y="284" text-anchor="middle">W18</text><g class="wk"><title>W19 2026 (week of 4 May 2026): +0.45% realized</title><rect class="hit-area" x="110.9" y="22" width="32.5" height="244"/><path class="b-below" d="M116.1,239.1V197.0Q116.1,193.0 120.1,193.0H134.2Q138.2,193.0 138.2,197.0V239.1Z"/></g><g class="wk"><title>W20 2026 (week of 11 May 2026): +0.74% realized · goal met</title><rect class="hit-area" x="143.4" y="22" width="32.5" height="244"/><path class="b-hit" d="M148.6,239.1V167.3Q148.6,163.3 152.6,163.3H166.7Q170.7,163.3 170.7,167.3V239.1Z"/></g><text class="ax" x="159.6" y="284" text-anchor="middle">W20</text><g class="wk"><title>W21 2026 (week of 18 May 2026): +0.15% realized</title><rect class="hit-area" x="175.8" y="22" width="32.5" height="244"/><path class="b-below" d="M181.0,239.1V227.7Q181.0,223.7 185.0,223.7H199.1Q203.1,223.7 203.1,227.7V239.1Z"/></g><g class="wk"><title>W22 2026 (week of 25 May 2026): +0.04% realized</title><rect class="hit-area" x="208.3" y="22" width="32.5" height="244"/><path class="b-below" d="M213.5,239.1V239.0Q213.5,235.0 217.5,235.0H231.6Q235.6,235.0 235.6,239.0V239.1Z"/></g><text class="ax" x="224.5" y="284" text-anchor="middle">W22</text><g class="wk"><title>W23 2026 (week of 1 Jun 2026): −0.09% realized</title><rect class="hit-area" x="240.8" y="22" width="32.5" height="244"/><path class="b-neg" d="M246.0,239.1V244.3Q246.0,248.3 250.0,248.3H264.0Q268.0,248.3 268.0,244.3V239.1Z"/></g><text class="val" x="257.0" y="262.3" text-anchor="middle">−0.09%</text><g class="wk"><title>W24 2026 (week of 8 Jun 2026): +0.54% realized · goal met</title><rect class="hit-area" x="273.2" y="22" width="32.5" height="244"/><path class="b-hit" d="M278.4,239.1V187.8Q278.4,183.8 282.4,183.8H296.5Q300.5,183.8 300.5,187.8V239.1Z"/></g><text class="ax" x="289.5" y="284" text-anchor="middle">W24</text><g class="wk"><title>W25 2026 (week of 15 Jun 2026): +0.34% realized</title><rect class="hit-area" x="305.7" y="22" width="32.5" height="244"/><path class="b-below" d="M310.9,239.1V208.3Q310.9,204.3 314.9,204.3H329.0Q333.0,204.3 333.0,208.3V239.1Z"/></g><g class="wk"><title>W26 2026 (week of 22 Jun 2026): +0.28% realized</title><rect class="hit-area" x="338.2" y="22" width="32.5" height="244"/><path class="b-below" d="M343.3,239.1V214.4Q343.3,210.4 347.3,210.4H361.4Q365.4,210.4 365.4,214.4V239.1Z"/></g><text class="ax" x="354.4" y="284" text-anchor="middle">W26</text><g class="wk"><title>W27 2026 (week of 29 Jun 2026): +0.53% realized · goal met</title><rect class="hit-area" x="370.6" y="22" width="32.5" height="244"/><path class="b-hit" d="M375.8,239.1V188.8Q375.8,184.8 379.8,184.8H393.9Q397.9,184.8 397.9,188.8V239.1Z"/></g><g class="wk"><title>W28 2026 (week of 6 Jul 2026): +0.76% realized · goal met</title><rect class="hit-area" x="403.1" y="22" width="32.5" height="244"/><path class="b-hit" d="M408.3,239.1V165.3Q408.3,161.3 412.3,161.3H426.3Q430.3,161.3 430.3,165.3V239.1Z"/></g><text class="ax" x="419.3" y="284" text-anchor="middle">W28</text><g class="wk"><title>W29 2026 (week of 13 Jul 2026): +0.45% realized</title><rect class="hit-area" x="435.5" y="22" width="32.5" height="244"/><path class="b-below" d="M440.7,239.1V197.0Q440.7,193.0 444.7,193.0H458.8Q462.8,193.0 462.8,197.0V239.1Z"/></g><g class="wk"><title>W30 2026 (week of 20 Jul 2026): +0.30% realized</title><rect class="hit-area" x="468.0" y="22" width="32.5" height="244"/><path class="b-below" d="M473.2,239.1V212.4Q473.2,208.4 477.2,208.4H491.3Q495.3,208.4 495.3,212.4V239.1Z"/></g><text class="ax" x="484.2" y="284" text-anchor="middle">W30</text><g class="wk"><title>W31 2026 (week of 27 Jul 2026): +0.19% realized</title><rect class="hit-area" x="500.5" y="22" width="32.5" height="244"/><path class="b-below" d="M505.7,239.1V223.6Q505.7,219.6 509.7,219.6H523.7Q527.7,219.6 527.7,223.6V239.1Z"/></g><g class="wk"><title>W32 2026 (week of 3 Aug 2026): +0.19% realized</title><rect class="hit-area" x="532.9" y="22" width="32.5" height="244"/><path class="b-below" d="M538.1,239.1V223.6Q538.1,219.6 542.1,219.6H556.2Q560.2,219.6 560.2,223.6V239.1Z"/></g><text class="ax" x="549.2" y="284" text-anchor="middle">W32</text><g class="wk"><title>W33 2026 (week of 10 Aug 2026): +0.02% realized</title><rect class="hit-area" x="565.4" y="22" width="32.5" height="244"/><path class="b-below" d="M570.6,239.1V239.1Q570.6,237.1 572.6,237.1H590.6Q592.7,237.1 592.7,239.1V239.1Z"/></g><g class="wk"><title>W34 2026 (week of 17 Aug 2026): +1.32% realized · goal met</title><rect class="hit-area" x="597.8" y="22" width="32.5" height="244"/><path class="b-hit" d="M603.0,239.1V107.9Q603.0,103.9 607.0,103.9H621.1Q625.1,103.9 625.1,107.9V239.1Z"/></g><text class="val" x="614.1" y="97.9" text-anchor="middle">+1.32%</text><text class="ax" x="614.1" y="284" text-anchor="middle">W34</text><g class="wk"><title>W35 2026 (week of 24 Aug 2026): +1.00% realized · goal met</title><rect class="hit-area" x="630.3" y="22" width="32.5" height="244"/><path class="b-hit" d="M635.5,239.1V140.7Q635.5,136.7 639.5,136.7H653.6Q657.6,136.7 657.6,140.7V239.1Z"/></g><g class="wk"><title>W36 2026 (week of 31 Aug 2026): +0.75% realized · goal met</title><rect class="hit-area" x="662.8" y="22" width="32.5" height="244"/><path class="b-hit" d="M668.0,239.1V166.3Q668.0,162.3 672.0,162.3H686.0Q690.0,162.3 690.0,166.3V239.1Z"/></g><text class="ax" x="679.0" y="284" text-anchor="middle">W36</text><g class="wk"><title>W37 2026 (week of 7 Sep 2026): +0.38% realized</title><rect class="hit-area" x="695.2" y="22" width="32.5" height="244"/><path class="b-below" d="M700.4,239.1V204.2Q700.4,200.2 704.4,200.2H718.5Q722.5,200.2 722.5,204.2V239.1Z"/></g><g class="wk"><title>W38 2026 (week of 14 Sep 2026): +1.06% realized · goal met</title><rect class="hit-area" x="727.7" y="22" width="32.5" height="244"/><path class="b-hit" d="M732.9,239.1V134.5Q732.9,130.5 736.9,130.5H751.0Q755.0,130.5 755.0,134.5V239.1Z"/></g><text class="ax" x="743.9" y="284" text-anchor="middle">W38</text><g class="wk"><title>W39 2026 (week of 21 Sep 2026): +0.46% realized</title><rect class="hit-area" x="760.2" y="22" width="32.5" height="244"/><path class="b-below" d="M765.3,239.1V196.0Q765.3,192.0 769.3,192.0H783.4Q787.4,192.0 787.4,196.0V239.1Z"/></g><g class="wk"><title>W40 2026 (week of 28 Sep 2026): +0.74% realized · goal met</title><rect class="hit-area" x="792.6" y="22" width="32.5" height="244"/><path class="b-hit" d="M797.8,239.1V167.3Q797.8,163.3 801.8,163.3H815.9Q819.9,163.3 819.9,167.3V239.1Z"/></g><text class="ax" x="808.8" y="284" text-anchor="middle">W40</text><g class="wk"><title>W41 2026 (week of 5 Oct 2026): +0.47% realized</title><rect class="hit-area" x="825.1" y="22" width="32.5" height="244"/><path class="b-below" d="M830.3,239.1V195.0Q830.3,191.0 834.3,191.0H848.3Q852.3,191.0 852.3,195.0V239.1Z"/></g><g class="wk"><title>W42 2026 (week of 12 Oct 2026): +0.30% realized</title><rect class="hit-area" x="857.5" y="22" width="32.5" height="244"/><path class="b-below" d="M862.7,239.1V212.4Q862.7,208.4 866.7,208.4H880.8Q884.8,208.4 884.8,212.4V239.1Z"/></g><text class="ax" x="873.8" y="284" text-anchor="middle">W42</text><line class="zero" x1="46" x2="890" y1="239.1" y2="239.1"/><line class="ref ref-goal" x1="46" x2="894" y1="187.9" y2="187.9"/><text class="ref-lbl goal" x="898" y="191.9">goal</text><line class="ref ref-name" x1="46" x2="894" y1="34.3" y2="34.3"/><text class="ref-lbl name" x="898" y="38.3">the name</text></svg><svg class="narrow" viewBox="0 0 360 240" role="img" aria-labelledby="wn-en-t wn-en-d"><title id="wn-en-t">Realized profit per week, % of capital in play</title><desc id="wn-en-d">Bar chart of realized profit per week, W17 to W42, as a percentage of the capital in play. Median +0.46%, best +1.32%, worst −0.09%. 11 of 26 weeks reached the 0.5% goal; no week came near the 2% in the name.</desc><line class="ax-line" x1="42" x2="318" y1="184.0" y2="184.0"/><text class="ax" x="34" y="188.0" text-anchor="end">0.0%</text><line class="ax-line" x1="42" x2="318" y1="145.8" y2="145.8"/><text class="ax" x="34" y="149.8" text-anchor="end">0.5%</text><line class="ax-line" x1="42" x2="318" y1="107.6" y2="107.6"/><text class="ax" x="34" y="111.6" text-anchor="end">1.0%</text><line class="ax-line" x1="42" x2="318" y1="69.4" y2="69.4"/><text class="ax" x="34" y="73.4" text-anchor="end">1.5%</text><line class="ax-line" x1="42" x2="318" y1="31.2" y2="31.2"/><text class="ax" x="34" y="35.2" text-anchor="end">2.0%</text><g class="wk"><title>W17 2026 (week of 20 Apr 2026): +0.52% realized · goal met</title><rect class="hit-area" x="42.0" y="22" width="10.6" height="186"/><path class="b-hit" d="M43.7,184.0V147.9Q43.7,144.3 47.3,144.3H47.3Q50.9,144.3 50.9,147.9V184.0Z"/></g><text class="ax" x="47.3" y="226" text-anchor="middle">W17</text><g class="wk"><title>W18 2026 (week of 27 Apr 2026): +0.61% realized · goal met</title><rect class="hit-area" x="52.6" y="22" width="10.6" height="186"/><path class="b-hit" d="M54.3,184.0V141.0Q54.3,137.4 57.9,137.4H57.9Q61.5,137.4 61.5,141.0V184.0Z"/></g><g class="wk"><title>W19 2026 (week of 4 May 2026): +0.45% realized</title><rect class="hit-area" x="63.2" y="22" width="10.6" height="186"/><path class="b-below" d="M64.9,184.0V153.2Q64.9,149.6 68.5,149.6H68.5Q72.1,149.6 72.1,153.2V184.0Z"/></g><g class="wk"><title>W20 2026 (week of 11 May 2026): +0.74% realized · goal met</title><rect class="hit-area" x="73.8" y="22" width="10.6" height="186"/><path class="b-hit" d="M75.5,184.0V131.1Q75.5,127.5 79.2,127.5H79.2Q82.8,127.5 82.8,131.1V184.0Z"/></g><g class="wk"><title>W21 2026 (week of 18 May 2026): +0.15% realized</title><rect class="hit-area" x="84.5" y="22" width="10.6" height="186"/><path class="b-below" d="M86.2,184.0V176.2Q86.2,172.6 89.8,172.6H89.8Q93.4,172.6 93.4,176.2V184.0Z"/></g><g class="wk"><title>W22 2026 (week of 25 May 2026): +0.04% realized</title><rect class="hit-area" x="95.1" y="22" width="10.6" height="186"/><path class="b-below" d="M96.8,184.0V184.0Q96.8,181.0 99.8,181.0H100.9Q104.0,181.0 104.0,184.0V184.0Z"/></g><text class="ax" x="100.4" y="226" text-anchor="middle">W22</text><g class="wk"><title>W23 2026 (week of 1 Jun 2026): −0.09% realized</title><rect class="hit-area" x="105.7" y="22" width="10.6" height="186"/><path class="b-neg" d="M107.4,184.0V187.3Q107.4,190.9 111.0,190.9H111.0Q114.6,190.9 114.6,187.3V184.0Z"/></g><text class="val" x="111.0" y="204.9" text-anchor="middle">−0.09%</text><g class="wk"><title>W24 2026 (week of 8 Jun 2026): +0.54% realized · goal met</title><rect class="hit-area" x="116.3" y="22" width="10.6" height="186"/><path class="b-hit" d="M118.0,184.0V146.4Q118.0,142.8 121.6,142.8H121.6Q125.2,142.8 125.2,146.4V184.0Z"/></g><g class="wk"><title>W25 2026 (week of 15 Jun 2026): +0.34% realized</title><rect class="hit-area" x="126.9" y="22" width="10.6" height="186"/><path class="b-below" d="M128.6,184.0V161.6Q128.6,158.0 132.2,158.0H132.2Q135.8,158.0 135.8,161.6V184.0Z"/></g><g class="wk"><title>W26 2026 (week of 22 Jun 2026): +0.28% realized</title><rect class="hit-area" x="137.5" y="22" width="10.6" height="186"/><path class="b-below" d="M139.2,184.0V166.2Q139.2,162.6 142.8,162.6H142.8Q146.5,162.6 146.5,166.2V184.0Z"/></g><g class="wk"><title>W27 2026 (week of 29 Jun 2026): +0.53% realized · goal met</title><rect class="hit-area" x="148.2" y="22" width="10.6" height="186"/><path class="b-hit" d="M149.9,184.0V147.1Q149.9,143.5 153.5,143.5H153.5Q157.1,143.5 157.1,147.1V184.0Z"/></g><text class="ax" x="153.5" y="226" text-anchor="middle">W27</text><g class="wk"><title>W28 2026 (week of 6 Jul 2026): +0.76% realized · goal met</title><rect class="hit-area" x="158.8" y="22" width="10.6" height="186"/><path class="b-hit" d="M160.5,184.0V129.5Q160.5,125.9 164.1,125.9H164.1Q167.7,125.9 167.7,129.5V184.0Z"/></g><g class="wk"><title>W29 2026 (week of 13 Jul 2026): +0.45% realized</title><rect class="hit-area" x="169.4" y="22" width="10.6" height="186"/><path class="b-below" d="M171.1,184.0V153.2Q171.1,149.6 174.7,149.6H174.7Q178.3,149.6 178.3,153.2V184.0Z"/></g><g class="wk"><title>W30 2026 (week of 20 Jul 2026): +0.30% realized</title><rect class="hit-area" x="180.0" y="22" width="10.6" height="186"/><path class="b-below" d="M181.7,184.0V164.7Q181.7,161.1 185.3,161.1H185.3Q188.9,161.1 188.9,164.7V184.0Z"/></g><g class="wk"><title>W31 2026 (week of 27 Jul 2026): +0.19% realized</title><rect class="hit-area" x="190.6" y="22" width="10.6" height="186"/><path class="b-below" d="M192.3,184.0V173.1Q192.3,169.5 195.9,169.5H195.9Q199.5,169.5 199.5,173.1V184.0Z"/></g><g class="wk"><title>W32 2026 (week of 3 Aug 2026): +0.19% realized</title><rect class="hit-area" x="201.2" y="22" width="10.6" height="186"/><path class="b-below" d="M202.9,184.0V173.1Q202.9,169.5 206.5,169.5H206.5Q210.1,169.5 210.1,173.1V184.0Z"/></g><text class="ax" x="206.5" y="226" text-anchor="middle">W32</text><g class="wk"><title>W33 2026 (week of 10 Aug 2026): +0.02% realized</title><rect class="hit-area" x="211.8" y="22" width="10.6" height="186"/><path class="b-below" d="M213.5,184.0V184.0Q213.5,182.5 215.1,182.5H219.2Q220.8,182.5 220.8,184.0V184.0Z"/></g><g class="wk"><title>W34 2026 (week of 17 Aug 2026): +1.32% realized · goal met</title><rect class="hit-area" x="222.5" y="22" width="10.6" height="186"/><path class="b-hit" d="M224.2,184.0V86.7Q224.2,83.1 227.8,83.1H227.8Q231.4,83.1 231.4,86.7V184.0Z"/></g><text class="val" x="227.8" y="77.1" text-anchor="middle">+1.32%</text><g class="wk"><title>W35 2026 (week of 24 Aug 2026): +1.00% realized · goal met</title><rect class="hit-area" x="233.1" y="22" width="10.6" height="186"/><path class="b-hit" d="M234.8,184.0V111.2Q234.8,107.6 238.4,107.6H238.4Q242.0,107.6 242.0,111.2V184.0Z"/></g><g class="wk"><title>W36 2026 (week of 31 Aug 2026): +0.75% realized · goal met</title><rect class="hit-area" x="243.7" y="22" width="10.6" height="186"/><path class="b-hit" d="M245.4,184.0V130.3Q245.4,126.7 249.0,126.7H249.0Q252.6,126.7 252.6,130.3V184.0Z"/></g><g class="wk"><title>W37 2026 (week of 7 Sep 2026): +0.38% realized</title><rect class="hit-area" x="254.3" y="22" width="10.6" height="186"/><path class="b-below" d="M256.0,184.0V158.6Q256.0,155.0 259.6,155.0H259.6Q263.2,155.0 263.2,158.6V184.0Z"/></g><text class="ax" x="259.6" y="226" text-anchor="middle">W37</text><g class="wk"><title>W38 2026 (week of 14 Sep 2026): +1.06% realized · goal met</title><rect class="hit-area" x="264.9" y="22" width="10.6" height="186"/><path class="b-hit" d="M266.6,184.0V106.6Q266.6,103.0 270.2,103.0H270.2Q273.8,103.0 273.8,106.6V184.0Z"/></g><g class="wk"><title>W39 2026 (week of 21 Sep 2026): +0.46% realized</title><rect class="hit-area" x="275.5" y="22" width="10.6" height="186"/><path class="b-below" d="M277.2,184.0V152.5Q277.2,148.9 280.8,148.9H280.8Q284.5,148.9 284.5,152.5V184.0Z"/></g><g class="wk"><title>W40 2026 (week of 28 Sep 2026): +0.74% realized · goal met</title><rect class="hit-area" x="286.2" y="22" width="10.6" height="186"/><path class="b-hit" d="M287.9,184.0V131.1Q287.9,127.5 291.5,127.5H291.5Q295.1,127.5 295.1,131.1V184.0Z"/></g><g class="wk"><title>W41 2026 (week of 5 Oct 2026): +0.47% realized</title><rect class="hit-area" x="296.8" y="22" width="10.6" height="186"/><path class="b-below" d="M298.5,184.0V151.7Q298.5,148.1 302.1,148.1H302.1Q305.7,148.1 305.7,151.7V184.0Z"/></g><g class="wk"><title>W42 2026 (week of 12 Oct 2026): +0.30% realized</title><rect class="hit-area" x="307.4" y="22" width="10.6" height="186"/><path class="b-below" d="M309.1,184.0V164.7Q309.1,161.1 312.7,161.1H312.7Q316.3,161.1 316.3,164.7V184.0Z"/></g><text class="ax" x="312.7" y="226" text-anchor="middle">W42</text><line class="zero" x1="42" x2="318" y1="184.0" y2="184.0"/><line class="ref ref-goal" x1="42" x2="322" y1="145.8" y2="145.8"/><text class="ref-lbl goal" x="326" y="149.8">goal</text><line class="ref ref-name" x1="42" x2="322" y1="31.2" y2="31.2"/><text class="ref-lbl name" x="326" y="35.2">name</text></svg></figure>
+</div></section>
+
+<section id="decisions" style="border-bottom:0"><div class="wrap">
+<div class="sec-head"><p class="folio"><b>05</b> Design</p><h2>The design decisions, and why</h2><p>Every rule in the bot has a history. These are the main ones, with their date, what was measured, and how one sentence to your AI changes it.</p></div>
+<ol class="keuzes"><li class="keuze" id="goal"><p class="keuze-wanneer">From the logbook</p><h3>A 0.5% weekly goal, not 2%</h3><p>The name promised 2% a week. Measured honestly, week after week, 0.5% turned out to be the realistic goal. The chart on the logbook draws both lines.</p><p class="keuze-ai"><span>Tell your AI</span> “Report every week against a goal of 0.3%.”</p></li><li class="keuze" id="fees"><p class="keuze-wanneer">Measured 5 Aug 2026</p><h3>Book the real fee on every fill</h3><p>Fees took roughly a fifth of gross profit between late April and early August. The bot now books the actual fee per fill, and since 10 Oct 2026 it also fills in fees the exchange settles later.</p><p class="keuze-ai"><span>Tell your AI</span> “Use my own fee tier when you calculate sell targets.”</p></li><li class="keuze" id="time-decay"><p class="keuze-wanneer">Measured 5 Aug 2026</p><h3>Switch off time-decay</h3><p>A rule lowered the sell target as a position aged. In 78% of the 152 sales it touched, the original target was reached again within 24 hours (median: 3 hours later). It gave up about 0.33% per trade, so it was switched off.</p><p class="keuze-ai"><span>Tell your AI</span> “Lower the sell target by 0.1% for each day a position stays open.”</p></li><li class="keuze" id="rsi"><p class="keuze-wanneer">Aug 2026; off for the ladder since 2 Oct 2026</p><h3>An RSI brake: first a taper, then off</h3><p>Blocking all buys above RSI 70 also froze the ladder, so a later shallow dip caught nothing. In August it became a taper: smaller orders between RSI 70 and 80, a hard block only above 80. On 2 Oct 2026 the brake was switched off for the ladder entirely; the separate RSI dip-buy strategy is unaffected. The dashboard shows the brake&#x27;s state at snapshot time.</p><p class="keuze-ai"><span>Tell your AI</span> “Pause the ladder completely whenever RSI is above 75.”</p></li><li class="keuze" id="no-loss"><p class="keuze-wanneer">20 Aug 2026; stop-loss and timers removed 26–29 Sep 2026</p><h3>Never sell at a loss</h3><p>A position is only sold above its buy price; stop-losses and position timers are gone. The price of that choice: losses don&#x27;t disappear, they wait in open positions. In a deep drop the open number grows before anything shows up in the weekly figure.</p><p class="keuze-ai"><span>Tell your AI</span> “Add a stop-loss at −15% for the fine ladder only.”</p></li><li class="keuze" id="limit-orders"><p class="keuze-wanneer">2 Sep 2026</p><h3>Real limit orders on the exchange</h3><p>Sell targets became real limit orders at the exchange instead of prices the bot watched. The buy ladder also places real limit orders: up to 20 fine and 10 coarse rungs below the price. A resting order is filled at its own price.</p><p class="keuze-ai"><span>Tell your AI</span> “Use 10 fine rungs and keep them 0.2% apart.”</p></li><li class="keuze" id="depth-budget"><p class="keuze-wanneer">2 Oct 2026</p><h3>A depth budget for buying</h3><p>How much of the capital the bot may have in bitcoin depends on how deep the price is below the highest open purchase: 50% at that top, rising in a straight line to 100% at 25% below it. Capital is kept back for deeper dips.</p><p class="keuze-ai"><span>Tell your AI</span> “Never put more than 60% of my capital in, at any price.”</p></li><li class="keuze" id="simpler"><p class="keuze-wanneer">September 2026</p><h3>Fewer moving parts</h3><p>Several layers were removed: a machine-learning predictor, an anomaly detector, a strategy tournament and more. Most of them turned out not to change the orders the bot placed. Simpler code is easier to check, for you and for your AI.</p><p class="keuze-ai"><span>Tell your AI</span> “Explain every rule in the code to me in one sentence each.”</p></li></ol>
+<p class="terug"><a class="btn" href="/build-kit/#buy">Build your own version: the build kit · $14</a></p>
+<p class="risico">Past weeks say nothing about future weeks; you can lose your entire stake.</p>
+</div></section>
+</main>
+<footer class="foot"><div class="wrap">
+<p class="disclaimer">This is a personal logbook, not financial advice and not an investment service; the build kit is software documentation. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
+<ul class="foot-links">
+<li><a href="/">The logbook</a></li><li><a href="/build-kit/">Build kit</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="https://mijnbitcoinstrategie.nl/" hreflang="nl" lang="nl">Nederlands</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket on LinkedIn</a></li>
+</ul>
+</div></footer>
+</body>
+</html>

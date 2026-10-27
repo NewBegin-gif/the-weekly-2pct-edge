@@ -243,6 +243,7 @@ code,.code{font-family:var(--mono);font-size:.88em}
 .leak p.txt{color:var(--ink-2);font-size:.97rem}
 .leak .now{margin:auto 0 0;padding-top:.75rem;border-top:1px solid var(--rule);font-size:.88rem;font-weight:600}
 .leak .now::before{content:"Now: ";font-weight:400;color:var(--muted)}
+:lang(nl) .leak .now::before{content:"Nu: "}
 
 /* regels */
 .rules{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
@@ -310,6 +311,102 @@ button:hover,.btn:hover{opacity:.9}
   #strategies .code{font-size:1em}
 }
 
+/* koopweg: knop in de kopbalk */
+.nav{align-items:center}
+.nav .cta{background:var(--btn);color:var(--btn-ink);padding:.45rem .8rem;border-radius:3px;text-decoration:none;font-weight:600}
+.nav .cta:hover,.nav .cta[aria-current]{color:var(--btn-ink);text-decoration:none;opacity:.9}
+@media (max-width:520px){.nav{gap:.8rem;font-size:.85rem}.brand span{font-size:.92rem}}
+
+/* bouwpakket */
+.kit-grid{display:grid;gap:1.8rem;align-items:start}
+@media (min-width:900px){.kit-grid{grid-template-columns:1.2fr .9fr;gap:3.5rem}}
+.lead-groot{font-size:1.15rem;color:var(--ink-2);max-width:40rem}
+.kit-hero h1,.hero h1+.lead-groot{margin-top:0}.kit-hero h1,.hero .wrap>h1{margin-bottom:1rem}
+.echt{font-size:.95rem;color:var(--ink-2);border-left:3px solid var(--brass);padding-left:.9rem;max-width:40rem}
+.koopkaart{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.4rem 1.3rem 1.2rem;box-shadow:0 18px 40px -30px rgba(27,31,36,.35)}
+.box .koopkaart{border:0;padding:0;box-shadow:none;background:none}
+.koop-kop{font-size:1.35rem;margin-bottom:.5rem}
+.koop-groot{font:700 2.6rem/1 var(--sans);letter-spacing:-.03em;margin:.2rem 0 .5rem}
+.koop-groot .muted{font:500 1rem var(--sans);letter-spacing:0}
+.koop-sub{color:var(--ink-2);font-size:.95rem}
+.koopknoppen{display:grid;gap:.9rem;margin-top:.8rem}
+.koop{display:block;border-top:1px solid var(--rule);padding-top:.9rem;margin:0}
+.koop-naam{font-weight:650;margin:0}.koop-prijs{color:var(--ink-2);margin:0 0 .5rem;font-size:.92rem}
+.toestemming{display:flex;gap:.55rem;align-items:flex-start;font-size:.82rem;color:var(--ink-2);margin:.2rem 0 .7rem;line-height:1.45}
+.toestemming input{margin-top:.2rem;flex:none;width:1rem;height:1rem}
+.koop button{width:100%}
+.risico{font-size:.85rem;font-weight:600;color:var(--ink);margin:.9rem 0 0;padding:.6rem .75rem;background:var(--sunk);border-radius:3px}
+.stappen{list-style:none;margin:0;padding:0;display:grid;gap:1rem;counter-reset:stap}
+@media (min-width:760px){.stappen{grid-template-columns:repeat(4,1fr)}}
+.stappen li{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.1rem 1.1rem 1rem;position:relative}
+.stap-nr{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:50%;border:1.5px solid var(--brass);color:var(--brass);font:700 .95rem var(--mono);margin-bottom:.7rem}
+.stappen p{color:var(--ink-2);font-size:.95rem;margin:0}
+.teaser-knoppen{margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:center}
+.teaser-knoppen .btn{margin:0}
+.two-col{display:grid;gap:2rem}
+@media (min-width:860px){.two-col{grid-template-columns:1fr 1fr;gap:3rem}}
+.kaartlijst{list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
+@media (min-width:860px){#need .kaartlijst{grid-template-columns:repeat(3,1fr)}}
+.kaartlijst li{border-top:2px solid var(--ink);padding-top:.7rem}
+.kaartlijst h3{font-size:1.08rem}.kaartlijst p{color:var(--ink-2);font-size:.95rem;margin:0}
+.niet{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+.niet li{padding-left:1.7rem;position:relative;color:var(--ink-2)}
+.niet li::before{content:"✕";position:absolute;left:0;color:var(--neg);font-weight:700}
+.voorbeelden{list-style:none;padding:0;margin:0 0 1rem;display:grid;gap:.6rem}
+@media (min-width:760px){.voorbeelden{grid-template-columns:1fr 1fr}}
+.voorbeelden li{font-family:var(--mono);font-size:.88rem;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--below);border-radius:3px;padding:.75rem .9rem}
+.faqs{display:grid;gap:.6rem;max-width:46rem}
+details.faq{margin:0}
+details.faq p{padding:.2rem 1rem .9rem;margin:0;color:var(--ink-2)}
+.terug{margin-top:1.6rem}
+.kit-teaser{background:linear-gradient(var(--sunk),var(--sunk))}
+
+/* dashboard */
+.dash-stempel{font:.8rem/1.5 var(--mono);color:var(--muted);margin:0 0 1rem}
+.dash-stempel strong{color:var(--ink)}
+.dash-leeg{padding:1.2rem;background:var(--surface);border:1px dashed var(--rule-2);border-radius:4px;color:var(--ink-2)}
+.tegels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:0 0 1.2rem}
+@media (min-width:760px){.tegels{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1000px){.tegels{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.tegel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:.8rem .85rem .7rem;min-width:0}
+.tegel dt{font:600 .68rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tegel dd{margin:.3rem 0 .15rem;font:700 1.45rem/1.1 var(--sans);letter-spacing:-.02em}
+.tegel p{font-size:.76rem;color:var(--muted);margin:0;line-height:1.35}
+.spark{display:block;width:100%;height:28px;margin-top:.35rem}
+.spark path{fill:none;stroke:var(--brass);stroke-width:1.6}
+.dash-chart{margin-bottom:.4rem}
+.koerslijn{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.pt-koop{fill:var(--below);stroke:var(--surface);stroke-width:1.5}
+.pt-verkoop{fill:var(--hit);stroke:var(--surface);stroke-width:1.5}
+.pt-T{fill:var(--brass);stroke:var(--surface);stroke-width:2}
+.prijs-T{stroke:var(--brass);stroke-width:1;stroke-dasharray:4 4}
+.paneel{fill:var(--sunk);stroke:var(--rule)}
+.o-fine{fill:var(--below)}.o-coarse{fill:var(--below);opacity:.55}.o-verkoop{fill:var(--hit)}
+.kolkop{font-weight:600;fill:var(--ink-2)}
+.sw.dot{border-radius:50%}.sw.koop{background:var(--below)}.sw.verkoop{background:var(--hit)}
+.sw.o-fine{background:var(--below);height:.25rem;border-radius:2px}.sw.o-verkoop{background:var(--hit);height:.25rem;border-radius:2px}
+.dash-h3{margin:2rem 0 .8rem;font-size:1.25rem}
+.chart .narrow .px,.chart .narrow .kolkop{font-size:12px}
+
+/* werking */
+.stroom{list-style:none;margin:0;padding:0;display:grid;gap:.8rem;counter-reset:s}
+@media (min-width:860px){.stroom{grid-template-columns:repeat(5,1fr);gap:0}}
+.stroom li{counter-increment:s;background:var(--surface);border:1px solid var(--rule);padding:1rem 1rem .9rem;position:relative}
+@media (min-width:860px){.stroom li+li{border-left:0}.stroom li:not(:last-child)::after{content:"→";position:absolute;right:-.55rem;top:1rem;background:var(--bg);color:var(--brass);font-weight:700;z-index:1}}
+.stroom li::before{content:counter(s,decimal-leading-zero);font:700 .75rem var(--mono);color:var(--brass);display:block;margin-bottom:.4rem}
+.stroom p{font-size:.92rem;color:var(--ink-2);margin:0}
+.vol{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem}
+.vol-getal{font:700 3.4rem/1 var(--sans);letter-spacing:-.04em;margin:0 0 .3rem}
+.vol-sub{font-size:.85rem;color:var(--muted)}
+.keuzes{list-style:none;margin:0;padding:0;border-left:2px solid var(--rule-2);margin-left:.4rem}
+.keuze{position:relative;padding:0 0 1.6rem 1.5rem;max-width:46rem}
+.keuze::before{content:"";position:absolute;left:-.45rem;top:.3rem;width:.75rem;height:.75rem;border-radius:50%;background:var(--bg);border:2px solid var(--brass)}
+.keuze-wanneer{font:600 .72rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brass);margin:0 0 .35rem}
+.keuze p{color:var(--ink-2)}
+.keuze-ai{font-family:var(--mono);font-size:.86rem;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:.55rem .75rem;margin:0}
+.keuze-ai span{font-family:var(--sans);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:.15rem}
+.demo-balk{background:#c2412d;color:#fff;text-align:center;font:700 .8rem/1.4 var(--mono);padding:.4rem;letter-spacing:.06em}
+
 @media print{.top .nav,.signup,.skip{display:none}body{background:#fff}}
 </style>
 </head>
@@ -317,7 +414,7 @@ button:hover,.btn:hover{opacity:.9}
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap">
 <a class="brand" href="/"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#1b1f24"/><path d="M7 23h18" stroke="#d4ac5e" stroke-width="1.6"/><rect x="9" y="15" width="3.2" height="8" rx="1" fill="#2f9e68"/><rect x="14.4" y="11" width="3.2" height="12" rx="1" fill="#2f9e68"/><rect x="19.8" y="17" width="3.2" height="6" rx="1" fill="#5b8fd6"/><path d="M6 8.5h20" stroke="#d4ac5e" stroke-width="1.3" stroke-dasharray="2.5 2"/></svg><span>The Weekly 2% Edge</span></a>
-<nav class="nav" aria-label="Main"><a href="/#weeks" class="opt">Weeks</a><a href="/#leaks" class="opt">Leaks</a><a href="/method/" aria-current="page">Method</a><a href="/#follow">Follow</a></nav>
+<nav class="nav" aria-label="Main"><a href="/how-it-works/">How it works</a><a href="/method/" aria-current="page">Method</a><a class="cta" href="/build-kit/#buy">Build kit</a></nav>
 </div></header>
 <main id="main" class="doc"><div class="wrap"><div class="prose">
 <nav class="crumbs" aria-label="Breadcrumb"><a href="/">The logbook</a> &rsaquo; Method</nav>
@@ -368,9 +465,9 @@ button:hover,.btn:hover{opacity:.9}
 <p><a href="/">&larr; Back to the logbook</a></p>
 </div></div></main>
 <footer class="foot"><div class="wrap">
-<p class="disclaimer">This is a personal logbook, not financial advice and not an offer of any service. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
+<p class="disclaimer">This is a personal logbook, not financial advice and not an investment service; the build kit is software documentation. Crypto is volatile and you can lose your entire stake. Past weeks say nothing about future weeks. I don't run money for others and don't sell signals. &mdash; Daan, Rotterdam</p>
 <ul class="foot-links">
-<li><a href="/">The logbook</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket on LinkedIn</a></li>
+<li><a href="/">The logbook</a></li><li><a href="/build-kit/">Build kit</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/method/">Method</a></li><li><a href="/weekly-series.csv">Weekly series (CSV)</a></li><li><a href="https://mijnbitcoinstrategie.nl/" hreflang="nl" lang="nl">Nederlands</a></li><li><a href="https://www.linkedin.com/in/daniel-haket-8305a33" rel="me noopener">Daniel Haket on LinkedIn</a></li>
 </ul>
 </div></footer>
 </body>

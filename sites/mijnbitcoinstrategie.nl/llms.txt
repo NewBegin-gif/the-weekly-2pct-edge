@@ -1,0 +1,29 @@
+# Mijn Bitcoinstrategie
+
+> Het openbare logboek van een live BTC-EUR-handelsbot op Bitvavo (gerealiseerde winst per week als percentage van het ingezette kapitaal, na kosten, een week vertraagd), met de open posities ernaast, de gemeten lekken, en het bouwpakket: een stappenplan om met een AI-assistent je eigen versie te bouwen. Alleen percentages; geen signalen, geen advies. Data gelezen op 2026-10-26.
+
+De site is van Daan (Daniel Haket), oud-bankier (23 jaar in de internationale financiële wereld) uit Rotterdam. Hij bouwde de bot met de AI-agent van Replit; de bot handelt sinds april 2026 met echt geld. Engelse versie: https://theweekly2pctedge.com/
+
+## Pagina's
+- [Het logboek](https://mijnbitcoinstrategie.nl/): elke week sinds W17 2026, gerealiseerd en open, de lekken, rendement per strategie
+- [Het bouwpakket](https://mijnbitcoinstrategie.nl/bouwpakket/): wat je krijgt, de vier stappen, wat je nodig hebt, vragen; €14 eenmalig, updates €5 per jaar
+- [Zo werkt het](https://mijnbitcoinstrategie.nl/zo-werkt-het/): het dashboard van de bot (minstens 24 uur oud), hoe een trade loopt, waarom bitcoin, en elke ontwerpkeuze met datum
+
+## Actuele cijfers (W17 tot W42 2026, 26 weken)
+- Mediane week: +0,46% gerealiseerd; gemiddelde week +0,48%
+- Doel van 0,5% per week gehaald in 11 van 26 weken
+- Beste week +1,32%, slechtste week -0,09%
+- Open posities 2026-10-19 tot 2026-10-26: tussen -3,09% en +0,11% van de rekening
+
+## Regels
+- Alleen percentages: nooit eurobedragen, rekeninggrootte of ordergroottes
+- Weekresultaten een week vertraagd; dashboardgegevens minstens 24 uur oud
+- Geen signalen, geen advies, geen copy-trading; het bouwpakket is technische documentatie, geen rendementsbelofte
+- Afgelopen weken zeggen niets over komende weken; je kunt je hele inleg verliezen
+
+## Actualiteit
+- Laatste week: W42 2026 (begint 2026-10-12)
+- Wordt dagelijks gecontroleerd en alleen herbouwd als er een nieuwe week bij komt; dit bestand wordt in dezelfde ronde bijgewerkt
+
+## Contact
+- [Daniel Haket op LinkedIn](https://www.linkedin.com/in/daniel-haket-8305a33)
