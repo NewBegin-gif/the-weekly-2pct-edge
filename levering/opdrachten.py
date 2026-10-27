@@ -11,9 +11,20 @@
                                                 pad in een webroot of in de repo: dit bestand wordt nooit geserveerd)
   maandrapport --bot-repo PAD                   commits sinds de laatste documentversie (voor Claude, maandelijks)
   abonnees                                      actieve abonnees tonen (e-mail, taal, status, actief tot)
+  aankopen                                      betaalde aankopen zonder herroepingstoestemming (niet geleverd)
+  vrijgeven --transactie TXN --toestemming TEKST
+                                                zo'n aankoop alsnog leveren nadat de koper toestemming gaf (bv. per
+                                                mail: TEKST = "per mail 2026-11-02"); anders: refund in Paddle
+
+Op de VPS (zie de PR): `--env /etc/levering.env` leest de instellingen zoals systemd ze aan de dienst geeft. Als root
+gestart, werkt de opdracht op de database als de eigenaar van de databasemap (de dienstgebruiker 'levering'), zodat
+er nooit bestanden van root in /var/lib/levering komen; alleen wat root nodig heeft (het env-bestand, de changelog,
+git in de bot-repo, het exportbestand) gebeurt als root.
 """
 import argparse
+import contextlib
 import logging
+import os
 import pathlib
 import sys
 
@@ -22,9 +33,49 @@ from .kern import Levering, export_abonnees, maandrapport
 from .opslag import Opslag
 
 
+def lees_env(pad):
+    """KEY=waarde-regels zoals systemd EnvironmentFile ze leest (commentaar, lege regels, aanhalingstekens om de
+    hele waarde). Zet alleen wat nog niet in de omgeving staat."""
+    for regel in pathlib.Path(pad).read_text(encoding="utf-8").splitlines():
+        regel = regel.strip()
+        if not regel or regel.startswith(("#", ";")) or "=" not in regel:
+            continue
+        sleutel, _, waarde = regel.partition("=")
+        waarde = waarde.strip()
+        if len(waarde) >= 2 and waarde[0] == waarde[-1] and waarde[0] in "'\"":
+            waarde = waarde[1:-1]
+        os.environ.setdefault(sleutel.strip(), waarde)
+
+
+def als_eigenaar_van(map_):
+    """Als root: effectief de eigenaar van de databasemap worden (alleen effectieve ids, terug via als_root)."""
+    if os.geteuid() != 0 or not os.path.isdir(map_):
+        return
+    st = os.stat(map_)
+    if st.st_uid != 0:
+        os.setegid(st.st_gid)
+        os.seteuid(st.st_uid)
+
+
+@contextlib.contextmanager
+def als_root():
+    terug = (os.geteuid(), os.getegid())
+    if os.getuid() == 0 and terug[0] != 0:
+        os.seteuid(0)
+        os.setegid(0)
+        try:
+            yield
+        finally:
+            os.setegid(terug[1])
+            os.seteuid(terug[0])
+    else:
+        yield
+
+
 def main(argv=None):
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     p = argparse.ArgumentParser(prog="python3 -m levering")
+    p.add_argument("--env", help="env-bestand inlezen (bv. /etc/levering.env), zoals systemd dat voor de dienst doet")
     sub = p.add_subparsers(dest="opdracht", required=True)
     sub.add_parser("serve")
     nv = sub.add_parser("nieuwe-versie")
@@ -41,8 +92,16 @@ def main(argv=None):
     mr = sub.add_parser("maandrapport")
     mr.add_argument("--bot-repo", required=True)
     sub.add_parser("abonnees")
+    sub.add_parser("aankopen")
+    vg = sub.add_parser("vrijgeven")
+    vg.add_argument("--transactie", required=True)
+    vg.add_argument("--toestemming", required=True)
     a = p.parse_args(argv)
+    if a.env:
+        lees_env(a.env)
     cfg = Instellingen()
+    if a.opdracht != "serve":
+        als_eigenaar_van(str(pathlib.Path(cfg.db).parent))
 
     if a.opdracht == "serve":
         mist = cfg.ontbrekend("serve")
@@ -59,8 +118,16 @@ def main(argv=None):
             raise SystemExit(f"{bestand} bestaat niet")
         if str(bestand).startswith("/var/www"):
             raise SystemExit(f"weigert {bestand}: het betaalde document hoort buiten de webroot")
-        changelog = pathlib.Path(a.changelog).read_text(encoding="utf-8").strip() if a.changelog else ""
-        Opslag(cfg.db).versie_bewaar(a.versie, str(bestand), a.commit, changelog)
+        try:
+            bestand.open("rb").close()  # met de rechten van de dienst: anders zou elke download 'bestand ontbreekt' geven
+        except PermissionError:
+            raise SystemExit(f"de dienst kan {bestand} niet lezen: chgrp levering + chmod 640 (map: 750)")
+        with als_root():
+            changelog = pathlib.Path(a.changelog).read_text(encoding="utf-8").strip() if a.changelog else ""
+        try:
+            Opslag(cfg.db).versie_bewaar(a.versie, str(bestand), a.commit, changelog)
+        except ValueError as fout:
+            raise SystemExit(str(fout))
         print(f"versie {a.versie} geregistreerd: {bestand}")
     elif a.opdracht == "send-update":
         if not a.dry_run:
@@ -75,11 +142,24 @@ def main(argv=None):
         ok, fout = Levering(cfg).wachtrij()
         print(f"{ok} verzonden, {fout} mislukt (blijven in de rij)")
     elif a.opdracht == "export":
-        doel, n = export_abonnees(Opslag(cfg.db), a.uit)
+        rijen = Opslag(cfg.db).alle_abonnees()
+        with als_root():
+            doel, n = export_abonnees(None, a.uit, rijen=rijen)
         print(f"{n} abonnees naar {doel}")
     elif a.opdracht == "maandrapport":
-        sys.stdout.write(maandrapport(Opslag(cfg.db), pathlib.Path(a.bot_repo)))
+        versie = Opslag(cfg.db).versie()
+        with als_root():
+            sys.stdout.write(maandrapport(None, pathlib.Path(a.bot_repo), versie=versie))
     elif a.opdracht == "abonnees":
         for r in Opslag(cfg.db).actieve_abonnees():
             print(f"{r['email']}\t{r['taal'] or 'en'}\t{r['status']}\t{r['actief_tot']}")
+    elif a.opdracht == "aankopen":
+        for r in Opslag(cfg.db).aankopen_zonder_toestemming():
+            print(f"{r['transactie_id']}\t{r['email']}\t{r['taal'] or 'en'}\t{r['moment']}\tgeen toestemming, niet geleverd")
+    elif a.opdracht == "vrijgeven":
+        levering = Levering(cfg)
+        if not levering.vrijgeven(a.transactie, a.toestemming):
+            raise SystemExit(f"{a.transactie}: geen aankoop die op toestemming wacht")
+        ok, fout = levering.wachtrij()
+        print(f"{a.transactie} vrijgegeven; {ok} verzonden, {fout} mislukt (blijven in de rij)")
     return 0

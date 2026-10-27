@@ -5,8 +5,17 @@ mailadres. Geen geheimen in code. Elke mail is platte tekst, met het leverings- 
 """
 import email.message
 import email.utils
+import re
 import smtplib
 import ssl
+
+# Eén kaal adres (geen naam, geen komma, geen regeleinde): wat Paddle als klant-e-mail heeft. Strenger dan RFC 5322
+# met opzet; een afgewezen adres wordt niet gemaild en staat als 'ongeldig_adres' in de wachtrij (zie kern.wachtrij).
+_ADRES = re.compile(r"[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]{1,64}@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}")
+
+
+def adres_geldig(adres):
+    return isinstance(adres, str) and len(adres) <= 254 and _ADRES.fullmatch(adres) is not None
 
 TEKSTEN = {
     "en": {
@@ -39,6 +48,8 @@ TEKSTEN = {
 
 
 def bericht(cfg, aan, onderwerp, tekst):
+    if not adres_geldig(aan):
+        raise ValueError("ongeldig e-mailadres")
     m = email.message.EmailMessage()
     m["From"] = cfg.mail_van
     m["To"] = aan

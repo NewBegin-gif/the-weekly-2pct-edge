@@ -16,6 +16,7 @@ halen we het op met GET /customers/{id} (PADDLE_API_SLEUTEL).
 import hashlib
 import hmac
 import json
+import re
 import time
 import urllib.request
 
@@ -24,6 +25,10 @@ from .opslag import lees_iso
 
 class OngeldigeHandtekening(Exception):
     pass
+
+
+_TS = re.compile(r"[0-9]{1,12}")
+_H1 = re.compile(r"[0-9a-f]{64}")
 
 
 def controleer_handtekening(kop, body, geheim, tolerantie=300, nu=None):
@@ -39,7 +44,8 @@ def controleer_handtekening(kop, body, geheim, tolerantie=300, nu=None):
             ts = waarde
         elif sleutel == "h1":
             h1s.append(waarde)
-    if not ts or not ts.isdigit() or not h1s:
+    h1s = [h for h in h1s if _H1.fullmatch(h)]  # alleen ASCII-hex: compare_digest gooit anders TypeError
+    if not ts or not _TS.fullmatch(ts) or not h1s:
         raise OngeldigeHandtekening("Paddle-Signature onleesbaar")
     nu = time.time() if nu is None else nu
     if abs(nu - int(ts)) > tolerantie:

@@ -17,8 +17,12 @@ Onderdelen
   test_levering.py tests: handtekening, replay, volgorde, refund/chargeback, SMTP-wachtrij, gelijktijdige
                    downloads, verlopen link, idempotente updates, export, HTTP-routes
 
-Gebruik (op de VPS)
+Gebruik (op de VPS; de dienst draait als gebruiker 'levering' vanuit /opt/levering, opdrachten als root met
+`cd /opt/levering && python3 -m levering --env /etc/levering.env <opdracht>`: de database wordt dan als 'levering'
+geopend, zie opdrachten.py)
   python3 -m levering serve                                  # luistert op 127.0.0.1:$LEVERING_POORT
+  python3 -m levering aankopen                               # betaald maar zonder herroepingstoestemming: niet geleverd
+  python3 -m levering vrijgeven --transactie txn_... --toestemming "per mail 2026-11-02"
   python3 -m levering wachtrij                               # wachtende leveringsmails nu versturen
   python3 -m levering export --uit /root/boekhouding/abonnees.csv   # nooit in een webroot
   python3 -m levering nieuwe-versie --versie 1.0 --bestand /srv/bouwpakket/v1.0.pdf --commit <volledige sha in de bot-repo> --changelog wijzigingen.txt

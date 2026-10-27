@@ -48,8 +48,8 @@ class Bestanden(unittest.TestCase):
     def test_unit_en_caddy_kloppen_met_de_dienst(self):
         bestand, _ = bestanden.alle()
         unit = bestand["levering.service"]
-        for regel in ("EnvironmentFile=/etc/levering.env", "Restart=on-failure", "ExecStart=/root/felix_hq/venv/bin/python -m levering serve",
-                      "WorkingDirectory=/root/felix_hq/repos/the-weekly-2pct-edge", "ProtectSystem=strict"):
+        for regel in ("EnvironmentFile=/etc/levering.env", "Restart=on-failure", "ExecStart=/usr/bin/python3 -m levering serve",
+                      "WorkingDirectory=/opt/levering", "ProtectSystem=strict"):
             self.assertIn(regel, unit)
         nl = bestand["mijnbitcoinstrategie.nl.caddy"]
         poort = Instellingen().poort
@@ -149,6 +149,61 @@ class Publiceren(unittest.TestCase):
         for x in (".git", "*.bak*", "*.tmp-*", "*.orig", "*.py"):
             self.assertIn(x, cmd)
         self.assertEqual(publiceer_nl.en_exclude_regel().count("--exclude"), 6)
+
+
+class AuditDeploy(unittest.TestCase):
+    """Review 27 okt 2026: de unit draait niet als root en is afgeschermd; geen geheimen in gegenereerde bestanden;
+    wat nooit publiek mag geeft in beide site-blokken 404."""
+
+    def unit(self):
+        tekst = bestanden.alle()[0]["levering.service"]
+        return {r.split("=", 1)[0]: r.split("=", 1)[1] for r in tekst.splitlines() if "=" in r and not r.startswith("#")}, tekst
+
+    def test_unit_niet_als_root_en_afgeschermd(self):
+        u, tekst = self.unit()
+        self.assertEqual(u.get("User"), "levering")
+        self.assertEqual(u.get("Group"), "levering")
+        for sleutel, waarde in (("NoNewPrivileges", "true"), ("ProtectSystem", "strict"), ("PrivateTmp", "true"),
+                                ("ReadWritePaths", "/var/lib/levering"), ("ProtectHome", "true"),
+                                ("CapabilityBoundingSet", ""), ("UMask", "0077")):
+            self.assertEqual(u.get(sleutel), waarde, sleutel)
+        self.assertEqual(tekst.count("ReadWritePaths="), 1)
+        self.assertNotIn("/root", u["ExecStart"] + u["WorkingDirectory"])
+
+    def test_geen_geheimen_in_gegenereerde_bestanden(self):
+        import os
+        geheimen = {"LEVERING_GEHEIM": "s3cr3t-link", "PADDLE_WEBHOOK_GEHEIM": "pdl_ntfset_s3cr3t",
+                    "PADDLE_API_SLEUTEL": "pdl_apikey_s3cr3t", "SMTP_WACHTWOORD": "smtp-s3cr3t"}
+        oud = {k: os.environ.get(k) for k in geheimen}
+        os.environ.update(geheimen)
+        try:
+            alles = "".join(bestanden.alle()[0].values())
+        finally:
+            for k, v in oud.items():
+                if v is None:
+                    os.environ.pop(k, None)
+                else:
+                    os.environ[k] = v
+        for g in geheimen.values():
+            self.assertNotIn(g, alles)
+
+    def test_verborgen_paden_in_beide_blokken(self):
+        b = bestanden.alle()[0]
+        nieuw = bestanden.nieuwe_caddyfile(VOORBEELD, b["mijnbitcoinstrategie.nl.caddy"])
+        en = bestanden.site_blok(nieuw, "theweekly2pctedge.com")
+        nl = bestanden.site_blok(nieuw, "mijnbitcoinstrategie.nl")
+        for blok in (en, nl, b["theweekly2pctedge.com.proxy.caddy"]):
+            self.assertIn("respond @levering_verborgen 404", blok)
+            for patroon in ("*.py", "*.md", "*.db", "*.pdf", "/levering/*", "/deploy/*", "/.git/*"):
+                self.assertIn(patroon, blok)
+        self.assertEqual(nieuw.count("{"), nieuw.count("}"))
+
+    def test_caddy_proxyt_alleen_de_drie_paden(self):
+        b = bestanden.alle()[0]
+        for blok in (b["mijnbitcoinstrategie.nl.caddy"], b["theweekly2pctedge.com.proxy.caddy"]):
+            proxied = re.findall(r"handle (\S+) \{\n\t*reverse_proxy", blok)
+            self.assertEqual(sorted(proxied), ["/download/*", "/healthz", "/webhook/*"])
+            self.assertEqual(blok.count("reverse_proxy"), 3)
 
 
 if __name__ == "__main__":

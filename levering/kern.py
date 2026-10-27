@@ -12,12 +12,22 @@ Robuustheid
   - SMTP-fout: de leveringsmail staat eerst in de wachtrij 'uitgaand' en wordt pas na een gelukte verzending
     afgevinkt; de webhook antwoordt 200 (de aankoop is vastgelegd), de dienst probeert het elke LEVERING_WACHTRIJ_SEC
     opnieuw met oplopende wachttijd, en `python3 -m levering wachtrij` doet het direct. Niets gaat verloren.
+    In de dienst verstuurt een achtergronddraad de mail (mail_wekker): de webhook wacht nooit op SMTP, want Paddle
+    wil binnen enkele seconden antwoord. Een adres dat nooit te mailen is ('ongeldig_adres') wordt niet herhaald.
+  - EU-herroepingsrecht (richtlijn 2011/83/EU art. 16(m)): de kit wordt alleen geleverd als de transactie de
+    toestemming uit het afrekenvinkje draagt (custom_data.withdrawal_consent, gezet door de koopknop, zie
+    bouw/w2e_kassa.py). Versie en tijdstip van die toestemming staan in aankopen. Zonder: status
+    'wacht_op_toestemming', geen mail; `python3 -m levering aankopen` toont ze, `vrijgeven` levert na toestemming.
+  - Database op slot of weg: de webhook antwoordt 503 (Paddle probeert het later opnieuw), nooit een half event.
 """
 import csv
+import datetime
 import json
 import os
 import logging
 import pathlib
+import re
+import sqlite3
 import subprocess
 
 from . import links, paddle, post
@@ -27,6 +37,23 @@ log = logging.getLogger("levering")
 ABONNEE_STATUS = {"subscription.created", "subscription.activated", "subscription.updated", "subscription.canceled",
                   "subscription.past_due", "subscription.paused", "subscription.resumed"}
 TERUG = {"adjustment.created", "adjustment.updated"}
+TOESTEMMING = re.compile(r"[A-Za-z0-9.\-]{1,40}")
+
+
+def toestemming_uit(data, moment):
+    """(versie, tijdstip) van de herroepingstoestemming in custom_data, of (None, None). Een onleesbaar of toekomstig
+    tijdstip wordt vervangen door het moment van het event (de toestemming ging aan de betaling vooraf)."""
+    cd = data.get("custom_data") or {}
+    versie = cd.get("withdrawal_consent") if isinstance(cd, dict) else None
+    if not isinstance(versie, str) or not TOESTEMMING.fullmatch(versie):
+        return None, None
+    try:
+        wanneer = lees_iso(cd.get("consent_at"))
+    except (TypeError, ValueError):
+        wanneer = None
+    if not wanneer or wanneer > nu() + datetime.timedelta(minutes=5):
+        wanneer = moment
+    return versie, wanneer
 
 
 class Levering:
@@ -35,6 +62,7 @@ class Levering:
         self.opslag = opslag or Opslag(cfg.db)
         self.verzend = verzend or post.SmtpVerzender(cfg)
         self.klant_ophalen = klant_ophalen or (lambda cid: paddle.klant_email_ophalen(cid, cfg.paddle_api_url, cfg.paddle_api_sleutel))
+        self.mail_wekker = None  # threading.Event van de wachtrij-draad (dienst.py); None = meteen zelf versturen
 
     # ------------------------------------------------------------ webhook
     def webhook(self, body, kop, nu_ts=None):
@@ -49,17 +77,28 @@ class Levering:
         except ValueError:
             return 400, "geen JSON"
         event_id, soort, data = event.get("event_id"), event.get("event_type"), event.get("data") or {}
-        if not event_id or not soort:
+        if not isinstance(event, dict) or not event.get("event_id") or not event.get("event_type"):
             return 400, "event_id of event_type ontbreekt"
-        if not self.opslag.event_nieuw(event_id, soort):
-            return 200, "al verwerkt"
+        event_id, soort, data = str(event["event_id"]), str(event["event_type"]), event.get("data") or {}
+        try:
+            if not self.opslag.event_nieuw(event_id, soort):
+                return 200, "al verwerkt"
+        except sqlite3.Error as fout:
+            log.error("database niet beschikbaar voor event %s: %s", event_id, fout)
+            return 503, "probeer later opnieuw"
         try:
             self._verwerk(soort, data, lees_iso(event.get("occurred_at")) or nu())
-        except Exception:
-            self.opslag.event_vergeet(event_id)  # Paddle probeert het opnieuw
+        except Exception as fout:
+            try:
+                self.opslag.event_vergeet(event_id)  # Paddle probeert het opnieuw
+            except sqlite3.Error:
+                log.error("event %s kon niet worden vrijgegeven", event_id)
             log.exception("event %s (%s) mislukt", event_id, soort)
-            return 500, "verwerking mislukt"
-        self.wachtrij()  # leveringsmail meteen proberen; mislukt het, dan blijft hij in de rij
+            return (503, "probeer later opnieuw") if isinstance(fout, sqlite3.Error) else (500, "verwerking mislukt")
+        if self.mail_wekker is not None:
+            self.mail_wekker.set()  # de wachtrij-draad verstuurt; Paddle krijgt meteen antwoord
+        else:
+            self.wachtrij()  # opdrachtregel/tests: meteen; mislukt het, dan blijft hij in de rij
         return 200, "ok"
 
     def _klant(self, customer_id):
@@ -89,8 +128,12 @@ class Levering:
                 versie = self.opslag.versie()
                 if not versie:
                     raise RuntimeError("geen documentversie geregistreerd (python3 -m levering nieuwe-versie)")
+                toestemming, wanneer = toestemming_uit(data, moment)
                 self.opslag.aankoop_bewaar(data["id"], data.get("customer_id"), email, taal, "kit", versie["versie"],
-                                           data.get("subscription_id"))
+                                           data.get("subscription_id"), toestemming, wanneer,
+                                           "betaald" if toestemming else "wacht_op_toestemming")
+                if not toestemming:
+                    log.warning("transactie %s zonder herroepingstoestemming: niet geleverd (zie `aankopen`)", data["id"])
                 aankoop = self.opslag.aankoop(data["id"])
                 if aankoop["status"] == "betaald":
                     self.opslag.uitgaand_toevoegen(data["id"], "kit", email, taal, aankoop["versie"])
@@ -134,6 +177,14 @@ class Levering:
         if data.get("subscription_id"):
             self.opslag.abonnee_intrekken(abonnement_id=data["subscription_id"])
 
+    def vrijgeven(self, transactie_id, toestemming):
+        """Levert een aankoop die op toestemming wachtte, nadat de koper die alsnog gaf (bv. per mail). Geeft True als
+        er iets in de wachtrij kwam."""
+        if not self.opslag.aankoop_vrijgeven(transactie_id, toestemming):
+            return False
+        a = self.opslag.aankoop(transactie_id)
+        return self.opslag.uitgaand_toevoegen(transactie_id, "kit", a["email"], a["taal"] or "en", a["versie"])
+
     # ------------------------------------------------------------ mails
     def _link(self, email, taal, versie, uren):
         link_id, token = links.maak(self.opslag, self.cfg.geheim, email, versie, uren, self.cfg.max_downloads)
@@ -143,6 +194,11 @@ class Levering:
         """Verstuurt elke leveringsmail die aan de beurt is. Geeft (verzonden, mislukt)."""
         ok = fout = 0
         for r in self.opslag.uitgaand_klaar():
+            if not post.adres_geldig(r["email"]):
+                self.opslag.uitgaand_ongeldig(r["id"])
+                log.error("leveringsmail %s: ongeldig e-mailadres, niet verstuurd (handmatig oplossen)", r["sleutel"])
+                fout += 1
+                continue
             try:
                 taal = r["taal"] if r["taal"] in post.TEKSTEN else "en"
                 link_id, url = self._link(r["email"], taal, r["versie"], self.cfg.link_uur)
@@ -170,6 +226,9 @@ class Levering:
         resultaat = []
         for a in self.opslag.actieve_abonnees():
             email = a["email"]
+            if not post.adres_geldig(email):
+                resultaat.append((email, "mislukt: ongeldig e-mailadres"))
+                continue
             eerder = self.opslag.verzending(email, versie)
             if eerder and eerder["status"] == "verzonden":
                 resultaat.append((email, "al eerder verzonden"))
@@ -216,7 +275,7 @@ class Levering:
 VERBODEN_EXPORT = ("/var/www", "/srv/www", "/usr/share/nginx")
 
 
-def export_abonnees(opslag, doel):
+def export_abonnees(opslag, doel, rijen=None):
     """Schrijft alle abonnees (ook beëindigde) naar CSV voor de boekhouding, met bestandsrechten 600. Weigert een pad
     in een webroot of in deze repo: het bestand bevat e-mailadressen en mag nooit geserveerd worden."""
     doel = pathlib.Path(doel).expanduser().resolve()
@@ -224,7 +283,7 @@ def export_abonnees(opslag, doel):
     if any(str(doel).startswith(p) for p in VERBODEN_EXPORT) or repo in doel.parents:
         raise SystemExit(f"weigert {doel}: dat is (mogelijk) publiek. Kies bv. /root/boekhouding/abonnees.csv")
     doel.parent.mkdir(parents=True, exist_ok=True)
-    rijen = opslag.alle_abonnees()
+    rijen = opslag.alle_abonnees() if rijen is None else rijen
     with open(doel, "w", newline="", encoding="utf-8", opener=lambda p, f: os.open(p, f, 0o600)) as f:
         w = csv.writer(f)
         w.writerow(["abonnement_id", "customer_id", "email", "taal", "status", "actief_tot", "bijgewerkt"])
@@ -234,10 +293,11 @@ def export_abonnees(opslag, doel):
     return doel, len(rijen)
 
 
-def maandrapport(opslag, bot_repo, git="git"):
+def maandrapport(opslag, bot_repo, git="git", versie=None):
     """Commits in de bot-repo sinds de laatste documentversie, zodat Claude kan beslissen of het document een update
-    nodig heeft. Geeft markdown-tekst (naar stdout; niets wordt verstuurd of gewijzigd)."""
-    v = opslag.versie()
+    nodig heeft. Geeft markdown-tekst (naar stdout; niets wordt verstuurd of gewijzigd). Zonder opslag: de meegegeven
+    versie-rij (de opdrachtregel leest die als dienstgebruiker en draait git als root)."""
+    v = opslag.versie() if opslag is not None else versie
     if v and v["bot_commit"]:
         bereik, sinds = [f"{v['bot_commit']}..HEAD"], f"commit {v['bot_commit'][:10]} (versie {v['versie']}, {v['datum'][:10]})"
     elif v:

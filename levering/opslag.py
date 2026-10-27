@@ -3,7 +3,9 @@
 Tabellen
   events          verwerkte Paddle-events (event_id uniek: een tweede aflevering doet niets)
   klanten         customer_id -> e-mail, taal (uit customer.*-events of opgehaald via de Paddle-API)
-  aankopen        één rij per betaalde transactie met de kit; status 'betaald' of 'teruggedraaid' (refund/chargeback)
+  aankopen        één rij per betaalde transactie met de kit; status 'betaald', 'wacht_op_toestemming' (geen
+                  vastgelegde EU-toestemming voor directe levering: niets geleverd tot `vrijgeven`) of 'teruggedraaid'
+                  (refund/chargeback); 'toestemming' + 'toestemming_moment' leggen die toestemming vast
   abonnees        één rij per Paddle-abonnement: status, 'actief_tot' (einde lopende periode) en 'event_moment'
                   (occurred_at van het laatst toegepaste event: een ouder event dat later binnenkomt wordt genegeerd)
   versies         documentversies: versie, bestand (buiten de webroot), datum, bot-commit, changelog
@@ -11,10 +13,13 @@ Tabellen
   verzendingen    wie welke updateversie kreeg (e-mail + versie uniek): maakt send-update idempotent
   uitgaand        wachtrij voor de leveringsmail: een mislukte SMTP-poging blijft staan en wordt later opnieuw
                   geprobeerd (oplopende wachttijd, max. 6 uur), zodat een betaalde levering nooit verloren gaat
-Een bestaande database krijgt nieuwe kolommen bij het openen (ALTER TABLE, alleen als ze ontbreken).
+Een bestaande database krijgt nieuwe kolommen bij het openen (ALTER TABLE, alleen als ze ontbreken). Een nieuw
+databasebestand krijgt rechten 600 (e-mailadressen); alle query's zijn geparametriseerd.
 """
 import contextlib
 import datetime
+import os
+import re
 import sqlite3
 
 SCHEMA = """
@@ -34,8 +39,13 @@ CREATE TABLE IF NOT EXISTS uitgaand (id INTEGER PRIMARY KEY AUTOINCREMENT, sleut
     gemaakt TEXT, verzonden TEXT);
 """
 NIEUWE_KOLOMMEN = [("aankopen", "status", "TEXT DEFAULT 'betaald'"), ("aankopen", "subscription_id", "TEXT"),
-                   ("abonnees", "event_moment", "TEXT"), ("links", "ingetrokken", "INTEGER DEFAULT 0")]
+                   ("abonnees", "event_moment", "TEXT"), ("links", "ingetrokken", "INTEGER DEFAULT 0"),
+                   ("aankopen", "toestemming", "TEXT"), ("aankopen", "toestemming_moment", "TEXT")]
 MAX_WACHT = datetime.timedelta(hours=6)
+# Paddle wacht ~5 s op een antwoord; langer op een slot wachten heeft geen zin (Paddle probeert het later opnieuw).
+SLOT_WACHT_SEC = 4
+VERSIE = re.compile(r"[0-9A-Za-z][0-9A-Za-z.\-]{0,19}")  # komt in een bestandsnaam en een Content-Disposition-kop
+ACTIEF = ("active", "trialing", "canceled")  # past_due = verlenging niet betaald: geen nieuwe updates tot betaling
 
 
 def nu():
@@ -60,6 +70,8 @@ def lees_iso(s):
 class Opslag:
     def __init__(self, pad):
         self.pad = pad
+        if pad != ":memory:" and not os.path.exists(pad):
+            os.close(os.open(pad, os.O_CREAT | os.O_WRONLY, 0o600))
         with self.verbind() as c:
             c.executescript(SCHEMA)
             for tabel, kolom, soort in NIEUWE_KOLOMMEN:
@@ -69,11 +81,11 @@ class Opslag:
 
     @contextlib.contextmanager
     def verbind(self):
-        c = sqlite3.connect(self.pad, timeout=30, isolation_level=None)  # autocommit; transacties expliciet
+        c = sqlite3.connect(self.pad, timeout=SLOT_WACHT_SEC, isolation_level=None)  # autocommit; transacties expliciet
         c.row_factory = sqlite3.Row
         try:
             c.execute("PRAGMA journal_mode=WAL")
-            c.execute("PRAGMA busy_timeout=30000")
+            c.execute(f"PRAGMA busy_timeout={SLOT_WACHT_SEC * 1000}")
             yield c
         finally:
             c.close()
@@ -111,15 +123,29 @@ class Opslag:
             return c.execute("SELECT * FROM klanten WHERE customer_id = ?", (customer_id,)).fetchone()
 
     # --- aankopen
-    def aankoop_bewaar(self, transactie_id, customer_id, email, taal, product, versie, subscription_id=None):
+    def aankoop_bewaar(self, transactie_id, customer_id, email, taal, product, versie, subscription_id=None,
+                       toestemming=None, toestemming_moment=None, status="betaald"):
         with self.verbind() as c:
             try:
                 c.execute("INSERT INTO aankopen (transactie_id, customer_id, email, taal, product, versie, moment, status, "
-                          "subscription_id) VALUES (?,?,?,?,?,?,?, 'betaald', ?)",
-                          (transactie_id, customer_id, email, taal, product, versie, iso(nu()), subscription_id))
+                          "subscription_id, toestemming, toestemming_moment) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                          (transactie_id, customer_id, email, taal, product, versie, iso(nu()), status, subscription_id,
+                           toestemming, iso(toestemming_moment) if toestemming_moment else None))
                 return True
             except sqlite3.IntegrityError:
                 return False
+
+    def aankoop_vrijgeven(self, transactie_id, toestemming, moment=None):
+        """Een aankoop die op toestemming wachtte alsnog op 'betaald' zetten (toestemming kwam later, bv. per mail).
+        Geeft True als dat gebeurde; een teruggedraaide aankoop blijft teruggedraaid."""
+        with self.verbind() as c:
+            return bool(c.execute("UPDATE aankopen SET status='betaald', toestemming=?, toestemming_moment=? "
+                                  "WHERE transactie_id=? AND status='wacht_op_toestemming'",
+                                  (toestemming, iso(moment or nu()), transactie_id)).rowcount)
+
+    def aankopen_zonder_toestemming(self):
+        with self.verbind() as c:
+            return c.execute("SELECT * FROM aankopen WHERE status='wacht_op_toestemming' ORDER BY moment").fetchall()
 
     def aankoop(self, transactie_id):
         with self.verbind() as c:
@@ -172,7 +198,7 @@ class Opslag:
                 c.execute("UPDATE abonnees SET status='revoked', bijgewerkt=? WHERE lower(email)=lower(?)", (iso(nu()), email))
 
     def actieve_abonnees(self, moment=None):
-        """Status active/past_due/trialing óf opgezegd maar nog binnen de betaalde periode, actief_tot in de toekomst,
+        """Status active/trialing óf opgezegd maar nog binnen de betaalde periode (niet past_due), actief_tot in de toekomst,
         niet ingetrokken en zonder teruggedraaide aankoop op hetzelfde e-mailadres."""
         moment = moment or nu()
         geblokkeerd = self.teruggedraaide_emails()
@@ -182,7 +208,7 @@ class Opslag:
         for r in rijen:
             tot = lees_iso(r["actief_tot"])
             mail = r["email"].lower()
-            if (tot and tot > moment and r["status"] in ("active", "past_due", "trialing", "canceled")
+            if (tot and tot > moment and r["status"] in ACTIEF
                     and mail not in geblokkeerd and mail not in gezien):
                 gezien.add(mail)
                 uit.append(r)
@@ -194,6 +220,8 @@ class Opslag:
 
     # --- versies
     def versie_bewaar(self, versie, bestand, bot_commit, changelog):
+        if not VERSIE.fullmatch(versie or ""):
+            raise ValueError("versie: alleen letters, cijfers, punt en streepje (max. 20), bv. 1.1")
         with self.verbind() as c:
             c.execute("INSERT INTO versies VALUES (?,?,?,?,?) ON CONFLICT(versie) DO UPDATE SET bestand=excluded.bestand, "
                       "bot_commit=excluded.bot_commit, changelog=excluded.changelog", (versie, bestand, iso(nu()), bot_commit, changelog))
@@ -274,6 +302,11 @@ class Opslag:
             wacht = min(datetime.timedelta(minutes=5 * 2 ** (pogingen - 1)), MAX_WACHT)
             c.execute("UPDATE uitgaand SET pogingen=?, volgende=?, laatste_fout=? WHERE id=?",
                       (pogingen, iso(nu() + wacht), str(fout)[:300], rij_id))
+
+    def uitgaand_ongeldig(self, rij_id):
+        """Een adres dat nooit te mailen is: niet eindeloos opnieuw proberen (handmatig oplossen, zie `aankopen`)."""
+        with self.verbind() as c:
+            c.execute("UPDATE uitgaand SET status='ongeldig_adres', laatste_fout='ongeldig e-mailadres' WHERE id=?", (rij_id,))
 
     def uitgaand_annuleren(self, email):
         with self.verbind() as c:

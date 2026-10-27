@@ -5,8 +5,10 @@ Caddy stuurt op beide domeinen deze paden door (deploy/bestanden.py schrijft de 
   GET  /download/<token>      het document, als de link geldig is (handtekening, verloop, aantal, niet ingetrokken)
   GET  /healthz               200 "ok" of 503 "unavailable" (alleen: database bereikbaar). Geen tellingen, geen
                               versie, geen paden: niets wat een buitenstaander iets vertelt.
-Alles anders: 404. De dienst draait een achtergronddraad die elke LEVERING_WACHTRIJ_SEC de wachtrij met
-leveringsmails afwerkt (mislukte SMTP-pogingen).
+Alles anders: 404. De dienst draait een achtergronddraad die de wachtrij met leveringsmails afwerkt: direct na een
+webhook (die daar niet op wacht) en elke LEVERING_WACHTRIJ_SEC voor mislukte SMTP-pogingen.
+Grenzen: body max. 1 MB, elke socket-bewerking max. TIMEOUT seconden (een trage of hangende client houdt geen draad
+vast). Foutpagina's zijn de kale stdlib-pagina's: status en korte tekst, geen paden of stacktrace.
 """
 import http.server
 import logging
@@ -17,6 +19,7 @@ from .kern import Levering
 
 log = logging.getLogger("levering")
 MAX_BODY = 1_000_000
+TIMEOUT = 15
 
 
 def maak_handler(levering: Levering):
@@ -26,8 +29,12 @@ def maak_handler(levering: Levering):
         server_version = "levering"
         sys_version = ""
 
+        def setup(self):
+            self.timeout = TIMEOUT  # per verbinding, gelezen bij het openen (tests zetten TIMEOUT tijdelijk lager)
+            super().setup()
+
         def _pad(self):
-            pad = self.path.split("?", 1)[0]
+            pad = (getattr(self, "path", None) or "").split("?", 1)[0]  # leeg bij een onleesbaar verzoek
             return pad[len(voorvoegsel):] if voorvoegsel and pad.startswith(voorvoegsel) else pad
 
         def _antwoord(self, status, tekst):
@@ -77,21 +84,34 @@ def maak_handler(levering: Levering):
                 shutil.copyfileobj(f, self.wfile)
 
 
-        def log_message(self, fmt, *args):  # tokens niet in het log
+        def log_message(self, fmt, *args):  # tokens niet in het log; ook geen ruwe verzoekregel
             pad = self._pad()
-            log.info("%s %s", self.command, "/download/…" if pad.startswith("/download/") else pad)
+            log.info("%s %s", getattr(self, "command", None) or "-", "/download/…" if pad.startswith("/download/") else pad[:200])
 
     return Handler
 
 
-def wachtrij_draad(levering: Levering, stop: threading.Event):
-    while not stop.wait(levering.cfg.wachtrij_sec):
+def wachtrij_draad(levering: Levering, stop: threading.Event, wekker: threading.Event):
+    while not stop.is_set():
+        wekker.wait(levering.cfg.wachtrij_sec)
+        wekker.clear()
+        if stop.is_set():
+            return
         try:
             ok, fout = levering.wachtrij()
             if ok or fout:
                 log.info("wachtrij: %s verzonden, %s opnieuw later", ok, fout)
         except Exception:
             log.exception("wachtrij mislukt")
+
+
+def start_wachtrij(levering: Levering, stop: threading.Event):
+    """Start de wachtrij-draad en laat webhooks die wekken in plaats van zelf te mailen."""
+    wekker = threading.Event()
+    levering.mail_wekker = wekker
+    stop_en_wek = threading.Thread(target=lambda: (stop.wait(), wekker.set()), daemon=True)
+    stop_en_wek.start()
+    threading.Thread(target=wachtrij_draad, args=(levering, stop, wekker), daemon=True).start()
 
 
 def maak_server(levering: Levering, poort=None):
@@ -102,7 +122,7 @@ def maak_server(levering: Levering, poort=None):
 def serve(levering: Levering):
     server = maak_server(levering)
     stop = threading.Event()
-    threading.Thread(target=wachtrij_draad, args=(levering, stop), daemon=True).start()
+    start_wachtrij(levering, stop)
     log.info("levering luistert op 127.0.0.1:%s", server.server_address[1])
     try:
         server.serve_forever()

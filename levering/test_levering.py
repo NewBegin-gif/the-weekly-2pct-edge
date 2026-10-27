@@ -50,10 +50,13 @@ class Basis(unittest.TestCase):
         body = json.dumps(event).encode()
         return self.lev.webhook(body, paddle.teken(body, GEHEIM))
 
-    def transactie(self, event_id="evt_t1", txn="txn_1", prijzen=("pri_kit_usd",), origin="web", sub=None):
+    def transactie(self, event_id="evt_t1", txn="txn_1", prijzen=("pri_kit_usd",), origin="web", sub=None,
+                   toestemming=True):
         return {"event_id": event_id, "event_type": "transaction.completed", "occurred_at": moment(0),
                 "data": {"id": txn, "customer_id": "ctm_1", "origin": origin, "subscription_id": sub,
                          "items": [{"price": {"id": p}} for p in prijzen],
+                         "custom_data": {"withdrawal_consent": "en-2026-10-27", "consent_at": moment(0)}
+                         if toestemming else None,
                          "billing_period": {"ends_at": moment(365)} if sub else None}}
 
     def abonnement(self, event_id, soort, status, wanneer, ends_at=None):
@@ -373,6 +376,292 @@ class Http(Basis):
                               nu=datetime.datetime.now(UTC) - datetime.timedelta(hours=2))[1]
         self.assertEqual(self.vraag("GET", f"/download/{verlopen}")[0], 410)
         self.assertEqual(self.vraag("GET", "/levering.db")[0], 404)
+
+
+# ----------------------------------------------------------------------------------------------- review 27 okt 2026
+class AuditHandtekening(unittest.TestCase):
+    body = b'{"event_id":"evt_1","event_type":"transaction.completed"}'
+
+    def test_niet_ascii_in_de_kop_geeft_ongeldig_en_geen_crash(self):
+        ts = int(time.time())
+        for kop in ("ts=\u00b2;h1=00", f"ts={ts};h1=\u00e9\u00e9", f"ts={ts};h1=" + "z" * 64, f"ts={ts}"):
+            with self.assertRaises(paddle.OngeldigeHandtekening):
+                paddle.controleer_handtekening(kop, self.body, GEHEIM)
+
+    def test_herserialiseerde_json_klopt_niet(self):
+        ruw = b'{"event_id": "evt_1",  "event_type":"transaction.completed"}'
+        kop = paddle.teken(ruw, GEHEIM)
+        with self.assertRaises(paddle.OngeldigeHandtekening):
+            paddle.controleer_handtekening(kop, json.dumps(json.loads(ruw)).encode(), GEHEIM)
+
+    def test_uit_de_toekomst_geweigerd(self):
+        kop = paddle.teken(self.body, GEHEIM, time.time() + 3600)
+        with self.assertRaises(paddle.OngeldigeHandtekening):
+            paddle.controleer_handtekening(kop, self.body, GEHEIM, tolerantie=300)
+
+
+class AuditToestemming(Basis):
+    """EU-herroepingsrecht: zonder vastgelegde toestemming geen levering."""
+    def setUp(self):
+        super().setUp()
+        self.opslag.klant_bewaar("ctm_1", "koper@voorbeeld.test", "en")
+
+    def test_zonder_toestemming_geen_levering(self):
+        ev = self.transactie(toestemming=False)
+        self.assertEqual(self.stuur(ev), (200, "ok"))
+        self.assertEqual(self.post, [])
+        self.assertEqual(self.opslag.aankoop("txn_1")["status"], "wacht_op_toestemming")
+
+    def test_met_toestemming_levering_en_tijdstip_vastgelegd(self):
+        ev = self.transactie()
+        ev["data"]["custom_data"] = {"withdrawal_consent": "en-2026-10-27", "consent_at": "2026-10-01T10:00:00.000Z"}
+        self.assertEqual(self.stuur(ev), (200, "ok"))
+        self.assertEqual(len(self.post), 1)
+        a = self.opslag.aankoop("txn_1")
+        self.assertEqual(a["toestemming"], "en-2026-10-27")
+        self.assertEqual(a["toestemming_moment"], "2026-10-01T10:00:00Z")
+
+    def test_handmatig_vrijgeven_na_toestemming_per_mail(self):
+        self.stuur(self.transactie(toestemming=False))
+        self.assertTrue(self.lev.vrijgeven("txn_1", "per mail 2026-11-02"))
+        self.lev.wachtrij()
+        self.assertEqual(len(self.post), 1)
+        self.assertEqual(self.opslag.aankoop("txn_1")["toestemming"], "per mail 2026-11-02")
+
+
+class AuditGeldstroom(Basis):
+    """Elk Paddle-event waarop de dienst geabonneerd is: wat krijgt de klant, wat zegt de database."""
+    def setUp(self):
+        super().setUp()
+        self.opslag.klant_bewaar("ctm_1", "abo@voorbeeld.test", "en")
+
+    def test_verlenging_schuift_einde_op(self):
+        self.stuur(self.abonnement("evt_1", "subscription.created", "active", moment(-360), ends_at=moment(5)))
+        ev = self.transactie(event_id="evt_r", txn="txn_r", prijzen=("pri_upd_usd",), origin="subscription_recurring",
+                             sub="sub_1")
+        self.assertEqual(self.stuur(ev), (200, "ok"))
+        self.assertEqual(self.post, [])  # een verlenging levert geen kit opnieuw
+        tot = self.opslag.alle_abonnees()[0]["actief_tot"]
+        self.assertGreater(tot, moment(300))
+
+    def test_past_due_krijgt_geen_nieuwe_updates(self):
+        self.stuur(self.abonnement("evt_1", "subscription.created", "active", moment(-10), ends_at=moment(355)))
+        self.stuur(self.abonnement("evt_2", "subscription.past_due", "past_due", moment(-1), ends_at=moment(355)))
+        self.assertEqual(self.opslag.alle_abonnees()[0]["status"], "past_due")
+        self.assertEqual(self.opslag.actieve_abonnees(), [])
+        # betaalt alsnog -> weer actief
+        self.stuur(self.abonnement("evt_3", "subscription.updated", "active", moment(0), ends_at=moment(365)))
+        self.assertEqual(len(self.opslag.actieve_abonnees()), 1)
+
+    def test_gepauzeerd_en_hervat(self):
+        self.stuur(self.abonnement("evt_1", "subscription.created", "active", moment(-10), ends_at=moment(355)))
+        self.stuur(self.abonnement("evt_2", "subscription.paused", "paused", moment(-5)))
+        self.assertEqual(self.opslag.actieve_abonnees(), [])
+        self.stuur(self.abonnement("evt_3", "subscription.resumed", "active", moment(-1), ends_at=moment(364)))
+        self.assertEqual(len(self.opslag.actieve_abonnees()), 1)
+
+    def test_opzegging_per_periode_einde_blijft_actief_tot_dat_einde(self):
+        self.stuur(self.abonnement("evt_1", "subscription.created", "active", moment(-10), ends_at=moment(355)))
+        ev = self.abonnement("evt_2", "subscription.updated", "active", moment(-1), ends_at=moment(355))
+        ev["data"]["scheduled_change"] = {"action": "cancel", "effective_at": moment(355)}
+        self.stuur(ev)
+        self.assertEqual(len(self.opslag.actieve_abonnees()), 1)
+
+    def test_chargeback_waarschuwing_doet_niets(self):
+        ev = self.transactie()
+        ev["data"]["custom_data"] = {"withdrawal_consent": "en-2026-10-27"}
+        self.stuur(ev)
+        token = self.token_uit(self.post[0])
+        self.stuur({"event_id": "evt_w", "event_type": "adjustment.created", "occurred_at": moment(0),
+                    "data": {"transaction_id": "txn_1", "customer_id": "ctm_1", "action": "chargeback_warning",
+                             "status": "approved"}})
+        self.assertEqual(self.lev.download(token)[0], self.doc)
+
+
+class AuditEmail(Basis):
+    def test_meerdere_ontvangers_worden_niet_gemaild(self):
+        self.opslag.klant_bewaar("ctm_1", "koper@voorbeeld.test, buit@aanvaller.test", "en")
+        self.stuur(self.transactie())
+        self.assertEqual(self.post, [])
+        self.assertEqual(self.opslag.uitgaand_alle()[0]["status"], "ongeldig_adres")
+
+    def test_regeleinde_in_adres_niet_gemaild_en_niet_eindeloos_opnieuw(self):
+        self.opslag.klant_bewaar("ctm_1", "koper@voorbeeld.test\r\nBcc: buit@aanvaller.test", "en")
+        self.stuur(self.transactie())
+        self.assertEqual(self.post, [])
+        self.assertEqual(self.opslag.uitgaand_alle()[0]["status"], "ongeldig_adres")
+
+    def test_adrescontrole(self):
+        from levering import post
+        for goed in ("a@b.nl", "Jan.de-Vries+kit@sub.voorbeeld.co.uk"):
+            self.assertTrue(post.adres_geldig(goed), goed)
+        for fout in ("", "a", "a@b", "a@b.nl, c@d.nl", "<a@b.nl>", "a@b.nl\n", "Jan <a@b.nl>", "a b@c.nl", None,
+                     "x" * 250 + "@b.nl"):
+            self.assertFalse(post.adres_geldig(fout), repr(fout))
+
+    def test_versie_met_vreemde_tekens_geweigerd(self):
+        with self.assertRaises(ValueError):
+            self.opslag.versie_bewaar('1.2"\r\nX-Kop: y', str(self.doc), "", "")
+
+
+class AuditOpslag(Basis):
+    def test_vergrendelde_database_geeft_503_niet_crash(self):
+        import sqlite3
+
+        def op_slot(*a, **k):
+            raise sqlite3.OperationalError("database is locked")
+        self.opslag.event_nieuw = op_slot
+        self.assertEqual(self.stuur(self.transactie())[0], 503)
+
+    def test_ontbrekende_database_map(self):
+        weg = Opslag.__new__(Opslag)
+        weg.pad = str(pathlib.Path(self.tmp.name) / "bestaat-niet" / "x.db")
+        self.assertFalse(weg.gezond())
+
+    def test_databasebestand_alleen_voor_eigenaar(self):
+        import os
+        d = pathlib.Path(self.tmp.name) / "vers"
+        d.mkdir()
+        oud = os.umask(0o022)
+        try:
+            Opslag(str(d / "n.db"))
+        finally:
+            os.umask(oud)
+        self.assertEqual((d / "n.db").stat().st_mode & 0o077, 0)
+
+    def test_geheimen_niet_in_repr(self):
+        cfg = Instellingen(geheim="LINKGEHEIM", paddle_geheim="PDLGEHEIM", paddle_api_sleutel="APISLEUTEL",
+                           smtp_wachtwoord="SMTPWW")
+        tekst = repr(cfg)
+        for g in ("LINKGEHEIM", "PDLGEHEIM", "APISLEUTEL", "SMTPWW"):
+            self.assertNotIn(g, tekst)
+
+
+class AuditHttp(Http):
+    def test_trage_client_wordt_afgekapt(self):
+        import socket
+        import levering.dienst as dienst
+        oud = dienst.TIMEOUT
+        dienst.TIMEOUT = 1
+        try:
+            s = socket.create_connection(("127.0.0.1", self.poort), timeout=10)
+            s.sendall(b"POST /webhook/paddle HTTP/1.1\r\nHost: x\r\nContent-Length: 100\r\n\r\n{")
+            start = time.time()
+            data = s.recv(1024)  # de dienst sluit (b'' of een fout) in plaats van eeuwig te wachten
+            self.assertLess(time.time() - start, 5)
+            s.close()
+        finally:
+            dienst.TIMEOUT = oud
+
+    def test_te_grote_body(self):
+        self.assertEqual(self.vraag("POST", "/webhook/paddle", b"x", {"Content-Length": "2000000"})[0], 413)
+
+    def test_kapot_verzoek_geeft_geen_fout_in_de_dienst(self):
+        import socket
+        fouten = []
+        self.server.handle_error = lambda req, adres: fouten.append(sys.exc_info()[1])
+        s = socket.create_connection(("127.0.0.1", self.poort), timeout=5)
+        s.sendall(b"\x16\x03\x01 rommel\r\n\r\n")
+        s.recv(1024)
+        s.close()
+        s = socket.create_connection(("127.0.0.1", self.poort), timeout=5)
+        s.sendall(b"GET /" + b"a" * 70000 + b" HTTP/1.1\r\n\r\n")
+        s.recv(1024)
+        s.close()
+        time.sleep(0.2)
+        self.assertEqual(fouten, [])
+
+    def test_foutpagina_lekt_geen_paden_of_stacktrace(self):
+        status, inhoud = self.vraag("PUT", "/download/x")
+        self.assertIn(status, (404, 405, 501))
+        for lek in (b"Traceback", b"/home", b"/root", b".py", b"Python"):
+            self.assertNotIn(lek, inhoud)
+
+    def test_download_padtraversal(self):
+        for pad in ("/download/../levering.db", "/download/..%2F..%2Fetc%2Fpasswd", "/download/%2e%2e/x.y.z",
+                    "/download/" + "a." * 3):
+            self.assertIn(self.vraag("GET", pad)[0], (404, 410))
+
+    def test_token_niet_in_het_log(self):
+        _, token = links.maak(self.opslag, self.cfg.geheim, "a@b.test", "1.0", 72, 5)
+        with self.assertLogs("levering", level="INFO") as log:
+            self.vraag("GET", f"/download/{token}")
+            self.vraag("GET", f"/download/{token}x")
+        self.assertFalse(any(token in r or token.split(".")[2] in r for r in log.output), log.output)
+
+    def test_webhook_wacht_niet_op_smtp(self):
+        self.opslag.klant_bewaar("ctm_1", "koper@voorbeeld.test", "en")
+        klaar = threading.Event()
+
+        def traag(m):
+            time.sleep(3)
+            self.post.append(m)
+            klaar.set()
+        self.lev.verzend = traag
+        import levering.dienst as dienst
+        stop = threading.Event()
+        dienst.start_wachtrij(self.lev, stop)
+        try:
+            body = json.dumps(self.transactie()).encode()
+            start = time.time()
+            status, _ = self.vraag("POST", "/webhook/paddle", body, {"Paddle-Signature": paddle.teken(body, GEHEIM)})
+            self.assertEqual(status, 200)
+            self.assertLess(time.time() - start, 2)  # Paddle wil binnen 5 s antwoord
+            self.assertTrue(klaar.wait(10))
+        finally:
+            stop.set()
+
+
+class AuditOpdrachtregel(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.d = pathlib.Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_env_bestand_zoals_systemd(self):
+        import os
+        from levering.opdrachten import lees_env
+        env = self.d / "levering.env"
+        env.write_text('# commentaar\nW2E_T_A=Daan <kit@voorbeeld.test>\nW2E_T_B="met spaties"\nW2E_T_C=\n\n', encoding="utf-8")
+        try:
+            lees_env(env)
+            self.assertEqual(os.environ["W2E_T_A"], "Daan <kit@voorbeeld.test>")
+            self.assertEqual(os.environ["W2E_T_B"], "met spaties")
+            self.assertEqual(os.environ["W2E_T_C"], "")
+        finally:
+            for k in ("W2E_T_A", "W2E_T_B", "W2E_T_C"):
+                os.environ.pop(k, None)
+
+    @unittest.skipUnless(hasattr(__import__("os"), "geteuid") and __import__("os").geteuid() == 0, "alleen als root")
+    def test_als_root_geen_rootbestanden_in_de_databasemap(self):
+        import os
+        import subprocess
+        dbmap = self.d / "lib"
+        dbmap.mkdir()
+        os.chown(dbmap, 65534, 65534)
+        os.chmod(dbmap, 0o700)
+        os.chmod(self.d, 0o755)
+        doc = self.d / "kit.pdf"
+        doc.write_bytes(b"%PDF")
+        os.chmod(doc, 0o644)
+        geheim = self.d / "geheim.txt"  # alleen voor root leesbaar, zoals een changelog in /root
+        geheim.write_text("Wijziging", encoding="utf-8")
+        os.chmod(geheim, 0o600)
+        env = dict(os.environ, LEVERING_DB=str(dbmap / "levering.db"))
+        repo = pathlib.Path(__file__).resolve().parent.parent
+        uit = subprocess.run([sys.executable, "-m", "levering", "nieuwe-versie", "--versie", "1.0", "--bestand", str(doc),
+                              "--changelog", str(geheim)], cwd=repo, env=env, capture_output=True, text=True)
+        self.assertEqual(uit.returncode, 0, uit.stderr)
+        for f in dbmap.iterdir():
+            self.assertEqual(f.stat().st_uid, 65534, f)
+        self.assertEqual(Opslag(str(dbmap / "levering.db")).versie("1.0")["changelog"], "Wijziging")
+        os.chmod(doc, 0o600)  # niet leesbaar voor de dienst -> weigeren
+        uit = subprocess.run([sys.executable, "-m", "levering", "nieuwe-versie", "--versie", "1.1", "--bestand", str(doc)],
+                             cwd=repo, env=env, capture_output=True, text=True)
+        self.assertNotEqual(uit.returncode, 0)
+        self.assertIn("kan", uit.stderr)
 
 
 if __name__ == "__main__":

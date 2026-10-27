@@ -13,9 +13,11 @@ Bestanden
   theweekly2pctedge.com.proxy.caddy      drie regels voor IN het bestaande theweekly2pctedge.com-blok
   levering.env.voorbeeld                 elke variabele, GEEN waarden -> /etc/levering.env (chmod 600)
 
-Vaste feiten (VPS): Ubuntu, Caddy, webroots /var/www/<domein>, repos in /root/felix_hq/repos/, venv
-/root/felix_hq/venv, ufw alleen 22/80/443 -> de dienst luistert op 127.0.0.1 en Caddy proxyt /webhook/*,
-/download/* en /healthz. Security-headers: met --caddyfile worden de header- en import-regels van het
+Vaste feiten (VPS): Ubuntu, Caddy, webroots /var/www/<domein>, repos in /root/felix_hq/repos/, ufw alleen
+22/80/443 -> de dienst luistert op 127.0.0.1 en Caddy proxyt /webhook/*, /download/* en /healthz.
+De dienst draait als systeemgebruiker 'levering' (nooit root), met alleen-stdlib /usr/bin/python3 en een kopie van
+levering/ in /opt/levering (root-eigendom, alleen-lezen voor de dienst; /root is voor die gebruiker dicht). Schrijven
+mag hij alleen in /var/lib/levering; het betaalde document in /srv/bouwpakket is root:levering 640. Security-headers: met --caddyfile worden de header- en import-regels van het
 theweekly2pctedge.com-blok letterlijk overgenomen (gelijk aan de EN-site); zonder valt het terug op een vaste set en
 zegt het dat. Altijd eerst `caddy validate --config /etc/caddy/Caddyfile` en pas dan `systemctl reload caddy`.
 """
@@ -26,8 +28,9 @@ import sys
 
 sys.dont_write_bytecode = True
 
-REPO = "/root/felix_hq/repos/the-weekly-2pct-edge"
-VENV = "/root/felix_hq/venv"
+CODE = "/opt/levering"
+PYTHON = "/usr/bin/python3"
+GEBRUIKER = "levering"
 POORT = 8740
 NL, EN = "mijnbitcoinstrategie.nl", "theweekly2pctedge.com"
 PADEN = ("/webhook/*", "/download/*", "/healthz")
@@ -68,7 +71,7 @@ ENV_VARIABELEN = [
 ]
 
 
-def systemd(repo=REPO, venv=VENV):
+def systemd(code=CODE, python=PYTHON):
     return f"""[Unit]
 Description=Bouwpakket-levering: Paddle-webhook en downloads (theweekly2pctedge.com, mijnbitcoinstrategie.nl)
 After=network-online.target
@@ -76,27 +79,45 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory={repo}
+# nooit root: eigen systeemgebruiker (useradd --system, zie de PR)
+User={GEBRUIKER}
+Group={GEBRUIKER}
+WorkingDirectory={code}
+# systemd leest dit als root vóór het wisselen van gebruiker; het bestand blijft root:root 600
 EnvironmentFile=/etc/levering.env
 Environment=PYTHONDONTWRITEBYTECODE=1
-ExecStart={venv}/bin/python -m levering serve
+ExecStart={python} -m levering serve
 Restart=on-failure
 RestartSec=5
-# database in /var/lib/levering (systemd maakt de map aan, alleen root)
+# database in /var/lib/levering: systemd maakt de map aan, eigendom van {GEBRUIKER}, 0700
 StateDirectory=levering
 StateDirectoryMode=0700
 UMask=0077
-# afscherming: alleen-lezen systeem, geen nieuwe rechten, eigen /tmp
+# afscherming: alleen-lezen systeem behalve de databasemap, geen nieuwe rechten, geen capabilities, eigen /tmp
 NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
 PrivateTmp=true
+PrivateDevices=true
 ProtectSystem=strict
 ReadWritePaths=/var/lib/levering
-ProtectHome=read-only
+ProtectHome=true
 ProtectKernelTunables=true
 ProtectKernelModules=true
+ProtectKernelLogs=true
 ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+ProtectProc=invisible
+ProcSubset=pid
 RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
 LockPersonality=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
 
 [Install]
 WantedBy=multi-user.target
@@ -105,6 +126,16 @@ WantedBy=multi-user.target
 
 def proxy_regels(poort=POORT, inspring="\t"):
     return "\n".join(f"{inspring}handle {pad} {{\n{inspring}\treverse_proxy 127.0.0.1:{poort}\n{inspring}}}" for pad in PADEN)
+
+
+# Wat nooit uit een webroot geserveerd mag worden, ook als een rsync-exclude vergeten wordt. De handle-blokken van de
+# dienst gaan in Caddy vóór respond, dus /download/<token> wordt hier nooit door geraakt.
+VERBORGEN = ("@levering_verborgen path *.py *.pyc *.md *.db *.db-wal *.db-shm *.sqlite *.sqlite3 *.env *.bak* *.orig "
+             "*.pdf *.docx *.epub *.csv.export /.git/* /.env /levering/* /deploy/* /bouw/* /sites/* /.pr-screenshots/*")
+
+
+def verborgen_regels(inspring="\t"):
+    return f"{inspring}{VERBORGEN}\n{inspring}respond @levering_verborgen 404"
 
 
 def site_blok(tekst, domein):
@@ -163,8 +194,7 @@ www.{NL} {{
 {proxy_regels(poort)}
 
 	# nooit serveren, ook niet als het per ongeluk in de webroot belandt
-	@verborgen path *.py *.pyc *.md *.db *.sqlite *.sqlite3 *.env *.bak* *.orig /.git/* /.env
-	respond @verborgen 404
+{verborgen_regels()}
 
 	file_server
 	handle_errors {{
@@ -181,8 +211,10 @@ www.{NL} {{
 def en_regels(poort=POORT):
     return f"""	{MERK}: deze regels horen IN het bestaande {EN}-blok,
 	# (--nieuwe-caddyfile zet ze er zelf in). handle-blokken met een pad gaan vóór een algemeen handle-blok
-	# en vóór file_server, dus de rest van de site verandert niet.
+	# en vóór file_server, dus de rest van de site verandert niet. Het verborgen-blok is een vangnet naast de
+	# rsync-excludes: code, databases, .md en het betaalde document geven altijd 404.
 {proxy_regels(poort)}
+{verborgen_regels()}
 """
 
 
@@ -200,7 +232,7 @@ def nieuwe_caddyfile(tekst, nl_blok, poort=POORT):
         for m in re.finditer(r"(?m)^([^\s#{][^{\n]*)\{\s*$", tekst):
             adressen = [a.split("://")[-1].split(":")[0] for a in re.split(r"[\s,]+", m.group(1).strip()) if a]
             if EN in adressen:
-                invoeg = f"\t{MERK}\n{proxy_regels(poort)}\n\n"
+                invoeg = f"\t{MERK}\n{proxy_regels(poort)}\n{verborgen_regels()}\n\n"
                 tekst = tekst[:m.end()] + "\n" + invoeg + tekst[m.end():].lstrip("\n")
                 break
     if site_blok(tekst, NL) is None:
@@ -217,13 +249,13 @@ def env_sjabloon():
     return "\n".join(regels)
 
 
-def alle(caddyfile=None, repo=REPO, venv=VENV, poort=POORT):
+def alle(caddyfile=None, code=CODE, python=PYTHON, poort=POORT):
     headers, bron = None, "vaste standaardset"
     if caddyfile:
         headers = headers_uit_caddyfile(caddyfile)
         bron = f"overgenomen uit het {EN}-blok in {caddyfile}" if headers else f"niet gevonden in {caddyfile}: vaste standaardset"
     return {
-        "levering.service": systemd(repo, venv),
+        "levering.service": systemd(code, python),
         f"{NL}.caddy": nl_caddy(headers or STANDAARD_HEADERS, poort),
         f"{EN}.proxy.caddy": en_regels(poort),
         "levering.env.voorbeeld": env_sjabloon(),
@@ -234,13 +266,13 @@ def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--uit", help="map om de bestanden in te schrijven (anders stdout)")
     p.add_argument("--caddyfile", help="bestaande Caddyfile om de security-headers van het EN-blok uit te lezen")
-    p.add_argument("--repo", default=REPO)
-    p.add_argument("--venv", default=VENV)
+    p.add_argument("--code", default=CODE, help="map met een kopie van levering/ (leesbaar voor de dienstgebruiker)")
+    p.add_argument("--python", default=PYTHON)
     p.add_argument("--poort", type=int, default=POORT)
     p.add_argument("--nieuwe-caddyfile", help="schrijf de hele Caddyfile (met EN-regels en NL-blok) naar dit pad; "
                                               "vereist --caddyfile; het origineel wordt niet aangeraakt")
     a = p.parse_args(argv)
-    bestanden, bron = alle(a.caddyfile, a.repo, a.venv, a.poort)
+    bestanden, bron = alle(a.caddyfile, a.code, a.python, a.poort)
     if a.nieuwe_caddyfile:
         if not a.caddyfile:
             raise SystemExit("--nieuwe-caddyfile vereist --caddyfile")
