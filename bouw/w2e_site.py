@@ -221,8 +221,8 @@ def kit_pagina(S, c):
     if nl:
         intro = ("Dit is het stappenplan van de bitcoinbot uit het logboek, geschreven zodat een AI-assistent hem "
                  "samen met jou bouwt. Je krijgt de logica, de veiligheidscontroles en de lessen uit elke fout. Je "
-                 "krijgt géén belofte over wat hij oplevert. De naam beloofde 2% per week; het realistische doel bleek 0,5%, en "
-                 "ook dat is geen belofte.")
+                 "krijgt géén belofte over wat hij oplevert. De naam van het logboek, The Weekly 2% Edge, beloofde 2% per week; "
+                 "het realistische doel bleek 0,5%, en ook dat is geen belofte.")
         echt = (f"Dezelfde bot staat in het logboek: {n} weken, mediaan {med} gerealiseerd per week na kosten; de "
                 f"open posities staan ernaast. Afgelopen weken zeggen niets over komende weken; je kunt je hele inleg "
                 f"verliezen.")
