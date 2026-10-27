@@ -12,12 +12,15 @@ Onderdelen
   kern.py          de logica: webhook verwerken, kit en updates mailen, download, maandrapport (los van HTTP/SMTP)
   links.py         getekende, verlopende downloadlinks (standaard 72 uur, 5 downloads)
   post.py          e-mails (EN/NL) en verzenden via SMTP (Hostinger)
-  dienst.py        de HTTP-dienst: POST /paddle/webhook, GET /download/<token>, GET /gezond
-  opdrachten.py    opdrachtregel: serve, nieuwe-versie, send-update (met --dry-run), maandrapport, abonnees
-  test_levering.py tests: handtekening, verlopen link, idempotente updates, webhookstroom
+  dienst.py        de HTTP-dienst: POST /webhook/paddle, GET /download/<token>, GET /healthz (+ wachtrij-draad)
+  opdrachten.py    opdrachtregel: serve, nieuwe-versie, send-update (--dry-run), wachtrij, export, maandrapport, abonnees
+  test_levering.py tests: handtekening, replay, volgorde, refund/chargeback, SMTP-wachtrij, gelijktijdige
+                   downloads, verlopen link, idempotente updates, export, HTTP-routes
 
 Gebruik (op de VPS)
   python3 -m levering serve                                  # luistert op 127.0.0.1:$LEVERING_POORT
+  python3 -m levering wachtrij                               # wachtende leveringsmails nu versturen
+  python3 -m levering export --uit /root/boekhouding/abonnees.csv   # nooit in een webroot
   python3 -m levering nieuwe-versie --versie 1.0 --bestand /srv/bouwpakket/v1.0.pdf --commit <volledige sha in de bot-repo> --changelog wijzigingen.txt
   python3 -m levering send-update --versie 1.1 --dry-run     # wie zou wat krijgen; verstuurt en schrijft niets
   python3 -m levering send-update --versie 1.1               # verstuurt; nogmaals draaien slaat wie al kreeg over
@@ -26,10 +29,6 @@ Gebruik (op de VPS)
 
 Omgevingsvariabelen: zie instellingen.py.
 
-Caddy (voorbeeld; pad en poort zijn aannames):
-  theweekly2pctedge.com {
-      handle /kit/* { reverse_proxy 127.0.0.1:8740 }   # /kit/paddle/webhook en /kit/download/<token>
-      ...
-  }
-  (de dienst haalt het voorvoegsel LEVERING_VOORVOEGSEL, standaard /kit, zelf van het pad af)
+Caddy en systemd: deploy/bestanden.py schrijft de unit, de Caddy-blokken (beide domeinen sturen /webhook/*,
+/download/* en /healthz naar 127.0.0.1:8740) en een leeg /etc/levering.env-sjabloon; het runbook staat in de PR.
 """

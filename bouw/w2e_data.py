@@ -17,7 +17,8 @@ Bronnen (publieke read-only endpoints van het botdashboard; velden nagelezen in 
                               "Exposure: <b>12.3%</b> ... cap 50%"; de tekst zelf wordt nooit bewaard
 grid-multiplier heeft geen historie. Elke run (ook als het logboek niet herschreven wordt) bewaart daarom een
 opgeschoonde kopie in de cache (W2E_CACHE, standaard ~/.cache/w2e); de pagina gebruikt de nieuwste kopie van op of
-vóór T. Is die er nog niet (eerste run), dan de stap van nu, en dat staat er dan bij.
+vóór T. Is die er nog niet (eerste dag), dan toont de pagina geen ladder en zegt dat.
+Releasecontrole: controleer_leeftijd() laat de bouw stoppen als één getoond tijdstip jonger is dan 24 uur.
 
 Volatiliteit: dagcandles BTC-EUR van de publieke Bitvavo-API (geen sleutel), gerealiseerd en op jaarbasis:
 standaardafwijking (steekproef) van de dagelijkse log-rendementen van de slotkoersen x wortel(365), want bitcoin
@@ -37,7 +38,8 @@ import urllib.request
 
 import build_logboek as B
 
-MIN_LEEFTIJD = datetime.timedelta(hours=24)
+MIN_LEEFTIJD = datetime.timedelta(hours=24)  # harde grens: controleer_leeftijd() laat de bouw anders stoppen
+ANKER_LEEFTIJD = datetime.timedelta(hours=26)  # T ligt 2 uur verder terug: marge als een tijdstip toch lokale tijd is
 BITVAVO_CANDLES = "https://api.bitvavo.com/v2/BTC-EUR/candles?interval=1d&limit=365"
 FINE_TREDEN, COARSE_TREDEN = 20, 10  # src/config.py van de bot: FINE_GRID_LEVELS, COARSE_GRID_LEVELS (ladderdiepte)
 VOLGENDE_VERKOPEN = 8
@@ -194,17 +196,17 @@ def momentopname(nu, ph, grid_nu=None):
         t, p = _tijd(ts), _getal(prijs)
         if t and p:
             reeks.append({"t": t, "prijs": p, "open": (u / tot * 100) if tot else None})
-    grens = nu - MIN_LEEFTIJD
+    grens = nu - ANKER_LEEFTIJD
     oud = [r for r in reeks if r["t"] <= grens]
     if not oud:
         return None
     anker = oud[-1]
     T, P = anker["t"], anker["prijs"]
 
+    # Ladderstap, RSI en remmen alleen uit een opgeslagen meting van op of vóór T. Zonder zo'n meting (eerste dag na
+    # het uitrollen) toont de pagina geen ladder: de stap van nu zou de ladder van nu verraden.
     grid, grid_t = cache_op(T)
-    stap_bron = "cache"
-    if not grid:
-        grid, grid_t, stap_bron = grid_nu, nu, "nu"
+    stap_bron = "cache" if grid else "geen"
 
     kopen = [r for r in schoon_beslissingen(_haal(f"decision-stream?type=BUY_PLACED&limit={BESLIS_LIMIET}"), "BUY_PLACED")
              if r["t"] <= T]
@@ -223,7 +225,7 @@ def momentopname(nu, ph, grid_nu=None):
             continue
         verkocht = any(v["strategie"] == sleutel[0] and v["trede"] == sleutel[1] and v["t"] >= r["t"] for v in verkopen)
         if not verkocht and r["prijs"] > P:
-            open_verkoop.append({"prijs": r["prijs"], "afstand": r["prijs"] / P * 100 - 100})
+            open_verkoop.append({"prijs": r["prijs"], "afstand": r["prijs"] / P * 100 - 100, "t": r["t"]})
     open_verkoop.sort(key=lambda r: r["prijs"])
 
     exposure = [r for r in schoon_exposure(_haal("telegram-feed?limit=100&zoek=Exposure")) if r["t"] <= T]
@@ -244,6 +246,31 @@ def momentopname(nu, ph, grid_nu=None):
         "exposure_reeks": exposure[-60:],
         "beslis_van": min([r["t"] for r in kopen + plaatsingen + verkopen], default=None),
     }
+
+
+def getoonde_tijden(m):
+    """Elk tijdstip waarop iets in de momentopname berust (koers, ladderstap, aankopen, verkopen, plaatsingen,
+    exposure). Alles wat de pagina laat zien komt hieruit."""
+    tijden = [m["T"]] + [r["t"] for r in m["koers"]]
+    if m.get("grid") and m.get("grid_t"):
+        tijden.append(m["grid_t"])
+    for sleutel in ("kopen_venster", "verkopen_venster", "verkopen", "volgende_verkopen", "exposure_reeks"):
+        tijden += [r["t"] for r in m.get(sleutel) or []]
+    if m.get("exposure"):
+        tijden.append(m["exposure"]["t"])
+    return tijden
+
+
+def controleer_leeftijd(m, nu):
+    """Releasecontrole: de bouw stopt als iets op het dashboard jonger is dan MIN_LEEFTIJD (24 uur). Zo kan een
+    fout in de filters nooit een live ladder of live beslissing publiceren."""
+    if not m:
+        return
+    grens = nu - MIN_LEEFTIJD
+    te_jong = [t for t in getoonde_tijden(m) if t > grens]
+    if te_jong:
+        raise SystemExit(f"dashboard: {len(te_jong)} getoonde tijdstip(pen) jonger dan 24 uur (nieuwste {max(te_jong)} UTC, "
+                         f"grens {grens} UTC); niets geschreven")
 
 
 # ---------------------------------------------------------------- volatiliteit

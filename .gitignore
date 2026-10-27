@@ -10,3 +10,11 @@
 # Python-bytecode hoort niet in de webroot (rsync sluit alleen *.py uit)
 __pycache__/
 *.pyc
+# Nooit in git (en dus nooit via rsync in een webroot): databases, geheimen, exports
+*.db
+*.sqlite
+*.sqlite3
+*.env
+.env
+levering.env
+*.csv.export

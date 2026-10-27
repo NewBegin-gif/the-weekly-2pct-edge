@@ -1,13 +1,17 @@
-"""De HTTP-dienst (stdlib http.server), achter Caddy op 127.0.0.1.
+"""De HTTP-dienst (stdlib http.server), alleen op 127.0.0.1 achter Caddy (ufw laat alleen 22/80/443 door).
 
-  POST <voorvoegsel>/paddle/webhook   Paddle Billing-notificaties (handtekening verplicht)
-  GET  <voorvoegsel>/download/<token> het document, als de link geldig is (verloop + aantal)
-  GET  <voorvoegsel>/gezond           200 "ok" voor monitoring
-Alles anders: 404. Antwoorden zijn kort en lekken niets over de reden aan een vreemde (behalve 'verlopen').
+Caddy stuurt op beide domeinen deze paden door (deploy/bestanden.py schrijft de regels):
+  POST /webhook/paddle        Paddle Billing-notificaties (handtekening verplicht; fout = 401)
+  GET  /download/<token>      het document, als de link geldig is (handtekening, verloop, aantal, niet ingetrokken)
+  GET  /healthz               200 "ok" of 503 "unavailable" (alleen: database bereikbaar). Geen tellingen, geen
+                              versie, geen paden: niets wat een buitenstaander iets vertelt.
+Alles anders: 404. De dienst draait een achtergronddraad die elke LEVERING_WACHTRIJ_SEC de wachtrij met
+leveringsmails afwerkt (mislukte SMTP-pogingen).
 """
 import http.server
 import logging
 import shutil
+import threading
 
 from .kern import Levering
 
@@ -32,25 +36,29 @@ def maak_handler(levering: Levering):
             self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.send_header("Content-Length", str(len(data)))
             self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Robots-Tag", "noindex")
             self.end_headers()
             self.wfile.write(data)
 
         def do_POST(self):
-            if self._pad() != "/paddle/webhook":
-                return self._antwoord(404, "niet gevonden")
-            lengte = int(self.headers.get("Content-Length") or 0)
+            if self._pad() != "/webhook/paddle":
+                return self._antwoord(404, "not found")
+            try:
+                lengte = int(self.headers.get("Content-Length") or 0)
+            except ValueError:
+                lengte = 0
             if lengte <= 0 or lengte > MAX_BODY:
-                return self._antwoord(413 if lengte > MAX_BODY else 400, "ongeldige body")
+                return self._antwoord(413 if lengte > MAX_BODY else 400, "bad request")
             body = self.rfile.read(lengte)
             status, tekst = levering.webhook(body, self.headers.get("Paddle-Signature"))
             self._antwoord(status, tekst)
 
         def do_GET(self):
             pad = self._pad()
-            if pad == "/gezond":
-                return self._antwoord(200, "ok")
+            if pad == "/healthz":
+                return self._antwoord(200, "ok") if levering.opslag.gezond() else self._antwoord(503, "unavailable")
             if not pad.startswith("/download/"):
-                return self._antwoord(404, "niet gevonden")
+                return self._antwoord(404, "not found")
             bestand, naam = levering.download(pad[len("/download/"):])
             if not bestand:
                 reden = naam
@@ -68,14 +76,35 @@ def maak_handler(levering: Levering):
             with bestand.open("rb") as f:
                 shutil.copyfileobj(f, self.wfile)
 
+
         def log_message(self, fmt, *args):  # tokens niet in het log
-            log.info("%s %s", self.command, self._pad().split("/download/")[0] + ("/download/…" if "/download/" in self.path else ""))
+            pad = self._pad()
+            log.info("%s %s", self.command, "/download/…" if pad.startswith("/download/") else pad)
 
     return Handler
 
 
+def wachtrij_draad(levering: Levering, stop: threading.Event):
+    while not stop.wait(levering.cfg.wachtrij_sec):
+        try:
+            ok, fout = levering.wachtrij()
+            if ok or fout:
+                log.info("wachtrij: %s verzonden, %s opnieuw later", ok, fout)
+        except Exception:
+            log.exception("wachtrij mislukt")
+
+
+def maak_server(levering: Levering, poort=None):
+    return http.server.ThreadingHTTPServer(("127.0.0.1", levering.cfg.poort if poort is None else poort),
+                                           maak_handler(levering))
+
+
 def serve(levering: Levering):
-    adres = ("127.0.0.1", levering.cfg.poort)
-    server = http.server.ThreadingHTTPServer(adres, maak_handler(levering))
-    log.info("levering luistert op %s:%s (voorvoegsel %s)", *adres, levering.cfg.voorvoegsel)
-    server.serve_forever()
+    server = maak_server(levering)
+    stop = threading.Event()
+    threading.Thread(target=wachtrij_draad, args=(levering, stop), daemon=True).start()
+    log.info("levering luistert op 127.0.0.1:%s", server.server_address[1])
+    try:
+        server.serve_forever()
+    finally:
+        stop.set()

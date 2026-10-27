@@ -1203,6 +1203,7 @@ def main():
     uit.write_text(pagina, encoding="utf-8")
     if is_home:
         m = w2e_data.momentopname(nu, ph, grid_nu)
+        w2e_data.controleer_leeftijd(m, nu)  # releasecontrole: niets op het dashboard jonger dan 24 uur
         vol = w2e_data.volatiliteit()
         EN, NL = w2e_site.SITES["en"], w2e_site.SITES["nl"]
         # Engels (repo-root)

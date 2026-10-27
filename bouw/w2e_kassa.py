@@ -17,21 +17,109 @@ anders weggooien.
 
 Een andere aanbieder (zie de PR voor alternatieven) = een adapter met dezelfde twee functies toevoegen aan ADAPTERS.
 """
+import sys
 import urllib.parse
 
-import build_logboek as B
+sys.dont_write_bytecode = True  # ook als dit bestand los gedraaid wordt: geen .pyc naast de webroot
+import build_logboek as B  # noqa: E402
 
 AANBIEDER = "paddle"
+
+# ---- Daan vult alleen dit in (uit het Paddle-dashboard). Leeg = geen koopknop, de wachtlijst blijft staan.
+# Wat er in Paddle aangemaakt moet worden en hoe je test: python3 bouw/w2e_kassa.py (zie paddle_inrichting()).
+PADDLE_IDS = {
+    "hosted_checkout_url": "",  # Checkout > Hosted checkouts > launch-URL, bv. https://pay.paddle.io/checkout/hsc_01...
+    "kit_usd": "",              # pri_01... eenmalig 14.00 USD
+    "updates_usd": "",          # pri_01... 5.00 USD per jaar
+    "kit_eur": "",              # pri_01... eenmalig 14.00 EUR
+    "updates_eur": "",          # pri_01... 5.00 EUR per jaar
+}
+
+
+def _checkout_url(*prijs_ids):
+    basis = PADDLE_IDS["hosted_checkout_url"].strip()
+    if not basis or not all(prijs_ids):
+        return ""
+    return f"{basis.split('?')[0]}?price_id={urllib.parse.quote(','.join(prijs_ids), safe='')}"
+
+
 KASSA = {
     "en": {"munt": "USD", "teken": "$", "producten": {
-        "kit": {"prijs": "14", "url": ""},
-        "kit_updates": {"prijs": "14", "jaar": "5", "url": ""},
+        "kit": {"prijs": "14", "url": _checkout_url(PADDLE_IDS["kit_usd"])},
+        "kit_updates": {"prijs": "14", "jaar": "5", "url": _checkout_url(PADDLE_IDS["kit_usd"], PADDLE_IDS["updates_usd"])},
     }},
     "nl": {"munt": "EUR", "teken": "€", "producten": {
-        "kit": {"prijs": "14", "url": ""},
-        "kit_updates": {"prijs": "14", "jaar": "5", "url": ""},
+        "kit": {"prijs": "14", "url": _checkout_url(PADDLE_IDS["kit_eur"])},
+        "kit_updates": {"prijs": "14", "jaar": "5", "url": _checkout_url(PADDLE_IDS["kit_eur"], PADDLE_IDS["updates_eur"])},
     }},
 }
+
+WEBHOOK_EVENTS = ["transaction.completed", "customer.created", "customer.updated", "subscription.created",
+                  "subscription.activated", "subscription.updated", "subscription.canceled", "subscription.past_due",
+                  "subscription.paused", "subscription.resumed", "adjustment.created", "adjustment.updated"]
+
+
+def paddle_inrichting():
+    """Alles wat Paddle nodig heeft, op één plek. Daan maakt dit aan in Paddle en vult daarna alleen PADDLE_IDS in.
+
+    Producten (Catalog > Products), elk met tax category "digital-goods" (staat die niet open: aanvragen bij Paddle;
+    tot dan "standard"):
+      Bitcoin bot build kit          eenmalige download, de documentatie
+      Build kit updates (yearly)     jaarabonnement, bijgewerkte documentatie per mail
+    Prijzen (per product, Catalog > Prices), tax mode "internal" (prijs inclusief btw, zodat $14 / EUR 14 is wat de
+    koper betaalt, zoals de site zegt):
+      kit_usd      14.00 USD  eenmalig
+      kit_eur      14.00 EUR  eenmalig
+      updates_usd   5.00 USD  per jaar (billing cycle: 1 year)
+      updates_eur   5.00 EUR  per jaar (billing cycle: 1 year)
+    Hosted checkout (Checkout > Hosted checkouts): één, met de standaard-checkout; de site plakt er ?price_id=... aan.
+    Notification destination (Developer tools > Notifications): URL https://theweekly2pctedge.com/webhook/paddle,
+    events = WEBHOOK_EVENTS, het geheim gaat in /etc/levering.env (PADDLE_WEBHOOK_GEHEIM). API-sleutel met alleen
+    "customers: read" in PADDLE_API_SLEUTEL.
+
+    Sandbox-test (eerst, met sandbox-vendors.paddle.com en PADDLE_API_URL=https://sandbox-api.paddle.com):
+      1. Maak bovenstaande producten, prijzen, hosted checkout en notification destination aan in de sandbox.
+      2. Vul PADDLE_IDS met de sandbox-ID's (lokaal, niet committen) en draai python3 bouw/w2e_kassa.py: open de
+         vier checkout-URL's die het print in een browser. De site hoeft daarvoor niet herbouwd te worden.
+      3. Betaal met Paddle's sandbox-testkaart (4242 4242 4242 4242, toekomstige datum, CVC 100). Controleer: mail
+         met link komt binnen, de link werkt 5 keer, de 6e keer 410.
+      4. Koop "kit + updates": `python3 -m levering abonnees` toont het adres.
+      5. Stuur in Paddle een event opnieuw (Notifications > event > Replay): de dienst antwoordt "al verwerkt".
+      6. Refund de transactie in de sandbox: de link geeft daarna 404 ("ingetrokken"), het adres staat niet meer bij
+         `abonnees`.
+      7. Zet SMTP even fout in /etc/levering.env, koop opnieuw: geen mail, wel een rij in de wachtrij; zet SMTP terug
+         en draai `python3 -m levering wachtrij`: de mail gaat alsnog.
+      8. Daarna productie: dezelfde stappen 1 met de live-ID's, PADDLE_API_URL=https://api.paddle.com, nieuw geheim,
+         PADDLE_IDS invullen + committen, build met --forceer, deploy/rooktest.py --checkout-live.
+    Geeft een dict met dezelfde gegevens, plus wat er nog ontbreekt en de LEVERING_PRIJZEN-regel voor /etc/levering.env.
+    """
+    producten = {
+        "kit": {"naam": "Bitcoin bot build kit", "tax_category": "digital-goods", "type": "eenmalig",
+                "beschrijving": ("Downloadable software documentation: a step-by-step build plan for setting up and "
+                                 "running your own instance of an open grid-trading bot with an AI coding assistant. "
+                                 "Digital download, delivered by email.")},
+        "updates": {"naam": "Build kit updates (yearly)", "tax_category": "digital-goods", "type": "jaarabonnement",
+                    "beschrijving": ("Yearly subscription: updated versions of the build kit documentation by email "
+                                     "whenever the documented software changes. Cancel any time.")},
+    }
+    prijzen = [
+        {"sleutel": "kit_usd", "product": "kit", "bedrag": "14.00", "munt": "USD", "cyclus": None},
+        {"sleutel": "kit_eur", "product": "kit", "bedrag": "14.00", "munt": "EUR", "cyclus": None},
+        {"sleutel": "updates_usd", "product": "updates", "bedrag": "5.00", "munt": "USD", "cyclus": "1 year"},
+        {"sleutel": "updates_eur", "product": "updates", "bedrag": "5.00", "munt": "EUR", "cyclus": "1 year"},
+    ]
+    for p in prijzen:
+        p["id"] = PADDLE_IDS[p["sleutel"]]
+        p["tax_mode"] = "internal"
+    taal = {"usd": "en", "eur": "nl"}
+    levering_prijzen = ",".join(f'{p["id"]}={p["product"]}:{taal[p["sleutel"].split("_")[1]]}' for p in prijzen if p["id"])
+    return {
+        "producten": producten, "prijzen": prijzen, "webhook_events": WEBHOOK_EVENTS,
+        "webhook_url": "https://theweekly2pctedge.com/webhook/paddle",
+        "checkout_urls": {f"{t}/{s}": KASSA[t]["producten"][s]["url"] for t in ("en", "nl") for s in ("kit", "kit_updates")},
+        "env_levering_prijzen": f"LEVERING_PRIJZEN={levering_prijzen}",
+        "ontbrekend": [k for k, v in PADDLE_IDS.items() if not v],
+    }
 
 # EU-regels digitale inhoud (richtlijn 2011/83/EU art. 16(m)): uitdrukkelijke toestemming voor directe levering én
 # erkenning dat het herroepingsrecht van 14 dagen daarmee vervalt. Het vinkje is verplicht; Paddle toont daarnaast
@@ -136,3 +224,10 @@ def aanbiedingen_ld(taal, url):
         for o in (kit, upd):
             o["availability"] = "https://schema.org/InStock"
     return [kit, upd]
+
+
+if __name__ == "__main__":
+    import json
+    import sys
+    sys.dont_write_bytecode = True
+    print(json.dumps(paddle_inrichting(), indent=2, ensure_ascii=False))

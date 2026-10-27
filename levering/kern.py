@@ -1,15 +1,32 @@
-"""De logica, los van HTTP en SMTP (die worden erin gestoken, zodat de tests zonder netwerk draaien)."""
+"""De logica, los van HTTP en SMTP (die worden erin gestoken, zodat de tests zonder netwerk draaien).
+
+Robuustheid
+  - Herhaalde aflevering: elk event_id één keer (events-tabel); dezelfde transactie onder een ander event_id geeft
+    geen tweede aankoop of mail (aankopen + uitgaand zijn uniek op de transactie).
+  - Volgorde: Paddle garandeert de volgorde van events niet. Abonnementswijzigingen dragen het occurred_at van het
+    event; een ouder event dat na een nieuwer binnenkomt wordt genegeerd (opslag.abonnee_bewaar).
+  - Refund / chargeback (adjustment.created / adjustment.updated): een goedgekeurde refund of elke chargeback trekt
+    alle downloadlinks van dat e-mailadres in, annuleert wachtende leveringsmails, zet abonnementen op 'revoked' en
+    sluit het adres uit van updates. Een gedeeltelijke refund telt ook (voorzichtig: bij twijfel geen updates);
+    een chargeback_reverse herstelt niets automatisch (handmatig, zie PR).
+  - SMTP-fout: de leveringsmail staat eerst in de wachtrij 'uitgaand' en wordt pas na een gelukte verzending
+    afgevinkt; de webhook antwoordt 200 (de aankoop is vastgelegd), de dienst probeert het elke LEVERING_WACHTRIJ_SEC
+    opnieuw met oplopende wachttijd, en `python3 -m levering wachtrij` doet het direct. Niets gaat verloren.
+"""
+import csv
 import json
+import os
 import logging
 import pathlib
 import subprocess
 
 from . import links, paddle, post
-from .opslag import Opslag, nu
+from .opslag import Opslag, lees_iso, nu
 
 log = logging.getLogger("levering")
 ABONNEE_STATUS = {"subscription.created", "subscription.activated", "subscription.updated", "subscription.canceled",
                   "subscription.past_due", "subscription.paused", "subscription.resumed"}
+TERUG = {"adjustment.created", "adjustment.updated"}
 
 
 class Levering:
@@ -37,11 +54,12 @@ class Levering:
         if not self.opslag.event_nieuw(event_id, soort):
             return 200, "al verwerkt"
         try:
-            self._verwerk(soort, data)
+            self._verwerk(soort, data, lees_iso(event.get("occurred_at")) or nu())
         except Exception:
             self.opslag.event_vergeet(event_id)  # Paddle probeert het opnieuw
             log.exception("event %s (%s) mislukt", event_id, soort)
             return 500, "verwerking mislukt"
+        self.wachtrij()  # leveringsmail meteen proberen; mislukt het, dan blijft hij in de rij
         return 200, "ok"
 
     def _klant(self, customer_id):
@@ -56,7 +74,7 @@ class Levering:
     def _producten(self, data):
         return [self.cfg.prijzen[p] for p in paddle.prijzen(data) if p in self.cfg.prijzen]
 
-    def _verwerk(self, soort, data):
+    def _verwerk(self, soort, data, moment):
         if soort in ("customer.created", "customer.updated"):
             if data.get("id") and data.get("email"):
                 self.opslag.klant_bewaar(data["id"], data["email"], paddle._taal(data.get("locale")))
@@ -71,11 +89,14 @@ class Levering:
                 versie = self.opslag.versie()
                 if not versie:
                     raise RuntimeError("geen documentversie geregistreerd (python3 -m levering nieuwe-versie)")
-                if self.opslag.aankoop_bewaar(data["id"], data.get("customer_id"), email, taal, "kit", versie["versie"]):
-                    self.stuur_kit(email, taal, versie["versie"])
+                self.opslag.aankoop_bewaar(data["id"], data.get("customer_id"), email, taal, "kit", versie["versie"],
+                                           data.get("subscription_id"))
+                aankoop = self.opslag.aankoop(data["id"])
+                if aankoop["status"] == "betaald":
+                    self.opslag.uitgaand_toevoegen(data["id"], "kit", email, taal, aankoop["versie"])
             if data.get("subscription_id"):  # eerste betaling of verlenging: einde periode bijwerken
                 self.opslag.abonnee_bewaar(data["subscription_id"], data.get("customer_id"), email, taal, "active",
-                                           paddle.periode_einde(data))
+                                           paddle.periode_einde(data), moment)
             return
         if soort in ABONNEE_STATUS:
             if not any(p == "updates" for p, _ in self._producten(data)) and self.cfg.prijzen:
@@ -87,22 +108,56 @@ class Levering:
             status = data.get("status") or soort.split(".")[1]
             if soort == "subscription.canceled":
                 # Paddle stuurt dit pas als de opzegging ingaat (bij opzeggen per periode-einde: op dat einde), dus
-                # vanaf nu geen updates meer. Een opzegging die nog moet ingaan komt als subscription.updated met
-                # scheduled_change binnen en laat de abonnee actief tot het einde van de betaalde periode.
-                status, einde = "canceled", nu()
-            self.opslag.abonnee_bewaar(data["id"], data.get("customer_id"), email, taal, status, einde)
+                # vanaf het event geen updates meer. Een opzegging die nog moet ingaan komt als subscription.updated
+                # met scheduled_change binnen en laat de abonnee actief tot het einde van de betaalde periode.
+                status, einde = "canceled", min(moment, nu())
+            self.opslag.abonnee_bewaar(data["id"], data.get("customer_id"), email, taal, status, einde, moment)
+            return
+        if soort in TERUG:
+            self._terugdraaien(data)
+
+    def _terugdraaien(self, data):
+        actie, status = data.get("action"), data.get("status")
+        if not ((actie == "refund" and status == "approved") or actie == "chargeback"):
+            log.info("adjustment %s/%s voor %s: geen actie", actie, status, data.get("transaction_id"))
+            return
+        txn = data.get("transaction_id")
+        aankoop = self.opslag.aankoop(txn) if txn else None
+        email = aankoop["email"] if aankoop else self._klant(data.get("customer_id"))[0]
+        if txn:
+            self.opslag.aankoop_terugdraaien(txn, email, data.get("customer_id"))
+        if email:
+            n = self.opslag.links_intrekken(email)
+            self.opslag.uitgaand_annuleren(email)
+            self.opslag.abonnee_intrekken(email=email)
+            log.warning("%s op %s: %s links ingetrokken, updates gestopt voor %s", actie, txn, n, email)
+        if data.get("subscription_id"):
+            self.opslag.abonnee_intrekken(abonnement_id=data["subscription_id"])
 
     # ------------------------------------------------------------ mails
-    def _link(self, email, versie, uren):
-        return links.maak(self.opslag, self.cfg.geheim, email, versie, uren, self.cfg.max_downloads)
+    def _link(self, email, taal, versie, uren):
+        link_id, token = links.maak(self.opslag, self.cfg.geheim, email, versie, uren, self.cfg.max_downloads)
+        return link_id, f"{self.cfg.basis_url(taal)}/download/{token}"
 
-    def stuur_kit(self, email, taal, versie):
-        link_id, token = self._link(email, versie, self.cfg.link_uur)
-        t = post.TEKSTEN[taal]
-        tekst = t["kit"].format(uur=self.cfg.link_uur, max=self.cfg.max_downloads, versie=versie,
-                                link=f"{self.cfg.basis_url.rstrip('/')}/download/{token}")
-        self.verzend(post.bericht(self.cfg, email, t["kit_onderwerp"], tekst))
-        log.info("kit verzonden: %s versie %s link %s", email, versie, link_id)
+    def wachtrij(self):
+        """Verstuurt elke leveringsmail die aan de beurt is. Geeft (verzonden, mislukt)."""
+        ok = fout = 0
+        for r in self.opslag.uitgaand_klaar():
+            try:
+                taal = r["taal"] if r["taal"] in post.TEKSTEN else "en"
+                link_id, url = self._link(r["email"], taal, r["versie"], self.cfg.link_uur)
+                t = post.TEKSTEN[taal]
+                tekst = t["kit"].format(uur=self.cfg.link_uur, max=self.cfg.max_downloads, versie=r["versie"], link=url)
+                self.verzend(post.bericht(self.cfg, r["email"], t["kit_onderwerp"], tekst))
+            except Exception as e:
+                self.opslag.uitgaand_mislukt(r["id"], e)
+                log.warning("leveringsmail %s naar %s mislukt (blijft in de rij): %s", r["sleutel"], r["email"], e)
+                fout += 1
+                continue
+            self.opslag.uitgaand_verzonden(r["id"])
+            log.info("kit verzonden: %s versie %s link %s", r["email"], r["versie"], link_id)
+            ok += 1
+        return ok, fout
 
     def send_update(self, versie, dry_run=False, uit=print):
         """Mailt elke actieve abonnee die deze versie nog niet kreeg. Idempotent: een verzonden (e-mail, versie) wordt
@@ -125,11 +180,11 @@ class Levering:
                 continue
             self.opslag.verzending_bewaar(email, versie, "bezig")
             try:
-                link_id, token = self._link(email, versie, self.cfg.update_link_uur)
-                t = post.TEKSTEN[a["taal"] or "en"]
+                taal = a["taal"] if a["taal"] in post.TEKSTEN else "en"
+                link_id, url = self._link(email, taal, versie, self.cfg.update_link_uur)
+                t = post.TEKSTEN[taal]
                 tekst = t["update"].format(versie=versie, changelog=v["changelog"] or "-", uur=self.cfg.update_link_uur,
-                                           max=self.cfg.max_downloads, tot=a["actief_tot"][:10],
-                                           link=f"{self.cfg.basis_url.rstrip('/')}/download/{token}")
+                                           max=self.cfg.max_downloads, tot=a["actief_tot"][:10], link=url)
                 self.verzend(post.bericht(self.cfg, email, t["update_onderwerp"].format(versie=versie), tekst))
             except Exception as fout:
                 self.opslag.verzending_bewaar(email, versie, "mislukt")
@@ -158,6 +213,27 @@ class Levering:
         return pad, f"build-kit-v{rij['versie']}{pad.suffix}"
 
 
+VERBODEN_EXPORT = ("/var/www", "/srv/www", "/usr/share/nginx")
+
+
+def export_abonnees(opslag, doel):
+    """Schrijft alle abonnees (ook beëindigde) naar CSV voor de boekhouding, met bestandsrechten 600. Weigert een pad
+    in een webroot of in deze repo: het bestand bevat e-mailadressen en mag nooit geserveerd worden."""
+    doel = pathlib.Path(doel).expanduser().resolve()
+    repo = pathlib.Path(__file__).resolve().parent.parent
+    if any(str(doel).startswith(p) for p in VERBODEN_EXPORT) or repo in doel.parents:
+        raise SystemExit(f"weigert {doel}: dat is (mogelijk) publiek. Kies bv. /root/boekhouding/abonnees.csv")
+    doel.parent.mkdir(parents=True, exist_ok=True)
+    rijen = opslag.alle_abonnees()
+    with open(doel, "w", newline="", encoding="utf-8", opener=lambda p, f: os.open(p, f, 0o600)) as f:
+        w = csv.writer(f)
+        w.writerow(["abonnement_id", "customer_id", "email", "taal", "status", "actief_tot", "bijgewerkt"])
+        for r in rijen:
+            w.writerow([r["abonnement_id"], r["customer_id"], r["email"], r["taal"], r["status"], r["actief_tot"],
+                        r["bijgewerkt"]])
+    return doel, len(rijen)
+
+
 def maandrapport(opslag, bot_repo, git="git"):
     """Commits in de bot-repo sinds de laatste documentversie, zodat Claude kan beslissen of het document een update
     nodig heeft. Geeft markdown-tekst (naar stdout; niets wordt verstuurd of gewijzigd)."""
@@ -181,7 +257,7 @@ def maandrapport(opslag, bot_repo, git="git"):
             huidig["bestanden"].append(regel.strip())
     echt = [c for c in commits if not c["onderwerp"].startswith("Published your App")]
     geld = [c for c in echt if any(b.startswith(("src/", ".replit", "requirements")) for b in c["bestanden"])]
-    regels = [f"# Maandrapport bouwpakket", "", f"Bot-repo: {bot_repo}", f"Sinds: {sinds}", "",
+    regels = ["# Maandrapport bouwpakket", "", f"Bot-repo: {bot_repo}", f"Sinds: {sinds}", "",
               f"- {len(echt)} commits (zonder 'Published your App'), waarvan {len(geld)} in src/, .replit of requirements",
               "- Vraag voor Claude: verandert een van deze commits iets dat het bouwplan beschrijft (strategie, ladder,",
               "  verkoopregels, veiligheid, infrastructuur)? Zo ja: nieuwe versie schrijven, `nieuwe-versie`, dan `send-update`.",

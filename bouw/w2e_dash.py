@@ -73,7 +73,8 @@ L = {
         kant_sell="Sell order", kant_fine="Fine rung", kant_coarse="Coarse rung",
         ladder_noot=("Rungs sit on multiples of the step below the price; a rung that already holds a position is "
                      "skipped by the bot, which this view can't show. Sell orders come from the bot's decision log."),
-        stap_nu="Step size read at build time (no older reading stored yet), applied to the price at T.",
+        geen_ladder=("No ladder in this snapshot: the step size is only shown from a reading at least 24 hours old, "
+                     "and the first one is stored by the daily build."),
         mom_titel="Every sale in the decision log", mom_desc="Dot chart of each sale's price gain from buy to sell, before fees, {van} to {tot}.",
         mom_tbl="Latest {n} sales", mom_kop=("Date", "Strategy", "Gain, buy to sell"),
         mom_noot=("Each dot is one sale: the price gain from the position's buy price to its sell price, before "
@@ -101,7 +102,8 @@ L = {
         kant_sell="Verkooporder", kant_fine="Fijne trede", kant_coarse="Grove trede",
         ladder_noot=("Treden liggen op veelvouden van de stap onder de koers; een trede waar al een positie op zit, "
                      "slaat de bot over, en dat is hier niet te zien. Verkooporders komen uit het beslislog van de bot."),
-        stap_nu="Stapgrootte gelezen bij het bouwen (nog geen oudere meting bewaard), toegepast op de koers van T.",
+        geen_ladder=("Geen ladder in deze momentopname: de stapgrootte staat er alleen in vanaf een meting van minstens "
+                     "24 uur oud, en de eerste wordt door de dagelijkse bouw bewaard."),
         mom_titel="Elke verkoop uit het beslislog", mom_desc="Stippengrafiek van de koerswinst per verkoop, van aankoop tot verkoop, vóór kosten, {van} tot {tot}.",
         mom_tbl="Laatste {n} verkopen", mom_kop=("Datum", "Strategie", "Winst, aankoop tot verkoop"),
         mom_noot=("Elke stip is één verkoop: de koersstijging van de aankoopprijs van die positie tot de verkoopprijs, "
@@ -269,7 +271,7 @@ def dashboard(m, taal="en"):
              f'<li><span class="sw o-fine"></span>{t["ladder_lgd"]}</li>'
              f'<li><span class="sw o-verkoop"></span>{t["sell_lgd"]}</li></ul>'
              f'<figcaption class="chart-note">{t["ladder_noot"]}'
-             f'{" " + t["stap_nu"] if m["stap_bron"] == "nu" else ""}</figcaption></figure>')
+             f'{" " + t["geen_ladder"] if not m["fine"] else ""}</figcaption></figure>')
     regels = ([(t["kant_sell"], r) for r in reversed(m["volgende_verkopen"])]
               + [(t["kant_fine"], r) for r in m["fine"]] + [(t["kant_coarse"], r) for r in m["coarse"]])
     k = t["tbl_ladder_kop"]
